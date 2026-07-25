@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-<title>CRE Use of English — Practice System v1.1</title>
+<title>CRE Use of English — Practice System v1.2</title>
 <style>
 :root{
 --blue-50:#fdf2f8;--blue-100:#fce7f3;--blue-200:#fbcfe8;--blue-500:#ec4899;--blue-600:#db2777;--blue-700:#be185d;--blue-800:#9d174d;--blue-900:#831843;
@@ -73,6 +73,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Ro
 .btn-outline:hover{background:var(--blue-50)}
 .btn-sm{padding:8px 14px;font-size:12px;width:auto;border-radius:var(--radius-xs);min-height:32px}
 .btn-ghost{background:var(--gray-100);color:var(--gray-600)}
+.btn-cloud{background:linear-gradient(135deg,#4285f4,#34a853);color:#fff}
+.btn-cloud:hover:not(:disabled){background:linear-gradient(135deg,#3367d6,#2d8e47)}
 .info-box{border-radius:var(--radius);padding:14px 16px;margin-bottom:14px;font-size:12px;line-height:1.8}
 .info-box h4{font-size:13px;margin-bottom:4px;display:flex;align-items:center;gap:6px}
 .info-box ol,.info-box ul{padding-left:18px}
@@ -178,6 +180,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Ro
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .save-info{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius-sm);padding:10px 12px;font-size:11px;line-height:1.7;color:var(--gray-600);margin:8px 0}
 .save-info strong{color:var(--gray-800)}
+.cloud-status{padding:10px 14px;border-radius:var(--radius-sm);font-size:12px;margin:10px 0;display:none}
+.cloud-status.show{display:block}
+.cloud-status.ok{background:var(--green-50);border:1px solid var(--green-100);color:var(--green-700)}
+.cloud-status.err{background:var(--red-50);border:1px solid var(--red-100);color:var(--red-700)}
+.cloud-status.loading{background:var(--amber-50);border:1px solid var(--amber-100);color:var(--amber-600)}
 .kbd-hint{display:none;font-size:10px;color:var(--gray-400);margin-top:6px;text-align:center}
 @media(min-width:1024px){.kbd-hint{display:block}}
 </style>
@@ -196,6 +203,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Ro
 </div>
 </div>
 <script>
+// ===== CLOUD SAVE URL =====
+const CLOUD_URL = 'https://script.google.com/macros/s/AKfycbzRnKagiOJWQNMtWO7U-QmFhB7TXg-agE-GNeHHLYU3WzLlBPq7vL53asQYDC5qgU1aLw/exec';
+// 貼你嘅Google Apps Script URL喺上面引號入面
+
 function showModal(title,msg,confirmText,onConfirm){
 document.getElementById('modalTitle').textContent=title;
 document.getElementById('modalMsg').textContent=msg;
@@ -320,7 +331,7 @@ else renderHome(app);
 function renderHome(app){
 const tabs=['quiz','wrong','history','import','prompts','save'];
 const tNames=['Practice','Bank','History','Import','Prompt','Save'];
-let h=`<div class="header"><h1>CRE Use of English — Practice System</h1><div class="ver">v1.1</div></div><div class="container">`;
+let h=`<div class="header"><h1>CRE Use of English — Practice System</h1><div class="ver">v1.2 Cloud</div></div><div class="container">`;
 h+=`<div class="tab-bar">${tabs.map((t,i)=>`<button class="tab-btn ${S.tab===t?'active':''}" onclick="S.tab='${t}';render()">${tNames[i]}</button>`).join('')}</div>`;
 if(S.tab==='quiz')h+=tabQuiz();
 else if(S.tab==='wrong')h+=tabWrong();
@@ -433,14 +444,79 @@ function cpP(k){copyTxt(PROMPTS[k]);toast('Prompt copied!')}
 function tabSave(){
 const saveData=buildSave();
 const sz=new Blob([JSON.stringify(saveData)]).size;
-let h=`<div class="card"><h3 style="font-size:14px;margin-bottom:10px">📤 Export Save</h3>`;
+const hasCloud=!!CLOUD_URL;
+let h='';
+
+// Cloud Save Section
+h+=`<div class="card" style="border-color:${hasCloud?'var(--green-100)':'var(--amber-100)'}"><h3 style="font-size:14px;margin-bottom:10px;color:${hasCloud?'var(--green-700)':'var(--amber-600)'}">☁️ Cloud Save (Google Drive)</h3>`;
+if(!hasCloud){
+h+=`<div class="info-box info-amber">⚠️ 未設定Cloud URL。請按教程部署Google Apps Script後，將URL貼入HTML頂部 CLOUD_URL 變量。</div>`;
+}else{
+h+=`<div class="info-box info-green">✅ Cloud已連接</div>`;
+h+=`<button class="btn btn-cloud" style="margin-bottom:8px" onclick="cloudSave()">☁️ 一鍵雲端儲存</button>`;
+h+=`<button class="btn btn-outline" onclick="cloudLoad()">📥 從雲端讀取</button>`;
+h+=`<div class="cloud-status" id="cloudStatus"></div>`;
+}
+h+=`</div>`;
+
+// Manual Save Section
+h+=`<div class="card"><h3 style="font-size:14px;margin-bottom:10px">📤 Manual Export</h3>`;
 h+=`<div class="save-info"><strong>Save includes:</strong><br>• ✅ All quiz history (questions + answers + passages)<br>• ✅ Wrong bank (full detail + source passages)<br>• ✅ Uncertain bank<br>• ✅ Current question bank<br>• ✅ Passage history<br><br>📦 Size: <strong>${fmtB(sz)}</strong></div>`;
 h+=`<button class="btn btn-green" onclick="doExport()">📋 Copy Save (One-Click Export)</button>`;
 h+=`<div style="font-size:11px;color:var(--gray-400);margin-top:6px;text-align:center">Paste to Notes/Keep for backup</div></div>`;
-h+=`<div class="card"><h3 style="font-size:14px;margin-bottom:10px;color:var(--blue-700)">📥 Load Save</h3>`;
+h+=`<div class="card"><h3 style="font-size:14px;margin-bottom:10px;color:var(--blue-700)">📥 Manual Load</h3>`;
 h+=`<textarea class="textarea" style="height:100px" id="loadA" placeholder="Paste save JSON here..."></textarea>`;
 h+=`<button class="btn btn-primary" style="margin-top:10px" onclick="doLoad()">Load & Restore</button></div>`;
 return h;
+}
+
+// ===== CLOUD SAVE FUNCTIONS =====
+function cloudSave(){
+if(!CLOUD_URL){toast('未設定Cloud URL');return}
+const data=JSON.stringify(buildSave());
+const statusEl=document.getElementById('cloudStatus');
+if(statusEl){statusEl.className='cloud-status show loading';statusEl.textContent='⏳ 儲存中...';}
+fetch(CLOUD_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:data})
+.then(()=>{
+if(statusEl){statusEl.className='cloud-status show ok';statusEl.textContent='✅ 已儲存到Google Drive! '+nowStr();}
+toast('☁️ Cloud saved!');
+})
+.catch(err=>{
+if(statusEl){statusEl.className='cloud-status show err';statusEl.textContent='❌ 儲存失敗: '+err.message;}
+toast('Save failed');
+});
+}
+
+function cloudLoad(){
+if(!CLOUD_URL){toast('未設定Cloud URL');return}
+const statusEl=document.getElementById('cloudStatus');
+if(statusEl){statusEl.className='cloud-status show loading';statusEl.textContent='⏳ 讀取中...';}
+fetch(CLOUD_URL)
+.then(r=>r.text())
+.then(txt=>{
+if(!txt||txt==='NOT_FOUND'||txt.trim()===''){
+if(statusEl){statusEl.className='cloud-status show err';statusEl.textContent='⚠️ 雲端無存檔';}
+toast('No cloud save found');return;
+}
+let d;try{d=JSON.parse(txt)}catch(e){
+if(statusEl){statusEl.className='cloud-status show err';statusEl.textContent='❌ 資料格式錯誤';}
+toast('Parse error');return;
+}
+applyLoad(d);
+if(statusEl){statusEl.className='cloud-status show ok';statusEl.textContent='✅ 已從雲端載入! '+nowStr();}
+toast('☁️ Cloud loaded!');render();
+})
+.catch(err=>{
+if(statusEl){statusEl.className='cloud-status show err';statusEl.textContent='❌ 讀取失敗: '+err.message;}
+toast('Load failed');
+});
+}
+
+function applyLoad(d){
+if(d.wb)WB=d.wb;if(d.ub)UB=d.ub;if(d.hist)HIST=d.hist;if(d.cq)CQ=d.cq;
+if(d.psg1)PSG1=d.psg1;if(d.psg4)PSG4=d.psg4;
+if(d.imp)IMP=d.imp;if(d.pc!==undefined)PC=d.pc;if(d.psgHist)PSG_HIST=d.psgHist;
+for(let i=1;i<=4;i++){if(!WB[i])WB[i]=[];if(!UB[i])UB[i]=[]}
 }
 
 function renderQuiz(app){
@@ -661,17 +737,14 @@ sMsg(msg,`✓ Part ${pid} imported: ${d.questions.length} questions!`,'g');area.
 function sMsg(el,txt,c){if(!el)return;el.style.display='block';el.style.background=c==='r'?'var(--red-50)':'var(--green-50)';el.style.color=c==='r'?'var(--red-600)':'var(--green-600)';el.textContent=txt}
 
 function buildSave(){
-return{v:'1.1-USE',savedAt:nowStr(),wb:WB,ub:UB,hist:HIST,imp:IMP,pc:PC,cq:CQ,psg1:PSG1,psg4:PSG4,psgHist:PSG_HIST};
+return{v:'1.2-USE',savedAt:nowStr(),wb:WB,ub:UB,hist:HIST,imp:IMP,pc:PC,cq:CQ,psg1:PSG1,psg4:PSG4,psgHist:PSG_HIST};
 }
 function doExport(){copyTxt(JSON.stringify(buildSave()));toast('Save copied! Paste to Notes for backup.')}
 function doLoad(){
 const area=document.getElementById('loadA');if(!area)return;
 let raw=area.value.trim();if(!raw){toast('Please paste save data');return}
 let d;try{d=JSON.parse(raw)}catch(e){toast('JSON error');return}
-if(d.wb)WB=d.wb;if(d.ub)UB=d.ub;if(d.hist)HIST=d.hist;if(d.cq)CQ=d.cq;
-if(d.psg1)PSG1=d.psg1;if(d.psg4)PSG4=d.psg4;
-if(d.imp)IMP=d.imp;if(d.pc!==undefined)PC=d.pc;if(d.psgHist)PSG_HIST=d.psgHist;
-for(let i=1;i<=4;i++){if(!WB[i])WB[i]=[];if(!UB[i])UB[i]=[]}
+applyLoad(d);
 const qCount=Object.values(CQ).reduce((a,b)=>a+b.length,0);
 toast(`Loaded! ${HIST.length} records · ${qCount} questions`);area.value='';render();
 }
