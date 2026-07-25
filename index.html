@@ -1,7 +1,9 @@
-<!DOCTYPE html><html lang="en"><head><meta name="x-poe-datastore-behavior" content="local_only"><meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+<!DOCTYPE html>
+<html lang="en">
+<head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CRE Use of English — Practice System v1.0</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>CRE Use of English — Practice System v1.1</title>
 <style>
 :root{
 --blue-50:#eff6ff;--blue-100:#dbeafe;--blue-200:#bfdbfe;--blue-500:#3b82f6;--blue-600:#2563eb;--blue-700:#1d4ed8;--blue-800:#1e40af;--blue-900:#1e3a8a;
@@ -16,6 +18,7 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,sans-serif;background:var(--gray-50);color:var(--gray-800);line-height:1.6;-webkit-font-smoothing:antialiased;padding-bottom:40px}
 .container{max-width:480px;margin:0 auto;padding:16px}
+@media(min-width:768px){.container{max-width:680px;padding:20px 24px}}
 .header{background:linear-gradient(135deg,var(--blue-800),var(--blue-900));color:#fff;padding:18px 20px;text-align:center;position:sticky;top:0;z-index:100;box-shadow:var(--shadow-lg)}
 .header h1{font-size:14px;font-weight:700;letter-spacing:.3px}
 .header .ver{font-size:10px;opacity:.5;margin-top:2px}
@@ -33,12 +36,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Ro
 .badge-green{background:var(--green-50);color:var(--green-700);border:1px solid var(--green-100)}
 .badge-amber{background:var(--amber-50);color:var(--amber-600);border:1px solid var(--amber-100)}
 .badge-purple{background:var(--purple-50);color:var(--purple-700);border:1px solid var(--purple-100)}
-.stat-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px}
+.stat-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:16px}
+@media(max-width:400px){.stat-row{grid-template-columns:1fr 1fr;gap:6px}}
 .stat-card{background:#fff;border-radius:var(--radius);padding:14px;text-align:center;box-shadow:var(--shadow);border:1px solid var(--gray-100)}
-.stat-num{font-size:24px;font-weight:800;color:var(--blue-700)}
+.stat-num{font-size:22px;font-weight:800;color:var(--blue-700)}
+.stat-num.red{color:var(--red-600)}
+.stat-num.amber{color:var(--amber-600)}
 .stat-lbl{font-size:10px;color:var(--gray-400);margin-top:2px;font-weight:500}
 .section-title{font-size:13px;font-weight:700;color:var(--gray-600);margin:20px 0 10px;display:flex;align-items:center;gap:6px}
 .section-title::before{content:'';width:3px;height:14px;background:var(--blue-600);border-radius:2px}
+.section-title .rt{margin-left:auto}
 .part-card{background:#fff;border-radius:var(--radius);padding:18px;margin-bottom:10px;box-shadow:var(--shadow);border:1px solid var(--gray-100);cursor:pointer;transition:all .15s;position:relative;overflow:hidden}
 .part-card:hover{box-shadow:var(--shadow-md);border-color:var(--blue-200)}
 .part-card:active{transform:scale(.98)}
@@ -49,7 +56,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Ro
 .part-card.full-paper h3{color:var(--purple-700)}
 .part-card p{font-size:12px;color:var(--gray-500);margin-top:2px;padding-left:6px}
 .part-card .arrow{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--gray-300);font-size:18px}
-.btn{width:100%;padding:13px;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn{width:100%;padding:13px;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px;min-height:44px}
 .btn:active{transform:scale(.97)}
 .btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
 .btn-primary{background:var(--blue-700);color:#fff}
@@ -60,10 +67,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Ro
 .btn-green:hover:not(:disabled){background:var(--green-700)}
 .btn-purple{background:var(--purple-600);color:#fff}
 .btn-purple:hover:not(:disabled){background:var(--purple-700)}
+.btn-amber{background:var(--amber-600);color:#fff}
 .btn-gray{background:var(--gray-500);color:#fff}
 .btn-outline{background:#fff;color:var(--blue-700);border:2px solid var(--blue-200)}
 .btn-outline:hover{background:var(--blue-50)}
-.btn-sm{padding:8px 14px;font-size:12px;width:auto;border-radius:var(--radius-xs)}
+.btn-sm{padding:8px 14px;font-size:12px;width:auto;border-radius:var(--radius-xs);min-height:32px}
+.btn-ghost{background:var(--gray-100);color:var(--gray-600)}
 .info-box{border-radius:var(--radius);padding:14px 16px;margin-bottom:14px;font-size:12px;line-height:1.8}
 .info-box h4{font-size:13px;margin-bottom:4px;display:flex;align-items:center;gap:6px}
 .info-box ol,.info-box ul{padding-left:18px}
@@ -74,22 +83,26 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Ro
 .info-purple{background:var(--purple-50);border:1px solid var(--purple-100);color:var(--purple-700)}
 .textarea{width:100%;border:2px solid var(--gray-200);border-radius:var(--radius-sm);padding:12px;font-size:12px;font-family:'SF Mono',SFMono-Regular,Menlo,monospace;resize:vertical;transition:border-color .2s;line-height:1.5}
 .textarea:focus{border-color:var(--blue-500);outline:none}
-.textarea-sm{height:80px}
-.textarea-md{height:120px}
-.textarea-lg{height:180px}
 .prompt-card{background:#fff;border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--shadow);border:1px solid var(--gray-100)}
 .prompt-card.master{border-color:var(--purple-100);border-left:4px solid var(--purple-500)}
 .prompt-card h3{font-size:13px;color:var(--blue-800);margin-bottom:8px}
 .prompt-card.master h3{color:var(--purple-700)}
 .prompt-text{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius-sm);padding:12px;font-size:11px;max-height:160px;overflow-y:auto;white-space:pre-wrap;line-height:1.6;font-family:'SF Mono',monospace}
+/* Quiz */
 .quiz-bar{display:flex;justify-content:space-between;align-items:center;padding:12px 0}
-.progress-text{font-size:13px;color:var(--gray-500);font-weight:500}
+.timer-area{display:flex;align-items:center;gap:6px}
 .timer-display{font-size:22px;font-weight:800;color:var(--blue-700);font-variant-numeric:tabular-nums}
-.timer-row{display:flex;gap:8px;align-items:center;margin-bottom:14px}
 .timer-btn{padding:6px 12px;border-radius:var(--radius-xs);border:none;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s}
 .timer-btn-start{background:var(--green-100);color:var(--green-700)}
 .timer-btn-pause{background:var(--amber-100);color:var(--amber-600)}
 .timer-btn-reset{background:var(--gray-100);color:var(--gray-500)}
+.qmap-toggle{width:100%;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius-sm);padding:9px;text-align:center;font-size:11px;color:var(--gray-500);cursor:pointer;margin-bottom:10px;font-weight:600}
+.qmap{display:flex;flex-wrap:wrap;gap:4px;padding:10px;background:var(--gray-50);border-radius:var(--radius-sm);margin-bottom:12px;border:1px solid var(--gray-200)}
+.qmap-dot{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;cursor:pointer;border:2px solid var(--gray-200);background:#fff;color:var(--gray-500);transition:.15s}
+.qmap-dot:hover{border-color:var(--blue-500)}
+.qmap-dot.cur{border-color:var(--blue-600);background:var(--blue-50);color:var(--blue-700)}
+.qmap-dot.done{border-color:var(--green-500);background:var(--green-100);color:var(--green-700)}
+.qmap-dot.flag{border-color:var(--amber-500);background:var(--amber-100);color:var(--amber-600)}
 .part-divider{background:linear-gradient(135deg,var(--blue-50),var(--purple-50));border:1px solid var(--blue-200);border-radius:var(--radius);padding:14px 16px;margin-bottom:14px;text-align:center}
 .part-divider h4{font-size:14px;color:var(--blue-800);font-weight:700}
 .part-divider p{font-size:11px;color:var(--gray-500);margin-top:2px}
@@ -97,19 +110,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Ro
 .passage-toggle:hover{background:var(--blue-100)}
 .passage-content{background:var(--gray-50);border-radius:var(--radius-sm);padding:16px;margin-bottom:16px;font-size:14px;line-height:2;max-height:260px;overflow-y:auto;border:1px solid var(--gray-200)}
 .q-card{background:#fff;border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);border:1px solid var(--gray-100);margin-bottom:14px}
-.q-stem{font-size:15px;font-weight:600;margin-bottom:16px;line-height:1.8;color:var(--gray-800)}
+.q-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.q-stem{font-size:15px;font-weight:600;margin-bottom:16px;line-height:1.8;color:var(--gray-800);white-space:pre-wrap}
+.flag-btn{padding:6px 10px;border-radius:var(--radius-xs);border:1.5px solid var(--gray-200);background:#fff;cursor:pointer;font-size:14px;transition:.15s}
+.flag-btn.on{border-color:var(--amber-500);background:var(--amber-100)}
 .opt-btn{width:100%;min-height:44px;padding:14px 16px;margin-bottom:8px;border:2px solid var(--gray-200);border-radius:var(--radius-sm);background:#fff;font-size:14px;text-align:left;cursor:pointer;transition:all .15s;line-height:1.5;display:flex;align-items:center}
 .opt-btn:hover{border-color:var(--blue-300);background:var(--blue-50)}
 .opt-btn.selected{border-color:var(--blue-600);background:var(--blue-50);color:var(--blue-800);font-weight:600}
 .nav-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
-.nav-row.single{grid-template-columns:1fr}
+/* Modal */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
 .modal-overlay.show{opacity:1;pointer-events:auto}
 .modal-box{background:#fff;border-radius:var(--radius);padding:24px;max-width:320px;width:100%;box-shadow:var(--shadow-lg);text-align:center}
 .modal-box h3{font-size:16px;color:var(--gray-800);margin-bottom:8px}
-.modal-box p{font-size:13px;color:var(--gray-500);margin-bottom:18px}
+.modal-box p{font-size:13px;color:var(--gray-500);margin-bottom:18px;white-space:pre-wrap}
 .modal-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .modal-btns .btn{font-size:13px;padding:10px}
+/* Result */
 .result-hero{background:linear-gradient(135deg,var(--blue-700),var(--blue-900));border-radius:var(--radius);padding:28px 20px;text-align:center;color:#fff;margin-bottom:16px;box-shadow:var(--shadow-lg)}
 .result-hero.full-paper{background:linear-gradient(135deg,var(--purple-600),var(--blue-900))}
 .result-hero .score-big{font-size:48px;font-weight:900}
@@ -117,64 +134,58 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Ro
 .result-hero .time-label{font-size:12px;opacity:.6;margin-top:4px}
 .dot-grid{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-top:14px}
 .dot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff}
-.dot.ok{background:var(--green-500)}
-.dot.ng{background:var(--red-500)}
-.dot.skip{background:var(--gray-400)}
+.dot.ok{background:var(--green-500)}.dot.ng{background:var(--red-500)}.dot.skip{background:var(--gray-400)}
 .breakdown{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin:14px 0}
 .breakdown-item{background:rgba(255,255,255,.1);border-radius:var(--radius-sm);padding:10px;text-align:center}
 .breakdown-item .bd-label{font-size:10px;opacity:.7}
 .breakdown-item .bd-score{font-size:16px;font-weight:800}
 .bank-update{background:var(--green-50);border:1px solid var(--green-100);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:14px;font-size:12px;color:var(--green-700)}
+/* Review Items */
 .ri{background:#fff;border-radius:var(--radius-sm);margin-bottom:8px;box-shadow:var(--shadow-sm);border:1px solid var(--gray-100);overflow:hidden}
 .ri-wrong{border-left:3px solid var(--red-500)}
 .ri-right{border-left:3px solid var(--green-500)}
+.ri-unc{border-left:3px solid var(--amber-500)}
 .ri-head{padding:12px 14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
 .ri-head:hover{background:var(--gray-50)}
 .ri-head span{font-size:13px;font-weight:600;color:var(--gray-700)}
 .ri-head .tag{font-size:10px;padding:2px 6px;border-radius:10px;font-weight:600}
 .ri-head .tag-ok{background:var(--green-50);color:var(--green-700)}
 .ri-head .tag-ng{background:var(--red-50);color:var(--red-600)}
+.ri-head .tag-unc{background:var(--amber-50);color:var(--amber-600)}
 .ri-body{padding:0 14px 14px;border-top:1px solid var(--gray-100);display:none;font-size:13px;line-height:1.7}
 .ri-body.show{display:block;padding-top:12px}
 .ri-body .lbl{font-weight:700;color:var(--gray-500);font-size:11px;margin-top:8px;margin-bottom:2px}
-.ri-body .your-ans{color:var(--red-600);font-weight:600}
-.ri-body .correct-ans{color:var(--green-600);font-weight:600}
+.ri-body .opt-line{padding:2px 0}
+.ri-body .opt-correct{color:var(--green-600);font-weight:600}
+.ri-body .opt-wrong{color:var(--red-600);text-decoration:line-through}
+.ri-del{background:none;border:none;color:var(--gray-400);font-size:14px;cursor:pointer;padding:4px;margin-left:8px}
+.ri-del:hover{color:var(--red-600)}
+.psg-in-bank{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius-xs);padding:10px;margin-top:6px;font-size:12px;line-height:1.8;max-height:150px;overflow-y:auto;white-space:pre-wrap}
+.psg-label{display:inline-block;background:var(--blue-50);color:var(--blue-700);font-size:10px;font-weight:600;padding:1px 6px;border-radius:4px;margin-bottom:4px}
+/* Sub-tabs for wrong bank */
+.sub-tabs{display:flex;gap:2px;background:var(--gray-100);padding:3px;border-radius:var(--radius-sm);margin-bottom:12px}
+.sub-tab{flex:1;padding:7px 4px;border:none;border-radius:var(--radius-xs);background:transparent;color:var(--gray-500);font-size:11px;font-weight:600;cursor:pointer;text-align:center}
+.sub-tab.on{background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.sub-tab.on.err-tab{color:var(--red-600)}
+.sub-tab.on.unc-tab{color:var(--amber-600)}
+/* History */
 .hi-group-title{font-size:12px;font-weight:700;color:var(--gray-400);letter-spacing:.5px;margin:16px 0 8px;padding-left:2px}
-.hi-card{background:#fff;border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:8px;box-shadow:var(--shadow-sm);border:1px solid var(--gray-100);position:relative}
-.hi-card.clickable{cursor:pointer}
-.hi-card.clickable:hover{box-shadow:var(--shadow);border-color:var(--blue-200)}
+.hi-card{background:#fff;border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:8px;box-shadow:var(--shadow-sm);border:1px solid var(--gray-100);cursor:pointer;transition:.15s}
+.hi-card:hover{box-shadow:var(--shadow);border-color:var(--blue-200)}
 .hi-card.full-paper{border-left:3px solid var(--purple-500)}
 .hi-card .hi-date{font-size:11px;color:var(--gray-400)}
 .hi-card .hi-title{font-size:13px;font-weight:700;color:var(--gray-700);margin:2px 0}
 .hi-card .hi-score{font-size:12px;color:var(--blue-600);font-weight:600}
-.hi-card .hi-mode{position:absolute;right:14px;top:14px}
-.hi-card .hi-hint{font-size:10px;color:var(--blue-500);margin-top:4px}
 .hi-card .hi-breakdown{font-size:10px;color:var(--gray-500);margin-top:4px}
-.wb-card{background:#fff;border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;box-shadow:var(--shadow-sm);border:1px solid var(--gray-100);border-left:3px solid var(--red-500)}
-.wb-card .wb-stem{font-size:12px;color:var(--gray-700);line-height:1.5;margin-bottom:4px}
-.wb-card .wb-answer{font-size:11px;color:var(--green-600);font-weight:600}
-.wb-card .wb-meta{font-size:10px;color:var(--gray-400);margin-top:4px}
 .empty-state{text-align:center;padding:50px 20px;color:var(--gray-400)}
 .empty-state .ei{font-size:36px;margin-bottom:8px}
 .empty-state p{font-size:13px}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--gray-800);color:#fff;padding:11px 22px;border-radius:24px;font-size:13px;font-weight:500;z-index:999;opacity:0;transition:all .3s ease;pointer-events:none;box-shadow:var(--shadow-lg)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.size-bar{height:6px;background:var(--gray-200);border-radius:3px;overflow:hidden;margin:8px 0}
-.size-fill{height:100%;border-radius:3px;transition:width .3s}
-.size-ok{background:var(--green-500)}
-.size-warn{background:var(--amber-500)}
-.size-danger{background:var(--red-500)}
-.radio-group{margin:10px 0}
-.radio-group label{display:block;padding:8px 12px;font-size:12px;cursor:pointer;border-radius:var(--radius-xs);transition:background .15s}
-.radio-group label:hover{background:var(--gray-50)}
-.radio-group input{margin-right:6px}
-.mb-8{margin-bottom:8px}
-.mb-12{margin-bottom:12px}
-.mt-8{margin-top:8px}
-.mt-12{margin-top:12px}
-.mt-16{margin-top:16px}
-.mt-20{margin-top:20px}
-.hidden{display:none!important}
+.save-info{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius-sm);padding:10px 12px;font-size:11px;line-height:1.7;color:var(--gray-600);margin:8px 0}
+.save-info strong{color:var(--gray-800)}
+.kbd-hint{display:none;font-size:10px;color:var(--gray-400);margin-top:6px;text-align:center}
+@media(min-width:1024px){.kbd-hint{display:block}}
 </style>
 </head>
 <body>
@@ -201,16 +212,23 @@ btn.onclick=function(){closeModal();if(onConfirm)onConfirm();};
 document.getElementById('modalOverlay').classList.add('show');
 }
 function closeModal(){document.getElementById('modalOverlay').classList.remove('show');}
+function toast(m){const e=document.getElementById('toast');e.textContent=m;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2400);}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function nowStr(){const d=new Date();return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate())+' '+p2(d.getHours())+':'+p2(d.getMinutes());}
+function p2(n){return String(n).padStart(2,'0');}
+function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
+function fmtB(b){return b<1024?b+'B':b<1048576?(b/1024).toFixed(1)+'KB':(b/1048576).toFixed(1)+'MB';}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).substr(2,5);}
+function qKey(q){return(q.stem||'').substring(0,60)+'##'+(q.options?q.options[0]:'')}
+function optLabel(i){return'ABCDE'[i]||String(i);}
 
 // ===== META =====
-const OPT_LABELS='ABCDE';
 const PARTS_META=[
 {id:1,name:"Part 1 — Comprehension",desc:"Reading passage + inference",count:10,icon:"📖",optCount:4},
 {id:2,name:"Part 2 — Error Identification",desc:"Find lexical/grammatical/stylistic errors",count:10,icon:"🔍",optCount:5},
 {id:3,name:"Part 3 — Sentence Completion",desc:"Grammar-focused gap-fill",count:10,icon:"✍️",optCount:5},
 {id:4,name:"Part 4 — Paragraph Improvement",desc:"Revise draft passages",count:10,icon:"📝",optCount:4}
 ];
-const FULL_PAPER_COUNT=40;
 
 // ===== PASSAGES =====
 const PASSAGE_P1=`The notion that technology invariably leads to progress is one that has been largely unchallenged in public discourse for decades. From the industrial revolution onwards, each wave of innovation has been greeted with optimism, and those who expressed reservations were often dismissed as Luddites or reactionaries. Yet a more nuanced examination of the relationship between technological advancement and human wellbeing reveals a far more complex picture.\n\nConsider the impact of social media on democratic processes. While these platforms were initially celebrated as tools for democratisation — enabling citizens to organise, share information, and hold power to account — their capacity for spreading misinformation has proved equally formidable. The algorithms that determine what users see are designed not to inform but to engage, and outrage, it transpires, is considerably more engaging than nuance.\n\nThis is not to suggest that we should reject technological innovation wholesale. Rather, the argument is for a more deliberate and critical approach to adoption. The question should never be simply whether a new technology can be deployed, but whether it should be, and under what conditions. History offers numerous examples of innovations that were technically feasible but socially destructive — from leaded petrol to asbestos insulation.\n\nUltimately, the measure of any technology should be its contribution to human flourishing in its broadest sense. This requires that we move beyond simplistic metrics of economic growth or efficiency and consider the full spectrum of effects on social cohesion, mental health, equality of opportunity, and environmental sustainability. Technology, after all, is a means to an end, not an end in itself.`;
@@ -220,429 +238,486 @@ const PASSAGE_P4=`Passage A:\n\n(1) The city council has announced plans to conv
 // ===== BUILT-IN QUESTIONS =====
 const BUILTIN_QUESTIONS={
 1:[
-{stem:"The author's primary purpose in writing this passage is to:",options:["argue that technology should be rejected entirely","suggest that technological progress requires more critical evaluation","prove that social media has destroyed democracy","compare modern technology with industrial revolution machinery"],answer:1,explanation:"The author repeatedly argues for 'a more deliberate and critical approach' — not rejection, but evaluation.",passage:true,_part:1},
-{stem:"According to the passage, social media platforms were initially celebrated because they:",options:["generated significant advertising revenue","enabled citizens to organise and share information","replaced traditional news outlets","were designed by democratic governments"],answer:1,explanation:"Paragraph 2: 'initially celebrated as tools for democratisation — enabling citizens to organise, share information'.",passage:true,_part:1},
-{stem:"The word 'formidable' in paragraph 2 most nearly means:",options:["frightening","impressive in scale or power","unexpected","illegal"],answer:1,explanation:"'Formidable' here means impressively powerful — referring to the equal power of misinformation spreading.",passage:true,_part:1},
-{stem:"The author mentions 'leaded petrol' and 'asbestos insulation' in order to:",options:["demonstrate that all technology is dangerous","provide examples of innovations that were possible but harmful","criticise the petrochemical industry specifically","argue for stronger government regulation"],answer:1,explanation:"These are cited as 'innovations that were technically feasible but socially destructive' — supporting the argument for critical evaluation.",passage:true,_part:1},
-{stem:"Which of the following best describes the author's attitude toward technology?",options:["Wholly optimistic","Deeply pessimistic","Cautiously critical","Completely indifferent"],answer:2,explanation:"The author supports technology but advocates critical evaluation — 'cautiously critical' captures this balance.",passage:true,_part:1},
-{stem:"It can be inferred from paragraph 2 that social media algorithms prioritise:",options:["accurate information over engagement","content that provokes emotional reactions","posts from verified journalists","government-approved messages"],answer:1,explanation:"'outrage, it transpires, is considerably more engaging than nuance' — algorithms favour engagement/emotional content.",passage:true,_part:1},
-{stem:"The phrase 'a means to an end, not an end in itself' suggests that technology should be:",options:["valued for its own sake","judged by its contribution to human goals","abandoned if it causes any problems","developed without consideration of consequences"],answer:1,explanation:"A 'means to an end' = tool serving a purpose; judged by contribution to goals, not valued intrinsically.",passage:true,_part:1},
-{stem:"According to the passage, those who expressed early reservations about technology were:",options:["generally proven correct","often dismissed as backward-looking","given leadership positions","consulted by governments"],answer:1,explanation:"'those who expressed reservations were often dismissed as Luddites or reactionaries'.",passage:true,_part:1},
-{stem:"The author would most likely agree that:",options:["economic growth is the best measure of technological value","some technologies should not be deployed despite being feasible","all social media platforms should be shut down","the industrial revolution was entirely negative"],answer:1,explanation:"The central argument: 'whether it should be [deployed], and under what conditions' — feasibility alone is insufficient.",passage:true,_part:1},
-{stem:"Which of the following is presented as a FACT rather than an opinion in the passage?",options:["Technology invariably leads to progress","Outrage is more engaging than nuance","All innovation should be rejected","Leaded petrol was socially beneficial"],answer:1,explanation:"The author presents this as empirical observation ('it transpires') about algorithm behaviour — a factual claim about engagement patterns.",passage:true,_part:1}
+{stem:"The author's primary purpose in writing this passage is to:",options:["argue that technology should be rejected entirely","suggest that technological progress requires more critical evaluation","prove that social media has destroyed democracy","compare modern technology with industrial revolution machinery"],answer:1,explanation:"The author repeatedly argues for 'a more deliberate and critical approach' — not rejection, but evaluation.",_part:1},
+{stem:"According to the passage, social media platforms were initially celebrated because they:",options:["generated significant advertising revenue","enabled citizens to organise and share information","replaced traditional news outlets","were designed by democratic governments"],answer:1,explanation:"Paragraph 2: 'initially celebrated as tools for democratisation — enabling citizens to organise, share information'.",_part:1},
+{stem:"The word 'formidable' in paragraph 2 most nearly means:",options:["frightening","impressive in scale or power","unexpected","illegal"],answer:1,explanation:"'Formidable' here means impressively powerful — referring to the equal power of misinformation spreading.",_part:1},
+{stem:"The author mentions 'leaded petrol' and 'asbestos insulation' in order to:",options:["demonstrate that all technology is dangerous","provide examples of innovations that were possible but harmful","criticise the petrochemical industry specifically","argue for stronger government regulation"],answer:1,explanation:"These are cited as 'innovations that were technically feasible but socially destructive' — supporting the argument for critical evaluation.",_part:1},
+{stem:"Which of the following best describes the author's attitude toward technology?",options:["Wholly optimistic","Deeply pessimistic","Cautiously critical","Completely indifferent"],answer:2,explanation:"The author supports technology but advocates critical evaluation — 'cautiously critical' captures this balance.",_part:1},
+{stem:"It can be inferred from paragraph 2 that social media algorithms prioritise:",options:["accurate information over engagement","content that provokes emotional reactions","posts from verified journalists","government-approved messages"],answer:1,explanation:"'outrage, it transpires, is considerably more engaging than nuance' — algorithms favour engagement/emotional content.",_part:1},
+{stem:"The phrase 'a means to an end, not an end in itself' suggests that technology should be:",options:["valued for its own sake","judged by its contribution to human goals","abandoned if it causes any problems","developed without consideration of consequences"],answer:1,explanation:"A 'means to an end' = tool serving a purpose; judged by contribution to goals, not valued intrinsically.",_part:1},
+{stem:"According to the passage, those who expressed early reservations about technology were:",options:["generally proven correct","often dismissed as backward-looking","given leadership positions","consulted by governments"],answer:1,explanation:"'those who expressed reservations were often dismissed as Luddites or reactionaries'.",_part:1},
+{stem:"The author would most likely agree that:",options:["economic growth is the best measure of technological value","some technologies should not be deployed despite being feasible","all social media platforms should be shut down","the industrial revolution was entirely negative"],answer:1,explanation:"The central argument: 'whether it should be [deployed], and under what conditions' — feasibility alone is insufficient.",_part:1},
+{stem:"Which of the following is presented as a FACT rather than an opinion in the passage?",options:["Technology invariably leads to progress","Outrage is more engaging than nuance","All innovation should be rejected","Leaded petrol was socially beneficial"],answer:1,explanation:"The author presents this as empirical observation ('it transpires') about algorithm behaviour — a factual claim about engagement patterns.",_part:1}
 ],
 2:[
 {stem:"The manager insisted that every employee [A: submits] their report [B: by] the end of [C: the] working day [D: without] exception.",options:["submits","by","the","without","No error"],answer:0,explanation:"After 'insisted that' (subjunctive), should be 'submit' (base form), not 'submits'.",_part:2},
-{stem:"The new policy is [A: applicable to] all staff members [B: regardless] of their seniority, and [C: has been] well received [D: between] employees.",options:["applicable to","regardless","has been","between","No error"],answer:3,explanation:"'Between' should be 'among' (more than two people). 'Between' is for two entities.",_part:2},
+{stem:"The new policy is [A: applicable to] all staff members [B: regardless] of their seniority, and [C: has been] well received [D: between] employees.",options:["applicable to","regardless","has been","between","No error"],answer:3,explanation:"'Between' should be 'among' (more than two people).",_part:2},
 {stem:"[A: Having reviewed] the evidence carefully, the committee [B: have concluded] that the proposal [C: merits] further [D: consideration].",options:["Having reviewed","have concluded","merits","consideration","No error"],answer:4,explanation:"All parts are correct. 'Committee' can take plural verb in British English. No error.",_part:2},
-{stem:"The report highlighted a number of [A: significant] discrepancies [B: among] the projected figures and [C: the] actual [D: outcomes].",options:["significant","among","the","outcomes","No error"],answer:1,explanation:"'Among' should be 'between' — comparing two things (projected vs actual). 'Between' for two, 'among' for more than two.",_part:2},
-{stem:"Neither the director [A: nor] his assistants [B: was] available to comment on the allegations [C: made] [D: against] the organisation.",options:["nor","was","made","against","No error"],answer:1,explanation:"'Neither...nor' — verb agrees with nearest subject ('assistants' = plural), so should be 'were', not 'was'.",_part:2},
-{stem:"The city has invested [A: considerable] resources [B: in] improving public transport, which has resulted [C: in] a significant [D: reduce] in traffic congestion.",options:["considerable","in","in","reduce","No error"],answer:3,explanation:"'Reduce' is a verb; the noun form 'reduction' is needed here after the article 'a'.",_part:2},
+{stem:"The report highlighted a number of [A: significant] discrepancies [B: among] the projected figures and [C: the] actual [D: outcomes].",options:["significant","among","the","outcomes","No error"],answer:1,explanation:"'Among' should be 'between' — comparing two things (projected vs actual).",_part:2},
+{stem:"Neither the director [A: nor] his assistants [B: was] available to comment on the allegations [C: made] [D: against] the organisation.",options:["nor","was","made","against","No error"],answer:1,explanation:"'Neither...nor' — verb agrees with nearest subject ('assistants' = plural), so should be 'were'.",_part:2},
+{stem:"The city has invested [A: considerable] resources [B: in] improving public transport, which has resulted [C: in] a significant [D: reduce] in traffic congestion.",options:["considerable","in","in","reduce","No error"],answer:3,explanation:"'Reduce' is a verb; the noun form 'reduction' is needed here.",_part:2},
 {stem:"[A: Despite of] the severe weather warnings, thousands of commuters [B: attempted] to travel [C: to] work [D: as usual].",options:["Despite of","attempted","to","as usual","No error"],answer:0,explanation:"'Despite of' is incorrect. Either 'Despite' (no 'of') or 'In spite of'.",_part:2},
-{stem:"The professor's lecture was [A: so] informative [B: that] many students felt they had learned more [C: in] one hour than [D: in] an entire semester.",options:["so","that","in","in","No error"],answer:4,explanation:"The sentence is grammatically correct throughout. 'So...that' construction is proper; both 'in' usages are correct.",_part:2},
-{stem:"Each of the candidates [A: were] required to submit [B: their] application [C: prior to] the [D: deadline].",options:["were","their","prior to","deadline","No error"],answer:0,explanation:"'Each' is singular — requires 'was', not 'were'. ('Their' is acceptable as singular they in modern usage.)",_part:2},
-{stem:"The new regulation [A: effects] all businesses [B: operating] within the city limits and [C: requires] them to comply [D: with] updated safety standards.",options:["effects","operating","requires","with","No error"],answer:0,explanation:"'Effects' (noun/verb meaning 'brings about') should be 'affects' (verb meaning 'influences/impacts').",_part:2}
+{stem:"The professor's lecture was [A: so] informative [B: that] many students felt they had learned more [C: in] one hour than [D: in] an entire semester.",options:["so","that","in","in","No error"],answer:4,explanation:"The sentence is grammatically correct throughout. No error.",_part:2},
+{stem:"Each of the candidates [A: were] required to submit [B: their] application [C: prior to] the [D: deadline].",options:["were","their","prior to","deadline","No error"],answer:0,explanation:"'Each' is singular — requires 'was', not 'were'.",_part:2},
+{stem:"The new regulation [A: effects] all businesses [B: operating] within the city limits and [C: requires] them to comply [D: with] updated safety standards.",options:["effects","operating","requires","with","No error"],answer:0,explanation:"'Effects' should be 'affects' (verb meaning 'influences/impacts').",_part:2}
 ],
 3:[
-{stem:"The committee has not yet decided ______ for the annual conference.",options:["where will the venue be","where the venue will be","where will be the venue","the venue will be where","where be the venue will"],answer:1,explanation:"Indirect question after 'decided' needs statement word order: 'where + subject + verb'.",_part:3},
+{stem:"The committee has not yet decided ______ for the annual conference.",options:["where will the venue be","where the venue will be","where will be the venue","the venue will be where","where be the venue will"],answer:1,explanation:"Indirect question needs statement word order: 'where + subject + verb'.",_part:3},
 {stem:"Not until the final results were announced ______ the true extent of the problem.",options:["the public realised","did the public realise","the public did realise","realised the public","the public has realised"],answer:1,explanation:"'Not until...' at start requires inversion: auxiliary 'did' before subject.",_part:3},
 {stem:"The director demanded that the report ______ before the end of the week.",options:["is completed","will be completed","be completed","would be completed","has been completed"],answer:2,explanation:"Subjunctive after 'demanded that': base form 'be completed'.",_part:3},
-{stem:"______ the weather conditions, the outdoor event will proceed as planned.",options:["However severe","No matter how severe are","Regardless how severe","Despite how severe are","However severely are"],answer:0,explanation:"'However + adjective' = correct concessive structure. No inversion needed in subordinate clause.",_part:3},
-{stem:"The candidate ______ experience best matches our requirements will be offered the position.",options:["who","whom","which","whose","of whom the"],answer:3,explanation:"'Whose' = possessive relative pronoun modifying 'experience'. 'Whose experience best matches...'",_part:3},
-{stem:"Had the company invested in new technology earlier, it ______ a larger market share today.",options:["would have","would have had","will have","would be having","might have"],answer:3,explanation:"Mixed conditional: past counterfactual condition ('Had...invested') + present result ('would be having...today').",_part:3},
-{stem:"The research suggests that children who read regularly perform better academically than ______.",options:["those who do not","children who are not","them who do not read","those who are not doing so","ones not reading"],answer:0,explanation:"Comparison requires parallel structure: 'children who read' vs 'those who do not' — clean parallel with pronoun substitution.",_part:3},
+{stem:"______ the weather conditions, the outdoor event will proceed as planned.",options:["However severe","No matter how severe are","Regardless how severe","Despite how severe are","However severely are"],answer:0,explanation:"'However + adjective' = correct concessive structure.",_part:3},
+{stem:"The candidate ______ experience best matches our requirements will be offered the position.",options:["who","whom","which","whose","of whom the"],answer:3,explanation:"'Whose' = possessive relative pronoun modifying 'experience'.",_part:3},
+{stem:"Had the company invested in new technology earlier, it ______ a larger market share today.",options:["would have","would have had","will have","would be having","might have"],answer:3,explanation:"Mixed conditional: past counterfactual + present result ('would be having...today').",_part:3},
+{stem:"The research suggests that children who read regularly perform better academically than ______.",options:["those who do not","children who are not","them who do not read","those who are not doing so","ones not reading"],answer:0,explanation:"Comparison requires parallel structure: 'those who do not' — clean parallel.",_part:3},
 {stem:"So complex was the legal dispute ______ even experienced lawyers found it difficult to advise their clients.",options:["that","which","as","so that","than"],answer:0,explanation:"'So + adjective + inversion + that...' is the correct correlative structure.",_part:3},
-{stem:"The manager proposed ______ the meeting until all board members could attend.",options:["to postpone","postponing","that postponing","to be postponed","postpone"],answer:1,explanation:"'Propose' + gerund (postponing) OR 'propose that X be postponed'. Among options, B (gerund) is correct.",_part:3},
-{stem:"______ impressive his qualifications may appear, the candidate must still demonstrate practical competence.",options:["However","Whatever","No matter","Whichever","Despite"],answer:0,explanation:"'However + adjective + subject + verb' = correct concessive adverbial clause structure.",_part:3}
+{stem:"The manager proposed ______ the meeting until all board members could attend.",options:["to postpone","postponing","that postponing","to be postponed","postpone"],answer:1,explanation:"'Propose' + gerund (postponing) is correct.",_part:3},
+{stem:"______ impressive his qualifications may appear, the candidate must still demonstrate practical competence.",options:["However","Whatever","No matter","Whichever","Despite"],answer:0,explanation:"'However + adjective + subject + verb' = correct concessive adverbial clause.",_part:3}
 ],
 4:[
-{stem:"Which of the following is the best revision of sentence (3) from Passage A, reproduced below?\n\n(3) Having conducted extensive research into the benefits of urban greenery the council believes the investment will yield significant returns.",options:["Having conducted extensive research into the benefits of urban greenery, the council believes the investment will yield significant returns.","The council, having conducted extensive research into the benefits of urban greenery believes the investment will yield significant returns.","Extensive research into urban greenery having been conducted, significant returns are believed.","The council believes, having conducted extensive research, the investment into urban greenery will yield significant returns."],answer:0,explanation:"The original is missing a comma after the participial phrase. A adds the comma correctly while maintaining clarity.",passage:true,_part:4},
-{stem:"Which of the following best combines sentences (4) and (5) from Passage A?\n\n(4) Studies show that access to green spaces reduces stress and promotes physical activity. (5) Property values near parks tend to increase by up to 20 percent.",options:["Studies show that access to green spaces reduces stress, promotes physical activity and property values near parks tend to increase by up to 20 percent.","In addition to reducing stress and promoting physical activity, access to green spaces has been shown to increase nearby property values by up to 20 percent.","Studies show access to green spaces reduces stress and promotes physical activity, property values near parks also increase.","Green spaces reduce stress, promote physical activity, and property values increase."],answer:1,explanation:"B elegantly combines both ideas with parallel structure and clear logical connection. A is a run-on; C is a comma splice; D has faulty parallelism.",passage:true,_part:4},
-{stem:"Which version of sentence (8) from Passage A provides the best link between sentences (7) and (9)?\n\n(7) They worry that reduced parking will drive customers to suburban shopping centres. (8) The council has promised to address these concerns. (9) A new multi-storey car park will be built on the edge of the downtown area.",options:["The council has promised to address these concerns.","To address these concerns, the council has proposed alternative parking solutions.","These concerns, however, have been addressed by the council.","The council made promises about parking."],answer:1,explanation:"B creates the best bridge: it references the concerns (linking to 7) and introduces 'alternative parking solutions' (setting up 9's specific detail).",passage:true,_part:4},
-{stem:"In Passage A, which sentence could best be deleted without affecting the passage's coherence?",options:["Sentence (2)","Sentence (4)","Sentence (6)","Sentence (10)"],answer:3,explanation:"Sentence (10) about shuttle buses is a minor operational detail. Removing it doesn't break the logical flow from car park (9) to the overall argument.",passage:true,_part:4},
-{stem:"Which of the following is the best revision of sentence (7) from Passage B, reproduced below?\n\n(7) Misunderstandings that would be quickly resolved in person may escalate when conducted through email or messaging.",options:["Misunderstandings that would be quickly resolved in person may escalate when communication is conducted through email or messaging.","Misunderstandings, quickly resolved in person, may escalate when conducted through email or messaging.","When conducted through email, misunderstandings that would be quickly resolved in person may escalate through messaging.","Sentence (7) as it is now. No change needed."],answer:0,explanation:"The original has a dangling modifier — 'conducted' should refer to 'communication', not 'misunderstandings'. A fixes this by adding 'communication is conducted'.",passage:true,_part:4},
-{stem:"Which of the following is the best revision of sentence (8) from Passage B, reproduced below?\n\n(8) For this reason many organisations have adopted hybrid models.",options:["For this reason, many organisations have adopted hybrid models.","Many organisations, for this reason, have adopted hybrid models.","Hybrid models have been adopted by many organisations for this reason.","Sentence (8) as it is now. No change needed."],answer:0,explanation:"A comma is needed after the introductory phrase 'For this reason'. A is the simplest correct fix.",passage:true,_part:4},
-{stem:"Which of the following best combines sentences (2) and (3) from Passage B?\n\n(2) Many employees report higher job satisfaction when working from home. (3) Employers benefit from reduced overhead costs.",options:["Many employees report higher job satisfaction when working from home, employers benefit from reduced overhead costs.","While employees report higher job satisfaction, employers benefit from reduced overhead costs.","Employees report higher job satisfaction and employers benefit from reduced overhead costs when working from home.","The benefits are twofold: employees report higher job satisfaction, while employers enjoy reduced overhead costs."],answer:3,explanation:"D clearly signals the dual-benefit structure and uses a colon + parallel clauses. A is a comma splice; C misplaces 'when working from home'; B implies contrast where none exists.",passage:true,_part:4},
-{stem:"In the context of Passage B, which of the following would be the most effective opening sentence to replace sentence (1)?\n\n(1) Remote working has become increasingly common since the pandemic.",options:["The pandemic has changed everything about how we work.","The shift toward remote working, accelerated by the pandemic, represents one of the most significant changes to modern employment practices.","Remote working is good.","Since the pandemic many people work from home now."],answer:1,explanation:"B provides a more sophisticated, detailed opening that sets up the passage's discussion of both benefits and challenges. A is too vague; C too simplistic; D is informal and adds little.",passage:true,_part:4},
-{stem:"Which sentence in Passage B most effectively transitions from discussing advantages to discussing challenges?",options:["Sentence (3)","Sentence (4)","Sentence (5)","Sentence (7)"],answer:1,explanation:"Sentence (4) 'Despite these advantages, remote working is not without its challenges' is the explicit pivot point.",passage:true,_part:4},
-{stem:"Which of the following is the best revision of sentence (9) from Passage B to improve its connection to sentence (10)?\n\n(9) Employees typically spend two or three days in the office and the remainder at home. (10) This approach attempts to balance flexibility with the benefits of face-to-face collaboration.",options:["Employees typically spend two or three days in the office and the remainder at home, an arrangement that attempts to balance flexibility with the benefits of face-to-face collaboration.","Employees spend days in the office and days at home to balance things.","Employees typically spending two or three days in the office and the remainder at home.","Sentence (9) as it is now. No change needed."],answer:0,explanation:"A smoothly integrates both sentences with an appositive phrase, eliminating the abrupt 'This approach' reference. B is too vague; C is a fragment; D leaves the slightly disconnected original.",passage:true,_part:4}
+{stem:"Which is the best revision of sentence (3) from Passage A?\n\n(3) Having conducted extensive research into the benefits of urban greenery the council believes the investment will yield significant returns.",options:["Having conducted extensive research into the benefits of urban greenery, the council believes the investment will yield significant returns.","The council, having conducted extensive research into the benefits of urban greenery believes the investment will yield significant returns.","Extensive research into urban greenery having been conducted, significant returns are believed.","The council believes, having conducted extensive research, the investment into urban greenery will yield significant returns."],answer:0,explanation:"Missing comma after participial phrase. A adds the comma correctly.",_part:4},
+{stem:"Which best combines sentences (4) and (5) from Passage A?\n\n(4) Studies show that access to green spaces reduces stress and promotes physical activity. (5) Property values near parks tend to increase by up to 20 percent.",options:["Studies show that access to green spaces reduces stress, promotes physical activity and property values near parks tend to increase.","In addition to reducing stress and promoting physical activity, access to green spaces has been shown to increase nearby property values by up to 20 percent.","Studies show access to green spaces reduces stress and promotes physical activity, property values near parks also increase.","Green spaces reduce stress, promote physical activity, and property values increase."],answer:1,explanation:"B elegantly combines both ideas with parallel structure. A is a run-on; C is a comma splice; D has faulty parallelism.",_part:4},
+{stem:"Which version of sentence (8) from Passage A provides the best link between (7) and (9)?\n\n(7) They worry that reduced parking will drive customers to suburban shopping centres. (9) A new multi-storey car park will be built.",options:["The council has promised to address these concerns.","To address these concerns, the council has proposed alternative parking solutions.","These concerns, however, have been addressed by the council.","The council made promises about parking."],answer:1,explanation:"B references concerns (linking to 7) and introduces 'alternative parking solutions' (setting up 9).",_part:4},
+{stem:"In Passage A, which sentence could best be deleted without affecting coherence?",options:["Sentence (2)","Sentence (4)","Sentence (6)","Sentence (10)"],answer:3,explanation:"Sentence (10) about shuttle buses is a minor operational detail.",_part:4},
+{stem:"Which is the best revision of sentence (7) from Passage B?\n\n(7) Misunderstandings that would be quickly resolved in person may escalate when conducted through email or messaging.",options:["Misunderstandings that would be quickly resolved in person may escalate when communication is conducted through email or messaging.","Misunderstandings, quickly resolved in person, may escalate when conducted through email or messaging.","When conducted through email, misunderstandings that would be quickly resolved in person may escalate through messaging.","No change needed."],answer:0,explanation:"'Conducted' should refer to 'communication', not 'misunderstandings'. A fixes the dangling modifier.",_part:4},
+{stem:"Which is the best revision of sentence (8) from Passage B?\n\n(8) For this reason many organisations have adopted hybrid models.",options:["For this reason, many organisations have adopted hybrid models.","Many organisations, for this reason, have adopted hybrid models.","Hybrid models have been adopted by many organisations for this reason.","No change needed."],answer:0,explanation:"A comma is needed after the introductory phrase 'For this reason'.",_part:4},
+{stem:"Which best combines sentences (2) and (3) from Passage B?\n\n(2) Many employees report higher job satisfaction when working from home. (3) Employers benefit from reduced overhead costs.",options:["Many employees report higher job satisfaction, employers benefit from reduced overhead costs.","While employees report higher job satisfaction, employers benefit from reduced overhead costs.","Employees report higher job satisfaction and employers benefit from reduced overhead costs when working from home.","The benefits are twofold: employees report higher job satisfaction, while employers enjoy reduced overhead costs."],answer:3,explanation:"D clearly signals dual-benefit structure. A is comma splice; C misplaces modifier; B implies contrast.",_part:4},
+{stem:"Which would be the most effective replacement for sentence (1) in Passage B?\n\n(1) Remote working has become increasingly common since the pandemic.",options:["The pandemic has changed everything about how we work.","The shift toward remote working, accelerated by the pandemic, represents one of the most significant changes to modern employment practices.","Remote working is good.","Since the pandemic many people work from home now."],answer:1,explanation:"B provides a sophisticated opening setting up both benefits and challenges discussion.",_part:4},
+{stem:"Which sentence in Passage B most effectively transitions from advantages to challenges?",options:["Sentence (3)","Sentence (4)","Sentence (5)","Sentence (7)"],answer:1,explanation:"Sentence (4) 'Despite these advantages...' is the explicit pivot point.",_part:4},
+{stem:"Which is the best revision of sentence (9) from Passage B to improve its connection to (10)?\n\n(9) Employees typically spend two or three days in the office and the remainder at home. (10) This approach attempts to balance flexibility with face-to-face collaboration.",options:["Employees typically spend two or three days in the office and the remainder at home, an arrangement that attempts to balance flexibility with the benefits of face-to-face collaboration.","Employees spend days in the office and days at home to balance things.","Employees typically spending two or three days in the office and the remainder at home.","No change needed."],answer:0,explanation:"A smoothly integrates both sentences with an appositive, eliminating the abrupt 'This approach'.",_part:4}
 ]
 };
 
 // ===== PROMPTS =====
 const PROMPTS={
-1:`【CRE Use of English — Part 1: Comprehension 出題Prompt】\n\n你是CRE Use of English考試的出卷員。現在要出Part 1 Comprehension的題目。\n\n===== 結構 =====\n- 生成一篇300-500字英文散文（非專業背景，議論或說明體裁）\n- 配10道MC（4選1，A-D）\n- 難度：Flesch-Kincaid Grade 10-12\n\n===== 能力覆蓋（10題分配） =====\n- 主旨歸納(gist)：1-2題\n- 細節辨識(detail)：2-3題\n- 推論判斷(inference)：2-3題\n- 事實vs意見(fact/opinion)：1題\n- 詞語/比喻理解(vocabulary/figurative)：1-2題\n- 作者態度/語氣(tone/attitude)：1題\n\n===== 難度標準 =====\n- 文章用詞：中高級（如hitherto, unprecedented, ostensibly）\n- 選項差異：paraphrase式，非直接引用原文\n- 至少2題需跨段整合資訊\n- 干擾項須利用原文字眼製造似是而非\n\n===== 陷阱設計 =====\n- 過度推論：文中無明確支持\n- 程度偷換：may→definitely\n- 局部擴大：某段≠全文\n- 原文回收：exact words不同語境\n- 因果倒置\n\n===== 取材 =====\n公共政策、社會現象、教育、科技影響、文化比較\n不涉及：政治爭議、專業術語密集領域\n\n⚠️ 輸出JSON格式：\n{\n  "part": 1,\n  "passage": "文章全文（300-500字英文散文）",\n  "questions": [\n    {"stem":"題目","options":["A","B","C","D"],"answer":0,"explanation":"解釋","passage":true}\n  ]\n}\nanswer: 0=A, 1=B, 2=C, 3=D。所有10題設passage:true。請直接輸出JSON。`,
-2:`【CRE Use of English — Part 2: Error Identification 出題Prompt】\n\n你是CRE Use of English考試的出卷員。現在要出Part 2 Error Identification的題目。\n\n===== 結構 =====\n- 10句獨立句子\n- 每句4處劃線(A-D) + E "No error"，5選1\n- 每10題中1-2題答案為E\n\n===== 錯誤類型覆蓋 =====\n介詞搭配(2-3)、主謂一致(1-2)、時態語態(1-2)、詞性詞形(1-2)、平行結構(1)、冠詞(1)、慣用語(1)\n\n===== 題幹格式 =====\n用 [A: 詞組], [B: 詞組], [C: 詞組], [D: 詞組] 標記劃線位置\n\n===== Reference例題 =====\n"Irrespective [A: for] the outcome... [D: hitherto]..." → Answer: A (should be "of")\n\n⚠️ 輸出JSON格式：\n{\n  "part": 2,\n  "questions": [\n    {"stem":"句子（含[A:...],[B:...],[C:...],[D:...]標記）","options":["A部分","B部分","C部分","D部分","No error"],"answer":0,"explanation":"解釋"}\n  ]\n}\nanswer: 0=A, 1=B, 2=C, 3=D, 4=E(No error)。請直接輸出JSON。`,
-3:`【CRE Use of English — Part 3: Sentence Completion 出題Prompt】\n\n你是CRE Use of English考試的出卷員。現在要出Part 3 Sentence Completion的題目。\n\n===== 結構 =====\n- 10句含空格(______)，5選1(A-E)\n- Focus: grammatical use\n\n===== 語法覆蓋 =====\n名詞子句語序(2-3)、關係子句(1-2)、條件句/假設(1-2)、比較結構(1)、平行結構(1)、倒裝(1)、分詞(1)\n\n===== Reference例題 =====\n"This company claims to predict ______ by conducting exit polls."\nAnswer: "what the results of an election will be" (noun clause, statement order)\n\n⚠️ 輸出JSON格式：\n{\n  "part": 3,\n  "questions": [\n    {"stem":"句子含______","options":["A","B","C","D","E"],"answer":0,"explanation":"語法分析"}\n  ]\n}\nanswer: 0=A, 1=B, 2=C, 3=D, 4=E。請直接輸出JSON。`,
-4:`【CRE Use of English — Part 4: Paragraph Improvement 出題Prompt】\n\n你是CRE Use of English考試的出卷員。現在要出Part 4 Paragraph Improvement的題目。\n\n===== 結構 =====\n- 2篇draft passages（各150-250字，句子有編號）\n- 每篇配5題，共10題，4選1(A-D)\n- Focus: writing skills, NOT comprehension\n\n===== 題型 =====\nBest revision(3-4)、Best link(2-3)、Best combination(1-2)、Opening/concluding(1-2)、Delete/reposition(1)\n\n===== 陷阱 =====\nComma splice、主語偷換、過度改寫、表面流暢但邏輯不銜接\n\n⚠️ 輸出JSON格式：\n{\n  "part": 4,\n  "passage": "Passage A全文\\n\\n---\\n\\nPassage B全文",\n  "questions": [\n    {"stem":"題目（含reproduced原句）","options":["A","B","C","D"],"answer":0,"explanation":"分析","passage":true}\n  ]\n}\nanswer: 0=A, 1=B, 2=C, 3=D。請直接輸出JSON。`,
-full:`【CRE Use of English — Full Paper 出題Prompt】\n\n你是CRE Use of English考試的出卷員。現在要出一份完整試卷（共40題）。\n\n===== 整體結構 =====\nPart 1 — Comprehension（10題）：一篇300-500字英文散文 + 10道4選1\nPart 2 — Error Identification（10題）：10句，4處劃線+E，5選1\nPart 3 — Sentence Completion（10題）：10句含空格，5選1\nPart 4 — Paragraph Improvement（10題）：2篇draft×5題，4選1\n\n===== 各Part要點 =====\nP1: Flesch-Kincaid G10-12, paraphrase選項, inference/gist/detail/tone\nP2: 介詞/一致/時態/詞形/平行, 1-2題E(No error), [A:...][B:]格式\nP3: noun clause order/relative/conditional/inversion, 5選項結構極似\nP4: revision/link/combine, comma splice陷阱, 至少1題D=No change\n\n⚠️ 輸出格式：\n{\n  "fullPaper": true,\n  "passage": "Part1閱讀文章",\n  "passage4": "Part4兩篇draft(用---分隔)",\n  "parts": {\n    "1": [{...}×10, passage:true],\n    "2": [{...options有5個}×10],\n    "3": [{...options有5個}×10],\n    "4": [{...}×10, passage:true]\n  }\n}\nanswer: 0=A,1=B,2=C,3=D,4=E。請直接輸出JSON。`
+1:`【CRE Use of English — Part 1: Comprehension 出題Prompt】\n\n你是CRE Use of English考試的出卷員。現在要出Part 1 Comprehension的題目。\n\n===== 結構 =====\n- 生成一篇300-500字英文散文（非專業背景，議論或說明體裁）\n- 配10道MC（4選1，A-D）\n- 難度：Flesch-Kincaid Grade 10-12\n\n===== 能力覆蓋（10題分配） =====\n- 主旨歸納(gist)：1-2題\n- 細節辨識(detail)：2-3題\n- 推論判斷(inference)：2-3題\n- 事實vs意見(fact/opinion)：1題\n- 詞語/比喻理解(vocabulary/figurative)：1-2題\n- 作者態度/語氣(tone/attitude)：1題\n\n===== 難度標準 =====\n- 文章用詞：中高級（如hitherto, unprecedented, ostensibly）\n- 選項差異：paraphrase式，非直接引用原文\n- 至少2題需跨段整合資訊\n- 干擾項須利用原文字眼製造似是而非\n\n⚠️ 輸出JSON格式：\n{\n  "part": 1,\n  "passage": "文章全文",\n  "questions": [\n    {"stem":"題目","options":["A","B","C","D"],"answer":0,"explanation":"解釋"}\n  ]\n}\nanswer: 0=A, 1=B, 2=C, 3=D。請直接輸出JSON。`,
+2:`【CRE Use of English — Part 2: Error Identification 出題Prompt】\n\n你是CRE Use of English考試的出卷員。現在要出Part 2 Error Identification的題目。\n\n===== 結構 =====\n- 10句獨立句子\n- 每句4處劃線(A-D) + E "No error"，5選1\n- 每10題中1-2題答案為E\n\n===== 題幹格式 =====\n用 [A: 詞組], [B: 詞組], [C: 詞組], [D: 詞組] 標記劃線位置\n\n⚠️ 輸出JSON格式：\n{\n  "part": 2,\n  "questions": [\n    {"stem":"句子","options":["A部分","B部分","C部分","D部分","No error"],"answer":0,"explanation":"解釋"}\n  ]\n}\nanswer: 0=A, 1=B, 2=C, 3=D, 4=E(No error)。請直接輸出JSON。`,
+3:`【CRE Use of English — Part 3: Sentence Completion 出題Prompt】\n\n你是CRE Use of English考試的出卷員。現在要出Part 3 Sentence Completion的題目。\n\n===== 結構 =====\n- 10句含空格(______)，5選1(A-E)\n- Focus: grammatical use\n\n===== 語法覆蓋 =====\n名詞子句語序(2-3)、關係子句(1-2)、條件句/假設(1-2)、比較結構(1)、平行結構(1)、倒裝(1)、分詞(1)\n\n⚠️ 輸出JSON格式：\n{\n  "part": 3,\n  "questions": [\n    {"stem":"句子含______","options":["A","B","C","D","E"],"answer":0,"explanation":"語法分析"}\n  ]\n}\nanswer: 0=A, 1=B, 2=C, 3=D, 4=E。請直接輸出JSON。`,
+4:`【CRE Use of English — Part 4: Paragraph Improvement 出題Prompt】\n\n你是CRE Use of English考試的出卷員。現在要出Part 4 Paragraph Improvement的題目。\n\n===== 結構 =====\n- 2篇draft passages（各150-250字，句子有編號）\n- 每篇配5題，共10題，4選1(A-D)\n- Focus: writing skills, NOT comprehension\n\n⚠️ 輸出JSON格式：\n{\n  "part": 4,\n  "passage": "Passage A全文\\n\\n---\\n\\nPassage B全文",\n  "questions": [\n    {"stem":"題目","options":["A","B","C","D"],"answer":0,"explanation":"分析"}\n  ]\n}\nanswer: 0=A, 1=B, 2=C, 3=D。請直接輸出JSON。`,
+full:`【CRE Use of English — Full Paper 出題Prompt】\n\n你是CRE Use of English考試的出卷員。現在要出一份完整試卷（共40題）。\n\nPart 1 — Comprehension（10題）：一篇300-500字英文散文 + 10道4選1\nPart 2 — Error Identification（10題）：10句，4處劃線+E，5選1\nPart 3 — Sentence Completion（10題）：10句含空格，5選1\nPart 4 — Paragraph Improvement（10題）：2篇draft×5題，4選1\n\n⚠️ 輸出格式：\n{\n  "fullPaper": true,\n  "passage": "Part1閱讀文章",\n  "passage4": "Part4兩篇draft(用---分隔)",\n  "parts": {\n    "1": [{...}×10],\n    "2": [{...options有5個}×10],\n    "3": [{...options有5個}×10],\n    "4": [{...}×10]\n  }\n}\nanswer: 0=A,1=B,2=C,3=D,4=E。請直接輸出JSON。`
 };
 
 // ===== STATE =====
-let currentQuestions=JSON.parse(JSON.stringify(BUILTIN_QUESTIONS));
-let currentPassage1=PASSAGE_P1;
-let currentPassage4=PASSAGE_P4;
-let importedSets={1:0,2:0,3:0,4:0,full:0};
-let wrongBank={1:[],2:[],3:[],4:[]};
-let quizHistory=[];
-let paperCount=0;
+let CQ=JSON.parse(JSON.stringify(BUILTIN_QUESTIONS));
+let PSG1=PASSAGE_P1;
+let PSG4=PASSAGE_P4;
+let IMP={1:0,2:0,3:0,4:0,full:0};
+let WB={1:[],2:[],3:[],4:[]};
+let UB={1:[],2:[],3:[],4:[]};
+let HIST=[];
+let PC=0;
+let PSG_HIST=[{text:PASSAGE_P1,importedAt:'Built-in',label:'P1 Built-in'},{text:PASSAGE_P4,importedAt:'Built-in',label:'P4 Built-in'}];
 
 let S={
-page:'home',tab:'quiz',
-currentPart:null,currentQ:0,answers:{},
-timerSec:0,timerOn:false,_timerID:null,
-passageOpen:true,quizMode:'normal',quizQs:null,
-_bankUpdate:null,viewingRecord:null,isFullPaper:false
+page:'home',tab:'quiz',wbSub:'wrong',
+part:null,qi:0,ans:{},flags:{},
+tSec:0,tOn:false,_tID:null,
+psgOpen:true,mode:'normal',qs:null,
+isFP:false,mapOpen:false,_bu:null,viewRec:null,
+_curPsg1:PASSAGE_P1,_curPsg4:PASSAGE_P4
 };
 
-// ===== UTIL =====
-function qKey(q){return(q.stem||'').substring(0,60)+'##'+(q.options?q.options[0]:'');}
-function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function toast(m){const e=document.getElementById('toast');e.textContent=m;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2400);}
-function today(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
-function uid(){return Date.now().toString(36)+Math.random().toString(36).substr(2,5);}
-function byteSize(o){return new Blob([JSON.stringify(o)]).size;}
-function fmtB(b){return b<1024?b+'B':(b/1024).toFixed(1)+'KB';}
-function optLabel(i){return OPT_LABELS[i]||String(i);}
-
 // ===== TIMER =====
-function timerStart(){
-if(S._timerID)clearInterval(S._timerID);
-S.timerOn=true;
-S._timerID=setInterval(()=>{S.timerSec++;const el=document.getElementById('timerDisp');if(el)el.textContent=fmt(S.timerSec);},1000);
-render();
-}
-function timerPause(){S.timerOn=false;if(S._timerID){clearInterval(S._timerID);S._timerID=null;}render();}
-function timerReset(){S.timerOn=false;if(S._timerID){clearInterval(S._timerID);S._timerID=null;}S.timerSec=0;render();}
+function tStart(){if(S._tID)clearInterval(S._tID);S.tOn=true;S._tID=setInterval(()=>{S.tSec++;const e=document.getElementById('tmr');if(e)e.textContent=fmt(S.tSec)},1000)}
+function tPause(){S.tOn=false;if(S._tID){clearInterval(S._tID);S._tID=null}}
+function tReset(){tPause();S.tSec=0;render()}
+function tStop(){tPause()}
 
 // ===== RENDER =====
 function render(){
 const app=document.getElementById('app');
-switch(S.page){
-case'home':renderHome(app);break;
-case'quiz':renderQuiz(app);break;
-case'result':renderResult(app);break;
-case'detail':renderDetail(app);break;
-}
+if(S.page==='quiz')renderQuiz(app);
+else if(S.page==='result')renderResult(app);
+else if(S.page==='detail')renderDetail(app);
+else renderHome(app);
 }
 
+// ===== HOME =====
 function renderHome(app){
-let h=`<div class="header"><h1>CRE Use of English — Practice System</h1><div class="ver">v1.0</div></div><div class="container">`;
-h+=`<div class="tab-bar">
-<button class="tab-btn ${S.tab==='quiz'?'active':''}" onclick="setTab('quiz')">Practice</button>
-<button class="tab-btn ${S.tab==='wrong'?'active':''}" onclick="setTab('wrong')">Wrong</button>
-<button class="tab-btn ${S.tab==='history'?'active':''}" onclick="setTab('history')">History</button>
-<button class="tab-btn ${S.tab==='import'?'active':''}" onclick="setTab('import')">Import</button>
-<button class="tab-btn ${S.tab==='prompts'?'active':''}" onclick="setTab('prompts')">Prompt</button>
-<button class="tab-btn ${S.tab==='save'?'active':''}" onclick="setTab('save')">Save</button>
-</div>`;
-switch(S.tab){
-case'quiz':h+=renderTabQuiz();break;
-case'wrong':h+=renderTabWrong();break;
-case'history':h+=renderTabHistory();break;
-case'import':h+=renderTabImport();break;
-case'prompts':h+=renderTabPrompts();break;
-case'save':h+=renderTabSave();break;
-}
+const tabs=['quiz','wrong','history','import','prompts','save'];
+const tNames=['Practice','Bank','History','Import','Prompt','Save'];
+let h=`<div class="header"><h1>CRE Use of English — Practice System</h1><div class="ver">v1.1</div></div><div class="container">`;
+h+=`<div class="tab-bar">${tabs.map((t,i)=>`<button class="tab-btn ${S.tab===t?'active':''}" onclick="S.tab='${t}';render()">${tNames[i]}</button>`).join('')}</div>`;
+if(S.tab==='quiz')h+=tabQuiz();
+else if(S.tab==='wrong')h+=tabWrong();
+else if(S.tab==='history')h+=tabHist();
+else if(S.tab==='import')h+=tabImport();
+else if(S.tab==='prompts')h+=tabPrompts();
+else h+=tabSave();
 h+=`</div>`;app.innerHTML=h;
 }
 
-function renderTabQuiz(){
-let h='';
-const tw=Object.values(wrongBank).reduce((s,a)=>s+a.length,0);
-const totalQ=Object.values(currentQuestions).reduce((s,a)=>s+a.length,0);
-h+=`<div class="stat-row"><div class="stat-card"><div class="stat-num">${quizHistory.length}</div><div class="stat-lbl">Completed</div></div><div class="stat-card"><div class="stat-num">${tw}</div><div class="stat-lbl">Wrong Bank</div></div><div class="stat-card"><div class="stat-num">${totalQ}</div><div class="stat-lbl">Questions</div></div></div>`;
-const fpReady=Object.values(currentQuestions).every(a=>a.length>0);
+function tabQuiz(){
+const tw=Object.values(WB).reduce((a,b)=>a+b.length,0);
+const tu=Object.values(UB).reduce((a,b)=>a+b.length,0);
+const tq=Object.values(CQ).reduce((a,b)=>a+b.length,0);
+let h=`<div class="stat-row"><div class="stat-card"><div class="stat-num">${HIST.length}</div><div class="stat-lbl">Completed</div></div><div class="stat-card"><div class="stat-num red">${tw}</div><div class="stat-lbl">❌ Wrong</div></div><div class="stat-card"><div class="stat-num amber">${tu}</div><div class="stat-lbl">⚠️ Uncertain</div></div><div class="stat-card"><div class="stat-num">${tq}</div><div class="stat-lbl">Questions</div></div></div>`;
 h+=`<div class="section-title">📄 Full Paper Mode</div>`;
-h+=`<div class="part-card full-paper" onclick="${fpReady?'startFullPaper()':'toast(\\\'Need all 4 Parts to have questions\\\')'}"><h3>📄 Full Paper (${FULL_PAPER_COUNT} Questions)</h3><p>Part 1→2→3→4 sequential · Exam simulation</p>${importedSets.full>0?`<span class="badge badge-purple">Set #${importedSets.full}</span>`:`<span class="badge badge-blue">Built-in</span>`}<span class="arrow">›</span></div>`;
+h+=`<div class="part-card full-paper" onclick="startFP()"><h3>📄 Full Paper (40 Questions)</h3><p>Part 1→2→3→4 sequential · Exam simulation</p><span class="arrow">›</span></div>`;
 h+=`<div class="section-title">📝 Individual Parts</div>`;
 PARTS_META.forEach(p=>{
-const qc=currentQuestions[p.id]?currentQuestions[p.id].length:0;
-const wc=wrongBank[p.id]?wrongBank[p.id].length:0;
-const src=importedSets[p.id]>0?`<span class="badge badge-amber">Import #${importedSets[p.id]}</span>`:`<span class="badge badge-blue">Built-in</span>`;
-const wb=wc>0?`<span class="badge badge-red">Wrong: ${wc}</span>`:'';
-h+=`<div class="part-card" onclick="startQuiz(${p.id},'normal')"><h3>${p.icon} ${p.name}</h3><p>${p.desc} · ${qc} Qs</p>${src}${wb}<span class="arrow">›</span></div>`;
+const n=CQ[p.id]?CQ[p.id].length:0;
+h+=`<div class="part-card" onclick="startP(${p.id})"><h3>${p.icon} ${p.name}</h3><p>${p.desc} · ${n} Qs</p><span class="arrow">›</span></div>`;
 });
 return h;
 }
 
-function renderTabWrong(){
-let h=`<div class="section-title">Wrong Bank</div>`;
-const total=Object.values(wrongBank).reduce((s,a)=>s+a.length,0);
-if(!total)return h+`<div class="empty-state"><div class="ei">🎉</div><p>No wrong questions yet!</p></div>`;
-h+=`<button class="btn btn-danger mb-8" onclick="startQuiz(0,'shuffle')" ${total<2?'disabled':''}>🔀 Shuffle All (${total} Qs)</button>`;
+// ===== WRONG/UNCERTAIN BANK =====
+function tabWrong(){
+const tw=Object.values(WB).reduce((a,b)=>a+b.length,0);
+const tu=Object.values(UB).reduce((a,b)=>a+b.length,0);
+let h=`<div class="sub-tabs"><button class="sub-tab ${S.wbSub==='wrong'?'on err-tab':''}" onclick="S.wbSub='wrong';render()">❌ Wrong (${tw})</button><button class="sub-tab ${S.wbSub==='uncertain'?'on unc-tab':''}" onclick="S.wbSub='uncertain';render()">⚠️ Uncertain (${tu})</button></div>`;
+if(S.wbSub==='wrong')h+=renderBank(WB,'wrong');
+else h+=renderBank(UB,'uncertain');
+return h;
+}
+
+function renderBank(bank,type){
+const total=Object.values(bank).reduce((a,b)=>a+b.length,0);
+if(!total)return`<div class="empty-state"><div class="ei">${type==='wrong'?'🎉':'⚠️'}</div><p>${type==='wrong'?'No wrong questions yet!':'No uncertain questions. Flag with 🚩 during quiz.'}</p></div>`;
+let h=`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"><button class="btn ${type==='wrong'?'btn-danger':'btn-amber'} btn-sm" onclick="startShuffle('${type}')" ${total<1?'disabled':''}>🔀 Shuffle All (${total})</button><button class="btn btn-ghost btn-sm" onclick="showModal('Clear','Clear all? Cannot undo.','Clear',function(){${type==='wrong'?'WB':'UB'}={1:[],2:[],3:[],4:[]};toast('Cleared');render()})">🗑️ Clear</button></div>`;
 PARTS_META.forEach(p=>{
-const items=wrongBank[p.id]||[];if(!items.length)return;
-h+=`<div style="display:flex;justify-content:space-between;align-items:center;margin:16px 0 8px"><div class="section-title" style="margin:0">${p.name} (${items.length})</div><button class="btn-sm btn-outline" onclick="startQuiz(${p.id},'review')">Redo</button></div>`;
-items.forEach(item=>{h+=`<div class="wb-card"><div class="wb-stem">${esc(item.stem.length>60?item.stem.substring(0,60)+'…':item.stem)}</div><div class="wb-answer">Correct: ${optLabel(item.answer)}. ${esc((item.options[item.answer]||'').substring(0,50))}</div><div class="wb-meta">${item.dateAdded||'—'} · Wrong ×${item.reviewCount||1}</div></div>`;});
+const items=bank[p.id]||[];if(!items.length)return;
+h+=`<div class="section-title">${p.name} (${items.length})<button class="btn btn-sm btn-outline rt" onclick="startReview(${p.id},'${type}')">Redo</button></div>`;
+items.forEach((q,i)=>{h+=bankItem(q,i,p.id,type)});
 });
-h+=`<button class="btn btn-gray mt-20" onclick="showModal('Clear Wrong Bank','Clear all wrong questions? Cannot undo.','Clear',function(){wrongBank={1:[],2:[],3:[],4:[]};toast('Cleared');render();})">🗑️ Clear Wrong Bank</button>`;
 return h;
 }
 
-function renderTabHistory(){
-let h=`<div class="section-title">History (${quizHistory.length})</div>`;
-if(!quizHistory.length)return h+`<div class="empty-state"><div class="ei">📋</div><p>No records yet</p></div>`;
-const fp=quizHistory.filter(r=>r.isFullPaper);
-const pr=quizHistory.filter(r=>!r.isFullPaper&&r.mode==='normal');
-const rv=quizHistory.filter(r=>r.mode!=='normal');
-if(fp.length){h+=`<div class="hi-group-title">📄 FULL PAPERS (${fp.length})</div>`;[...fp].reverse().forEach(r=>{h+=hiCard(r);});}
-if(pr.length){h+=`<div class="hi-group-title">📝 INDIVIDUAL PARTS (${pr.length})</div>`;[...pr].reverse().forEach(r=>{h+=hiCard(r);});}
-if(rv.length){h+=`<div class="hi-group-title">🔄 REVIEW/SHUFFLE (${rv.length})</div>`;[...rv].reverse().forEach(r=>{h+=hiCard(r);});}
-h+=`<button class="btn btn-gray mt-20" onclick="showModal('Clear History','Clear all records?','Clear',function(){quizHistory=[];render();toast('Cleared');})">🗑️ Clear History</button>`;
+function bankItem(q,idx,pid,bank){
+const isW=bank==='wrong';
+const cls=isW?'ri-wrong':'ri-unc';const tagCls=isW?'tag-ng':'tag-unc';const tagTxt=isW?'Wrong':'Uncertain';
+const elId=bank+pid+'_'+idx;
+let h=`<div class="ri ${cls}"><div class="ri-head" onclick="togB('${elId}')"><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(q.stem.length>40?q.stem.substring(0,40)+'…':q.stem)}</span><span style="display:flex;align-items:center;gap:4px;flex-shrink:0"><span class="tag ${tagCls}">${tagTxt}</span><button class="ri-del" onclick="event.stopPropagation();delBank('${bank}',${pid},${idx})" title="Remove">✕</button></span></div>`;
+h+=`<div class="ri-body" id="${elId}">`;
+if(q._passage){
+h+=`<div class="lbl">📄 Source Passage <span class="psg-label">${esc(q._psgLabel||'')}</span></div>`;
+h+=`<div class="psg-in-bank">${esc(q._passage).substring(0,400)}${q._passage.length>400?'…':''}</div>`;
+}
+h+=`<div class="lbl">Question</div><div style="white-space:pre-wrap;margin-bottom:6px">${esc(q.stem)}</div>`;
+h+=`<div class="lbl">Options</div>`;
+(q.options||[]).forEach((o,j)=>{
+let c='opt-line';
+if(j===q.answer)c+=' opt-correct';
+else if(j===q.yourAnswer&&j!==q.answer)c+=' opt-wrong';
+h+=`<div class="${c}">${optLabel(j)}. ${esc(o)}${j===q.answer?' ✓':''}${j===q.yourAnswer&&j!==q.answer?' ← yours':''}</div>`;
+});
+if(q.yourAnswer!==undefined&&q.yourAnswer!==q.answer){
+h+=`<div class="lbl">Your Answer</div><div style="color:var(--red-600);font-weight:600">${optLabel(q.yourAnswer)}</div>`;
+}
+h+=`<div class="lbl">Correct Answer</div><div style="color:var(--green-600);font-weight:600">${optLabel(q.answer)}. ${esc((q.options||[])[q.answer]||'')}</div>`;
+if(q.explanation)h+=`<div class="lbl">Explanation</div><div>${esc(q.explanation)}</div>`;
+h+=`<div class="lbl">Added</div><div style="font-size:11px;color:var(--gray-400)">${q.dateAdded||'—'}</div>`;
+h+=`</div></div>`;
+return h;
+}
+function togB(id){const e=document.getElementById(id);if(e)e.classList.toggle('show')}
+function delBank(bank,pid,idx){
+if(bank==='wrong')WB[pid].splice(idx,1);
+else UB[pid].splice(idx,1);
+toast('Removed');render();
+}
+
+// ===== HISTORY =====
+function tabHist(){
+if(!HIST.length)return`<div class="empty-state"><div class="ei">📋</div><p>No records yet</p></div>`;
+let h=`<div class="info-box info-blue">📌 Each record saves all questions + answers + passage. Tap to review.</div>`;
+const fp=HIST.filter(r=>r.isFP),pr=HIST.filter(r=>!r.isFP&&r.mode==='normal'),rv=HIST.filter(r=>r.mode!=='normal');
+if(fp.length){h+=`<div class="hi-group-title">📄 FULL PAPERS (${fp.length})</div>`;[...fp].reverse().forEach(r=>{h+=hiCard(r)})}
+if(pr.length){h+=`<div class="hi-group-title">📝 INDIVIDUAL PARTS (${pr.length})</div>`;[...pr].reverse().forEach(r=>{h+=hiCard(r)})}
+if(rv.length){h+=`<div class="hi-group-title">🔄 REVIEW/SHUFFLE (${rv.length})</div>`;[...rv].reverse().forEach(r=>{h+=hiCard(r)})}
+h+=`<button class="btn btn-ghost" style="margin-top:16px" onclick="showModal('Clear History','Clear all records? Cannot undo.','Clear',function(){HIST=[];render();toast('Cleared')})">🗑️ Clear History</button>`;
 return h;
 }
 function hiCard(r){
-const pn=r.isFullPaper?`Full Paper #${r.paperNum||'?'}`:r.part===0?'Shuffle Review':(PARTS_META.find(p=>p.id===r.part)?.name||'');
+const pn=r.isFP?'Full Paper':r.part===0?'Shuffle':(PARTS_META.find(p=>p.id===r.part)?.name||'');
 const pct=r.total?Math.round(r.correct/r.total*100):0;
-const mBadge=r.isFullPaper?'badge-purple':r.mode==='normal'?'badge-blue':'badge-amber';
-const mLabel=r.isFullPaper?'Full':r.mode==='normal'?'Normal':r.mode==='review'?'Review':'Shuffle';
-const hasDetail=r.questions&&r.questions.length>0;
-let bd='';if(r.isFullPaper&&r.breakdown){bd=`<div class="hi-breakdown">P1:${r.breakdown[1]||0} · P2:${r.breakdown[2]||0} · P3:${r.breakdown[3]||0} · P4:${r.breakdown[4]||0}</div>`;}
-return `<div class="hi-card ${hasDetail?'clickable':''} ${r.isFullPaper?'full-paper':''}" ${hasDetail?`onclick="viewRecord('${r.id}')"`:''}><div class="hi-date">${r.date}</div><div class="hi-title">${pn}</div><div class="hi-score">${r.correct}/${r.total} (${pct}%) · ${fmt(r.time)}</div>${bd}<span class="badge ${mBadge} hi-mode">${mLabel}</span>${hasDetail?'<div class="hi-hint">Tap to view details →</div>':''}</div>`;
+let bd='';if(r.isFP&&r.breakdown){bd=`<div class="hi-breakdown">P1:${r.breakdown[1]||0} · P2:${r.breakdown[2]||0} · P3:${r.breakdown[3]||0} · P4:${r.breakdown[4]||0}</div>`;}
+return`<div class="hi-card ${r.isFP?'full-paper':''}" onclick="viewR('${r.id}')"><div class="hi-date">🕐 ${r.date} · ⏱ ${fmt(r.time)}</div><div class="hi-title">${pn}${r.mode!=='normal'?' ('+r.mode+')':''}</div><div class="hi-score">${r.correct}/${r.total} (${pct}%)</div>${bd}</div>`;
 }
 
-function renderTabImport(){
-let h=`<div class="section-title">Import AI-Generated Questions</div>`;
-h+=`<div class="info-box info-purple"><h4>📄 Full Paper Import</h4><p>JSON with <code>"fullPaper":true</code> updates all 4 Parts at once.</p></div>`;
-h+=`<div class="info-box info-amber"><h4>📋 Workflow</h4><ol><li>Go to "Prompt" tab → copy prompt (Full or Part)</li><li>Paste to AI → get JSON output</li><li>Paste JSON below → click Import</li></ol></div>`;
-h+=`<div class="card"><h3>Paste JSON</h3><textarea class="textarea textarea-lg mt-12" id="importArea" placeholder='{"fullPaper":true,"passage":"...","passage4":"...","parts":{"1":[...],...}}\n\nor\n\n{"part":2,"questions":[...]}' spellcheck="false"></textarea><button class="btn btn-primary mt-12" onclick="doImport()">Import Questions</button><div id="importMsg" style="margin-top:8px;font-size:12px;padding:8px;border-radius:6px;display:none"></div></div>`;
+function tabImport(){
+return`<div class="info-box info-amber"><h4>📋 Workflow</h4><ol><li>Go to Prompt tab → copy</li><li>Paste to AI → get JSON</li><li>Paste JSON below → Import</li></ol></div><div class="card"><h3>Paste JSON</h3><textarea class="textarea" style="height:180px;margin-top:10px" id="impA" placeholder='{"fullPaper":true,"passage":"...","passage4":"...","parts":{"1":[...],...}}' spellcheck="false"></textarea><button class="btn btn-primary" style="margin-top:10px" onclick="doImport()">Import Questions</button><div id="impMsg" style="margin-top:6px;font-size:12px;display:none;padding:8px;border-radius:6px"></div></div>`;
+}
+
+function tabPrompts(){
+let h=`<div class="info-box info-blue"><h4>🔄 Workflow</h4><ol><li>Copy Prompt → new AI chat → paste</li><li>AI outputs JSON → Import tab → paste</li></ol></div>`;
+h+=`<div class="prompt-card master"><h3>📄 Full Paper (40 Qs)</h3><div class="prompt-text">${esc(PROMPTS.full)}</div><button class="btn btn-purple" style="margin-top:10px" onclick="cpP('full')">Copy Full Paper Prompt</button></div>`;
+PARTS_META.forEach(p=>{h+=`<div class="prompt-card"><h3>${p.icon} ${p.name}</h3><div class="prompt-text">${esc(PROMPTS[p.id])}</div><button class="btn btn-green btn-sm" style="margin-top:10px" onclick="cpP(${p.id})">Copy</button></div>`});
 return h;
 }
+function cpP(k){copyTxt(PROMPTS[k]);toast('Prompt copied!')}
 
-function renderTabPrompts(){
-let h=`<div class="section-title">Question Generation Prompts</div>`;
-h+=`<div class="info-box info-blue"><h4>🔄 Workflow</h4><ol><li>Copy Prompt → open new AI chat → paste</li><li>AI outputs JSON → go to "Import" tab → paste</li></ol></div>`;
-h+=`<div class="prompt-card master"><h3>📄 Full Paper (40 Questions)</h3><div class="prompt-text">${esc(PROMPTS.full)}</div><button class="btn btn-purple mt-12" onclick="copyTxt(PROMPTS.full,'Full Paper Prompt copied!')">Copy Full Paper Prompt</button></div>`;
-h+=`<div class="section-title">Individual Part Prompts</div>`;
-PARTS_META.forEach(p=>{
-h+=`<div class="prompt-card"><h3>${p.icon} ${p.name}</h3><div class="prompt-text">${esc(PROMPTS[p.id])}</div><button class="btn btn-green mt-12" onclick="copyTxt(PROMPTS[${p.id}],'Prompt copied!')">Copy</button></div>`;
-});
+function tabSave(){
+const saveData=buildSave();
+const sz=new Blob([JSON.stringify(saveData)]).size;
+let h=`<div class="card"><h3 style="font-size:14px;margin-bottom:10px">📤 Export Save</h3>`;
+h+=`<div class="save-info"><strong>Save includes:</strong><br>• ✅ All quiz history (questions + answers + passages)<br>• ✅ Wrong bank (full detail + source passages)<br>• ✅ Uncertain bank<br>• ✅ Current question bank<br>• ✅ Passage history<br><br>📦 Size: <strong>${fmtB(sz)}</strong></div>`;
+h+=`<button class="btn btn-green" onclick="doExport()">📋 Copy Save (One-Click Export)</button>`;
+h+=`<div style="font-size:11px;color:var(--gray-400);margin-top:6px;text-align:center">Paste to Notes/Keep for backup</div></div>`;
+h+=`<div class="card"><h3 style="font-size:14px;margin-bottom:10px;color:var(--blue-700)">📥 Load Save</h3>`;
+h+=`<textarea class="textarea" style="height:100px" id="loadA" placeholder="Paste save JSON here..."></textarea>`;
+h+=`<button class="btn btn-primary" style="margin-top:10px" onclick="doLoad()">Load & Restore</button></div>`;
 return h;
-}
-
-function renderTabSave(){
-const sc=buildSave('compact'),sf=buildSave('full');
-const sizeC=byteSize(sc),sizeF=byteSize(sf);const limit=50000;
-const pctC=Math.min(sizeC/limit*100,100),pctF=Math.min(sizeF/limit*100,100);
-let h=`<div class="section-title">Save / Load</div>`;
-h+=`<div class="info-box info-green"><h4>💾 Save Types</h4><ul><li><b>Compact</b>: Wrong bank + history summary (no per-question detail)</li><li><b>Full</b>: + question bank + complete history (viewable details)</li></ul></div>`;
-h+=`<div class="card"><h3>📊 Size Estimate</h3><div style="margin-top:10px"><div style="display:flex;justify-content:space-between;font-size:12px"><span>Compact</span><span style="font-weight:700">${fmtB(sizeC)}</span></div><div class="size-bar"><div class="size-fill ${pctC<60?'size-ok':pctC<85?'size-warn':'size-danger'}" style="width:${pctC}%"></div></div></div><div style="margin-top:8px"><div style="display:flex;justify-content:space-between;font-size:12px"><span>Full</span><span style="font-weight:700">${fmtB(sizeF)}</span></div><div class="size-bar"><div class="size-fill ${pctF<60?'size-ok':pctF<85?'size-warn':'size-danger'}" style="width:${pctF}%"></div></div></div></div>`;
-h+=`<div class="card"><h3>📤 Export</h3><div class="radio-group"><label><input type="radio" name="saveMode" value="compact" checked> Compact — ${fmtB(sizeC)}</label><label><input type="radio" name="saveMode" value="full"> Full — ${fmtB(sizeF)}</label></div><button class="btn btn-green mt-8" onclick="doExport()">Export (Copy to Clipboard)</button><textarea class="textarea textarea-sm mt-8" id="exportArea" readonly></textarea></div>`;
-h+=`<div class="card"><h3 style="color:var(--red-600)">📥 Load Save</h3><textarea class="textarea textarea-md mt-12" id="loadArea" placeholder="Paste save JSON here..." spellcheck="false"></textarea><button class="btn btn-danger mt-12" onclick="doLoad()">Load & Restore</button><div id="loadMsg" style="margin-top:8px;font-size:12px;padding:8px;border-radius:6px;display:none"></div></div>`;
-return h;
-}
-
-// ===== DETAIL =====
-function renderDetail(app){
-const r=quizHistory.find(x=>x.id===S.viewingRecord);
-if(!r||!r.questions){S.page='home';S.tab='history';render();return;}
-const pn=r.isFullPaper?`Full Paper #${r.paperNum||'?'}`:r.part===0?'Shuffle Review':(PARTS_META.find(p=>p.id===r.part)?.name||'');
-const pct=r.total?Math.round(r.correct/r.total*100):0;
-let h=`<div class="header"><button class="back-btn" onclick="S.page='home';S.tab='history';render();">←</button><h1>Record Detail</h1></div><div class="container">`;
-h+=`<div class="result-hero ${r.isFullPaper?'full-paper':''}"><div class="score-big">${r.correct}/${r.total}</div><div class="score-label">${pn} · ${pct}%</div><div class="time-label">${r.date} · ${fmt(r.time)}</div>`;
-if(r.isFullPaper&&r.breakdown){h+=`<div class="breakdown">`;PARTS_META.forEach(p=>{h+=`<div class="breakdown-item"><div class="bd-label">P${p.id}</div><div class="bd-score">${r.breakdown[p.id]||0}/${p.count}</div></div>`;});h+=`</div>`;}
-h+=`<div class="dot-grid">`;r.questions.forEach((q,i)=>{const ua=r.answers?r.answers[String(i)]:undefined;const ok=ua===q.answer;h+=`<div class="dot ${ua!==undefined?(ok?'ok':'ng'):'skip'}">${i+1}</div>`;});
-h+=`</div></div><div class="section-title">Question Review</div>`;
-let lastPart=0;
-r.questions.forEach((q,i)=>{
-if(r.isFullPaper&&q._part&&q._part!==lastPart){lastPart=q._part;const pm=PARTS_META.find(p=>p.id===q._part);h+=`<div class="part-divider"><h4>${pm?pm.icon:''} ${pm?pm.name:''}</h4></div>`;}
-const ua=r.answers?r.answers[String(i)]:undefined;const ok=ua===q.answer;h+=reviewItem(q,i,ua,ok);
-});
-h+=`<button class="btn btn-primary mt-20" onclick="S.page='home';S.tab='history';render();">← Back to History</button></div>`;
-app.innerHTML=h;
-}
-function reviewItem(q,i,ua,ok){
-const opts=q.options||[];
-let h=`<div class="ri ${ok?'ri-right':'ri-wrong'}"><div class="ri-head" onclick="toggleRI(${i})"><span>${ok?'✓':'✗'} Q${i+1}</span><span class="tag ${ok?'tag-ok':'tag-ng'}">${ok?'Correct':'Wrong'}</span></div><div class="ri-body" id="rb-${i}">`;
-h+=`<div class="lbl">Question</div><div style="margin-bottom:6px">${esc(q.stem).replace(/\n/g,'<br>')}</div><div class="lbl">Options</div>`;
-opts.forEach((opt,j)=>{
-let s='';if(j===q.answer)s='color:var(--green-600);font-weight:600';else if(j===ua&&!ok)s='color:var(--red-600);text-decoration:line-through';
-h+=`<div style="${s}">${optLabel(j)}. ${esc(opt)}</div>`;
-});
-if(!ok&&ua!==undefined)h+=`<div class="lbl">Your Answer</div><div class="your-ans">${optLabel(ua)}</div>`;
-h+=`<div class="lbl">Correct Answer</div><div class="correct-ans">${optLabel(q.answer)}</div>`;
-if(q.explanation)h+=`<div class="lbl">Explanation</div><div>${esc(q.explanation)}</div>`;
-h+=`</div></div>`;return h;
 }
 
 // ===== QUIZ =====
 function renderQuiz(app){
-const qs=S.quizQs;if(!qs||!qs[S.currentQ]){goHome();return;}
-const q=qs[S.currentQ];const opts=q.options||[];
-const headerTitle=S.isFullPaper?'Full Paper':(PARTS_META.find(p=>p.id===S.currentPart)?.name||'Shuffle');
-const mLabel=S.quizMode==='review'?' (Review)':S.quizMode==='shuffle'?' (Shuffle)':'';
-let h=`<div class="header"><button class="back-btn" onclick="confirmExit()">←</button><h1>${headerTitle}${mLabel}</h1></div><div class="container">`;
-h+=`<div class="quiz-bar"><span class="progress-text">Q ${S.currentQ+1} / ${qs.length}</span><span class="timer-display" id="timerDisp">${fmt(S.timerSec)}</span></div>`;
-h+=`<div class="timer-row">`;
-if(!S.timerOn)h+=`<button class="timer-btn timer-btn-start" onclick="timerStart()">▶ ${S.timerSec>0?'Resume':'Start'}</button>`;
-else h+=`<button class="timer-btn timer-btn-pause" onclick="timerPause()">⏸ Pause</button>`;
-if(S.timerSec>0)h+=`<button class="timer-btn timer-btn-reset" onclick="timerReset()">↺ Reset</button>`;
-h+=`</div>`;
-if(S.isFullPaper&&q._part){const prevQ=S.currentQ>0?qs[S.currentQ-1]:null;if(!prevQ||prevQ._part!==q._part){const pm=PARTS_META.find(p=>p.id===q._part);h+=`<div class="part-divider"><h4>${pm?pm.icon:''} ${pm?pm.name:''}</h4><p>${pm?pm.desc:''}</p></div>`;}}
-const showP1=q.passage&&q._part===1&&currentPassage1;
-const showP4=q.passage&&q._part===4&&currentPassage4;
-if(showP1){h+=`<button class="passage-toggle" onclick="S.passageOpen=!S.passageOpen;render();">📄 ${S.passageOpen?'Hide':'Show'} Reading Passage</button>`;if(S.passageOpen)h+=`<div class="passage-content">${currentPassage1.replace(/\n/g,'<br>')}</div>`;}
-if(showP4){h+=`<button class="passage-toggle" onclick="S.passageOpen=!S.passageOpen;render();">📄 ${S.passageOpen?'Hide':'Show'} Draft Passages</button>`;if(S.passageOpen)h+=`<div class="passage-content">${currentPassage4.replace(/\n/g,'<br>')}</div>`;}
-h+=`<div class="q-card"><div class="q-stem">${esc(q.stem).replace(/\n/g,'<br>')}</div>`;
-opts.forEach((opt,i)=>{
-const sel=S.answers[S.currentQ]===i?'selected':'';
-h+=`<button class="opt-btn ${sel}" onclick="pickOpt(${i})">${optLabel(i)}. ${esc(opt)}</button>`;
-});
+const qs=S.qs,q=qs[S.qi];if(!q){goHome();return}
+const title=S.isFP?'Full Paper':(PARTS_META.find(p=>p.id===S.part)?.name||'Shuffle');
+const ml=S.mode==='review'?' (Review)':S.mode==='shuffle'?' (Shuffle)':'';
+let h=`<div class="header"><button class="back-btn" onclick="showModal('Leave Quiz','Progress will not be saved.','Leave',goHome)">←</button><h1>${title}${ml}</h1></div><div class="container">`;
+h+=`<div class="quiz-bar"><span style="font-size:12px;color:var(--gray-500);font-weight:600">Q ${S.qi+1} / ${qs.length}</span><div class="timer-area"><span class="timer-display" id="tmr">${fmt(S.tSec)}</span>`;
+h+=S.tOn?`<button class="timer-btn timer-btn-pause" onclick="tPause();render()">⏸</button>`:`<button class="timer-btn timer-btn-start" onclick="tStart();render()">▶</button>`;
+h+=`<button class="timer-btn timer-btn-reset" onclick="tReset()">↺</button></div></div>`;
+h+=`<button class="qmap-toggle" onclick="S.mapOpen=!S.mapOpen;render()">📍 Question Map ${S.mapOpen?'▲':'▼'}</button>`;
+if(S.mapOpen){
+h+=`<div class="qmap">`;
+qs.forEach((qq,i)=>{
+let cls='qmap-dot';if(i===S.qi)cls+=' cur';
+if(S.flags[i])cls+=' flag';else if(S.ans[i]!==undefined)cls+=' done';
+h+=`<div class="${cls}" onclick="S.qi=${i};render()">${i+1}</div>`;
+});h+=`</div>`;
+}
+if(S.isFP&&q._part){const prev=S.qi>0?qs[S.qi-1]:null;if(!prev||prev._part!==q._part){const pm=PARTS_META.find(p=>p.id===q._part);h+=`<div class="part-divider"><h4>${pm?pm.icon:''} ${pm?pm.name:''}</h4><p>${pm?pm.desc:''}</p></div>`;}}
+// ★ Show passage for ALL Part 1 questions (not just passage:true)
+if(q._part===1&&S._curPsg1){
+h+=`<button class="passage-toggle" onclick="S.psgOpen=!S.psgOpen;render()">📄 ${S.psgOpen?'Hide':'Show'} Reading Passage</button>`;
+if(S.psgOpen)h+=`<div class="passage-content">${S._curPsg1.replace(/\n/g,'<br>')}</div>`;
+}
+// ★ Show passage for ALL Part 4 questions
+if(q._part===4&&S._curPsg4){
+h+=`<button class="passage-toggle" onclick="S.psgOpen=!S.psgOpen;render()">📄 ${S.psgOpen?'Hide':'Show'} Draft Passages</button>`;
+if(S.psgOpen)h+=`<div class="passage-content">${S._curPsg4.replace(/\n/g,'<br>')}</div>`;
+}
+h+=`<div class="q-card"><div class="q-head"><span style="font-size:11px;color:var(--gray-400)">Q${S.qi+1}${q._part?' · P'+q._part:''}</span><button class="flag-btn ${S.flags[S.qi]?'on':''}" onclick="S.flags[S.qi]=!S.flags[S.qi];render()" title="Flag as uncertain">${S.flags[S.qi]?'🚩':'⚑'}</button></div>`;
+h+=`<div class="q-stem">${esc(q.stem).replace(/\n/g,'<br>')}</div>`;
+(q.options||[]).forEach((o,i)=>{h+=`<button class="opt-btn ${S.ans[S.qi]===i?'selected':''}" onclick="pickA(${i})">${optLabel(i)}. ${esc(o)}</button>`});
 h+=`</div><div class="nav-row">`;
-if(S.currentQ>0)h+=`<button class="btn btn-outline" onclick="S.currentQ--;render();window.scrollTo(0,0);">← Prev</button>`;else h+=`<div></div>`;
-if(S.currentQ===qs.length-1)h+=`<button class="btn btn-danger" onclick="submitQuiz()">Submit</button>`;
-else h+=`<button class="btn btn-primary" onclick="S.currentQ++;render();window.scrollTo(0,0);">Next →</button>`;
-h+=`</div></div>`;app.innerHTML=h;
+h+=S.qi>0?`<button class="btn btn-outline" onclick="S.qi--;render();scrollTo(0,0)">← Prev</button>`:`<div></div>`;
+h+=S.qi===qs.length-1?`<button class="btn btn-danger" onclick="preSubmit()">Submit</button>`:`<button class="btn btn-primary" onclick="S.qi++;render();scrollTo(0,0)">Next →</button>`;
+h+=`</div><div class="kbd-hint">Keys: 1-5 select · ←→ navigate · F flag · Enter next</div></div>`;
+app.innerHTML=h;
+}
+
+function preSubmit(){
+const qs=S.qs;
+const un=qs.filter((_,i)=>S.ans[i]===undefined).length;
+const fl=Object.values(S.flags).filter(Boolean).length;
+let msg=`${qs.length} questions total`;
+if(un)msg+=`\n⚠️ ${un} unanswered`;
+if(fl)msg+=`\n🚩 ${fl} flagged as uncertain`;
+showModal('Submit',msg,'Submit',submitQ);
 }
 
 // ===== RESULT =====
 function renderResult(app){
-const qs=S.quizQs;let correct=0;qs.forEach((q,i)=>{if(S.answers[i]===q.answer)correct++;});
-const pct=qs.length?Math.round(correct/qs.length*100):0;
-const headerTitle=S.isFullPaper?'Full Paper Results':(PARTS_META.find(p=>p.id===S.currentPart)?.name||'Shuffle')+' Results';
-let h=`<div class="header"><h1>${headerTitle}</h1></div><div class="container">`;
-h+=`<div class="result-hero ${S.isFullPaper?'full-paper':''}"><div class="score-big">${correct}/${qs.length}</div><div class="score-label">${pct}%</div><div class="time-label">Time: ${fmt(S.timerSec)}</div>`;
-if(S.isFullPaper){const bd=getBreakdown();h+=`<div class="breakdown">`;PARTS_META.forEach(p=>{h+=`<div class="breakdown-item"><div class="bd-label">P${p.id}</div><div class="bd-score">${bd[p.id]||0}/${bd['t'+p.id]||0}</div></div>`;});h+=`</div>`;}
-h+=`<div class="dot-grid">`;qs.forEach((q,i)=>{const a=S.answers[i];const ok=a===q.answer;h+=`<div class="dot ${a!==undefined?(ok?'ok':'ng'):'skip'}">${i+1}</div>`;});
-h+=`</div></div>`;
-if(S._bankUpdate){const bu=S._bankUpdate;h+=`<div class="bank-update">✅ Wrong Bank: +${bu.added} new · ${bu.removed} mastered · ${bu.total} total</div>`;}
-const wrongCount=qs.filter((q,i)=>S.answers[i]!==q.answer&&S.answers[i]!==undefined).length;
-if(wrongCount>0)h+=`<button class="btn btn-danger mb-12" onclick="copyAllWrong()">📋 Copy All Wrong (${wrongCount} Qs)</button>`;
+const qs=S.qs;let cor=0;qs.forEach((q,i)=>{if(S.ans[i]===q.answer)cor++});
+const pct=qs.length?Math.round(cor/qs.length*100):0;
+const title=S.isFP?'Full Paper Results':(PARTS_META.find(p=>p.id===S.part)?.name||'Shuffle')+' Results';
+let h=`<div class="header"><h1>${title}</h1></div><div class="container">`;
+h+=`<div class="result-hero ${S.isFP?'full-paper':''}"><div class="score-big">${cor}/${qs.length}</div><div class="score-label">${pct}%</div><div class="time-label">⏱ ${fmt(S.tSec)}</div>`;
+if(S.isFP){
+const bd={};PARTS_META.forEach(p=>{bd[p.id]=0;bd['t'+p.id]=0});
+qs.forEach((q,i)=>{const pid=q._part||1;if(bd['t'+pid]!==undefined)bd['t'+pid]++;if(S.ans[i]===q.answer&&bd[pid]!==undefined)bd[pid]++});
+h+=`<div class="breakdown">`;PARTS_META.forEach(p=>{h+=`<div class="breakdown-item"><div class="bd-label">P${p.id}</div><div class="bd-score">${bd[p.id]}/${bd['t'+p.id]}</div></div>`;});h+=`</div>`;
+}
+h+=`<div class="dot-grid">`;qs.forEach((q,i)=>{const a=S.ans[i];h+=`<div class="dot ${a===undefined?'skip':a===q.answer?'ok':'ng'}">${i+1}</div>`});h+=`</div></div>`;
+if(S._bu)h+=`<div class="bank-update">✅ Wrong Bank: +${S._bu.a} new · ${S._bu.r} mastered · ${S._bu.tw} total${S._bu.u?`<br>⚠️ Uncertain: +${S._bu.u} flagged`:''}</div>`;
+const wc=qs.filter((q,i)=>S.ans[i]!==undefined&&S.ans[i]!==q.answer).length;
+if(wc)h+=`<button class="btn btn-danger" style="margin-bottom:12px" onclick="cpWrong()">📋 Copy Wrong to Keep (${wc} Qs)</button>`;
 h+=`<div class="section-title">Question Review</div>`;
-let lastPart=0;
+let lp=0;
 qs.forEach((q,i)=>{
-if(S.isFullPaper&&q._part&&q._part!==lastPart){lastPart=q._part;const pm=PARTS_META.find(p=>p.id===q._part);h+=`<div class="part-divider"><h4>${pm?pm.icon:''} ${pm?pm.name:''}</h4></div>`;}
-const ua=S.answers[i];const ok=ua===q.answer;h+=reviewItem(q,i,ua,ok);
+if(S.isFP&&q._part&&q._part!==lp){lp=q._part;const pm=PARTS_META.find(p=>p.id===q._part);h+=`<div class="part-divider"><h4>${pm?pm.icon:''} ${pm?pm.name:''}</h4></div>`;}
+const ua=S.ans[i],ok=ua===q.answer;h+=riItem(q,i,ua,ok);
 });
-h+=`<button class="btn btn-primary mt-20" onclick="goHome()">Back to Home</button></div>`;
+h+=`<button class="btn btn-primary" style="margin-top:16px" onclick="goHome()">Back to Home</button></div>`;
 app.innerHTML=h;
 }
-function getBreakdown(){const qs=S.quizQs;const bd={};PARTS_META.forEach(p=>{bd[p.id]=0;bd['t'+p.id]=0;});qs.forEach((q,i)=>{const pid=q._part||1;if(bd['t'+pid]!==undefined)bd['t'+pid]++;if(S.answers[i]===q.answer&&bd[pid]!==undefined)bd[pid]++;});return bd;}
+
+function riItem(q,i,ua,ok){
+let h=`<div class="ri ${ok?'ri-right':'ri-wrong'}"><div class="ri-head" onclick="togRI(${i})"><span>${ok?'✓':'✗'} Q${i+1}</span><span class="tag ${ok?'tag-ok':'tag-ng'}">${ok?'Correct':'Wrong'}</span></div><div class="ri-body" id="rb${i}">`;
+h+=`<div class="lbl">Question</div><div style="white-space:pre-wrap;margin-bottom:4px">${esc(q.stem)}</div><div class="lbl">Options</div>`;
+(q.options||[]).forEach((o,j)=>{
+let cls='opt-line';if(j===q.answer)cls+=' opt-correct';else if(j===ua&&!ok)cls+=' opt-wrong';
+h+=`<div class="${cls}">${optLabel(j)}. ${esc(o)}${j===q.answer?' ✓':''}${j===ua&&!ok?' ← yours':''}</div>`;
+});
+if(!ok&&ua!==undefined)h+=`<div class="lbl">Your Answer</div><div style="color:var(--red-600);font-weight:600">${optLabel(ua)}</div>`;
+h+=`<div class="lbl">Correct Answer</div><div style="color:var(--green-600);font-weight:600">${optLabel(q.answer)}</div>`;
+if(q.explanation)h+=`<div class="lbl">Explanation</div><div>${esc(q.explanation)}</div>`;
+h+=`</div></div>`;return h;
+}
+function togRI(i){const e=document.getElementById('rb'+i);if(e)e.classList.toggle('show')}
+
+function renderDetail(app){
+const r=HIST.find(x=>x.id===S.viewRec);
+if(!r||!r.questions){toast('Cannot load');goHome();return}
+S.qs=r.questions;S.ans=r.answers||{};S.isFP=r.isFP;S.part=r.part;S.tSec=r.time;S._bu=null;
+S._curPsg1=r.passage1||'';S._curPsg4=r.passage4||'';
+renderResult(app);
+}
 
 // ===== ACTIONS =====
-function setTab(t){S.tab=t;render();}
-function goHome(){if(S._timerID){clearInterval(S._timerID);S._timerID=null;}S.timerOn=false;S.page='home';render();}
-function confirmExit(){showModal('Leave Quiz','Leave now? Progress will not be saved.','Leave',goHome);}
-function pickOpt(i){S.answers[S.currentQ]=i;render();}
-function toggleRI(i){const el=document.getElementById('rb-'+i);if(el)el.classList.toggle('show');}
-function viewRecord(id){S.viewingRecord=id;S.page='detail';render();window.scrollTo(0,0);}
+function goHome(){tStop();S.page='home';render()}
+function pickA(i){S.ans[S.qi]=i;render()}
+function viewR(id){S.viewRec=id;S.page='detail';render();scrollTo(0,0)}
 
-function startQuiz(pid,mode){
-let qs;
-if(mode==='normal'){if(!currentQuestions[pid]||!currentQuestions[pid].length){toast('No questions');return;}qs=JSON.parse(JSON.stringify(currentQuestions[pid]));qs.forEach(q=>q._part=pid);}
-else if(mode==='review'){if(!wrongBank[pid]||!wrongBank[pid].length){toast('No wrong questions');return;}qs=JSON.parse(JSON.stringify(wrongBank[pid]));qs.forEach(q=>q._part=pid);}
-else{let all=[];Object.keys(wrongBank).forEach(k=>{wrongBank[k].forEach(q=>{all.push({...JSON.parse(JSON.stringify(q)),_part:parseInt(k)});});});if(!all.length){toast('No wrong questions');return;}for(let i=all.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[all[i],all[j]]=[all[j],all[i]];}qs=all;}
-S.page='quiz';S.currentPart=pid;S.currentQ=0;S.answers={};S.timerSec=0;S.timerOn=false;S.isFullPaper=false;
-if(S._timerID){clearInterval(S._timerID);S._timerID=null;}S.passageOpen=true;S.quizMode=mode;S.quizQs=qs;S._bankUpdate=null;render();
+function startP(pid){
+if(!CQ[pid]||!CQ[pid].length){toast('No questions');return}
+let qs=JSON.parse(JSON.stringify(CQ[pid]));qs.forEach(q=>q._part=pid);
+S._curPsg1=PSG1;S._curPsg4=PSG4;
+beginQ(qs,'normal',pid,false);
 }
-function startFullPaper(){
-let qs=[];for(let i=1;i<=4;i++){const pqs=JSON.parse(JSON.stringify(currentQuestions[i]||[]));pqs.forEach(q=>q._part=i);qs=qs.concat(pqs);}
-if(!qs.length){toast('No questions');return;}
-S.page='quiz';S.currentPart=0;S.currentQ=0;S.answers={};S.timerSec=0;S.timerOn=false;S.isFullPaper=true;
-if(S._timerID){clearInterval(S._timerID);S._timerID=null;}S.passageOpen=true;S.quizMode='normal';S.quizQs=qs;S._bankUpdate=null;render();
+function startFP(){
+let qs=[];for(let i=1;i<=4;i++){const p=JSON.parse(JSON.stringify(CQ[i]||[]));p.forEach(q=>q._part=i);qs=qs.concat(p)}
+if(!qs.length){toast('No questions');return}
+S._curPsg1=PSG1;S._curPsg4=PSG4;
+beginQ(qs,'normal',0,true);
+}
+function startReview(pid,bank){
+const src=bank==='wrong'?WB:UB;
+if(!src[pid]||!src[pid].length){toast('No questions');return}
+let qs=JSON.parse(JSON.stringify(src[pid]));qs.forEach(q=>q._part=pid);
+S._curPsg1=(qs[0]&&qs[0]._passage&&pid===1)?qs[0]._passage:PSG1;
+S._curPsg4=(qs[0]&&qs[0]._passage&&pid===4)?qs[0]._passage:PSG4;
+beginQ(qs,'review',pid,false);
+}
+function startShuffle(bank){
+const src=bank==='wrong'?WB:UB;
+let all=[];Object.keys(src).forEach(k=>src[k].forEach(q=>all.push({...JSON.parse(JSON.stringify(q)),_part:+k})));
+if(!all.length){toast('No questions');return}
+for(let i=all.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[all[i],all[j]]=[all[j],all[i]]}
+S._curPsg1=PSG1;S._curPsg4=PSG4;
+beginQ(all,'shuffle',0,false);
+}
+function beginQ(qs,mode,part,fp){
+S.page='quiz';S.qs=qs;S.mode=mode;S.part=part;S.isFP=fp;
+S.qi=0;S.ans={};S.flags={};S.tSec=0;S.tOn=false;S.mapOpen=false;S.psgOpen=true;S._bu=null;
+if(S._tID){clearInterval(S._tID);S._tID=null}
+render();
 }
 
-function submitQuiz(){
-if(S._timerID){clearInterval(S._timerID);S._timerID=null;}S.timerOn=false;
-const qs=S.quizQs;let correct=0,added=0,removed=0;
-const breakdown={};PARTS_META.forEach(p=>{breakdown[p.id]=0;});
+// ===== SUBMIT =====
+function submitQ(){
+tStop();const qs=S.qs;const submitTime=nowStr();
+let cor=0,added=0,removed=0,uncAdded=0;
+const psgLabel=submitTime;
+const breakdown={};PARTS_META.forEach(p=>{breakdown[p.id]=0});
+
 qs.forEach((q,i)=>{
-const pid=q._part||S.currentPart||1;if(pid<1||pid>4)return;
-const key=qKey(q);const bIdx=wrongBank[pid].findIndex(e=>qKey(e)===key);
-if(S.answers[i]===q.answer){correct++;if(breakdown[pid]!==undefined)breakdown[pid]++;if(bIdx>=0){wrongBank[pid].splice(bIdx,1);removed++;}}
-else{if(S.answers[i]!==undefined){if(bIdx<0){wrongBank[pid].push({stem:q.stem,options:q.options,answer:q.answer,explanation:q.explanation||'',passage:q.passage||false,dateAdded:today(),reviewCount:1,_part:pid});added++;}else{wrongBank[pid][bIdx].reviewCount=(wrongBank[pid][bIdx].reviewCount||0)+1;}}}
+const pid=q._part||S.part||1;if(pid<1||pid>4)return;
+const key=qKey(q);
+const bi=WB[pid].findIndex(e=>qKey(e)===key);
+if(S.ans[i]===q.answer){
+cor++;if(breakdown[pid]!==undefined)breakdown[pid]++;
+if(bi>=0){WB[pid].splice(bi,1);removed++}
+}else if(S.ans[i]!==undefined){
+if(bi<0){
+const entry={stem:q.stem,options:q.options,answer:q.answer,explanation:q.explanation||'',_part:pid,dateAdded:submitTime,yourAnswer:S.ans[i]};
+// ★ Store passage with wrong question for P1 and P4
+if(pid===1&&S._curPsg1){entry._passage=S._curPsg1;entry._psgLabel='P1 '+psgLabel}
+if(pid===4&&S._curPsg4){entry._passage=S._curPsg4;entry._psgLabel='P4 '+psgLabel}
+WB[pid].push(entry);added++;
+}else{WB[pid][bi].yourAnswer=S.ans[i];WB[pid][bi].dateAdded=submitTime}
+}
+if(S.flags[i]){
+const ui=UB[pid].findIndex(e=>qKey(e)===key);
+if(ui<0){
+const entry={stem:q.stem,options:q.options,answer:q.answer,explanation:q.explanation||'',_part:pid,dateAdded:submitTime,yourAnswer:S.ans[i]};
+if(pid===1&&S._curPsg1){entry._passage=S._curPsg1;entry._psgLabel='P1 '+psgLabel}
+if(pid===4&&S._curPsg4){entry._passage=S._curPsg4;entry._psgLabel='P4 '+psgLabel}
+UB[pid].push(entry);uncAdded++;
+}
+}
 });
-paperCount++;
-const record={id:uid(),date:today(),part:S.currentPart||0,mode:S.quizMode,total:qs.length,correct,time:S.timerSec,isFullPaper:S.isFullPaper,paperNum:S.isFullPaper?paperCount:undefined,breakdown:S.isFullPaper?breakdown:undefined,questions:qs.map(q=>({stem:q.stem,options:q.options,answer:q.answer,explanation:q.explanation||'',_part:q._part})),answers:{...S.answers}};
-quizHistory.push(record);
-const tw=Object.values(wrongBank).reduce((s,a)=>s+a.length,0);
-S._bankUpdate={added,removed,total:tw};S.page='result';render();window.scrollTo(0,0);
-toast(`+${added} wrong · ${removed} mastered`);
+PC++;
+HIST.push({
+id:uid(),date:submitTime,part:S.part||0,mode:S.mode,
+total:qs.length,correct:cor,time:S.tSec,
+isFP:S.isFP,breakdown:S.isFP?breakdown:undefined,
+passage1:S._curPsg1||'',passage4:S._curPsg4||'', // ★ store passages with history
+questions:qs.map(q=>({stem:q.stem,options:q.options,answer:q.answer,explanation:q.explanation||'',_part:q._part})),
+answers:{...S.ans}
+});
+const tw=Object.values(WB).reduce((a,b)=>a+b.length,0);
+S._bu={a:added,r:removed,tw,u:uncAdded};
+S.page='result';render();scrollTo(0,0);
+toast(`Saved! +${added} wrong`);
 }
 
-function copyAllWrong(){
-const qs=S.quizQs;let txt='=== Wrong Questions ===\n';txt+=`Date: ${today()}\n\n`;let n=0;
-qs.forEach((q,i)=>{if(S.answers[i]===undefined||S.answers[i]===q.answer)return;n++;
-txt+=`[Q${i+1}]${q._part?' (Part '+q._part+')':''}\n`;txt+=`${q.stem}\n`;
-(q.options||[]).forEach((o,j)=>{txt+=`  ${optLabel(j)}. ${o}\n`;});
-txt+=`Your answer: ${optLabel(S.answers[i])}\nCorrect: ${optLabel(q.answer)}\n`;
-if(q.explanation)txt+=`Explanation: ${q.explanation}\n`;txt+=`${'─'.repeat(30)}\n\n`;});
-copyTxt(txt,`Copied ${n} wrong questions!`);
+// ===== COPY WRONG =====
+function cpWrong(){
+const qs=S.qs;
+let txt=`📝 CRE English Wrong Qs · ${nowStr()}\n${'═'.repeat(30)}\n\n`;let n=0;
+qs.forEach((q,i)=>{
+if(S.ans[i]===undefined||S.ans[i]===q.answer)return;n++;
+txt+=`❌ Q${i+1}${q._part?' [P'+q._part+']':''}\n`;
+txt+=`${q.stem}\n\n`;
+(q.options||[]).forEach((o,j)=>{txt+=`${j===q.answer?'✓':'　'}${optLabel(j)}. ${o}\n`});
+txt+=`\n✗ You chose: ${optLabel(S.ans[i])}\n`;
+if(q.explanation)txt+=`💡 ${q.explanation}\n`;
+txt+=`\n${'─'.repeat(30)}\n\n`;
+});
+copyTxt(txt);toast(`Copied ${n} questions!`);
 }
 
 // ===== IMPORT =====
 function doImport(){
-const area=document.getElementById('importArea');const msg=document.getElementById('importMsg');if(!area)return;
-let raw=area.value.trim();if(!raw){showMsg(msg,'Please paste JSON.','red');return;}
+const area=document.getElementById('impA'),msg=document.getElementById('impMsg');if(!area)return;
+let raw=area.value.trim();if(!raw){sMsg(msg,'Please paste JSON.','r');return}
 const cm=raw.match(/```(?:json)?\s*([\s\S]*?)```/);if(cm)raw=cm[1].trim();
-let data;try{data=JSON.parse(raw);}catch(e){showMsg(msg,'JSON parse error: '+e.message,'red');return;}
-if(data.fullPaper&&data.parts){
-let totalImported=0,errors=[];
-for(let pid=1;pid<=4;pid++){
-const pqs=data.parts[String(pid)];if(!pqs||!Array.isArray(pqs)){errors.push(`Part ${pid} missing`);continue;}
-let valid=true;pqs.forEach(q=>{if(!q.stem||!q.options||q.options.length<4||q.answer===undefined)valid=false;});
-if(!valid){errors.push(`Part ${pid} format error`);continue;}
-pqs.forEach(q=>q._part=pid);currentQuestions[pid]=pqs;importedSets[pid]=(importedSets[pid]||0)+1;totalImported+=pqs.length;
+let d;try{d=JSON.parse(raw)}catch(e){sMsg(msg,'JSON error: '+e.message,'r');return}
+const impTime=nowStr();
+if(d.fullPaper&&d.parts){
+let tot=0;
+for(let pid=1;pid<=4;pid++){const pqs=d.parts[String(pid)];if(!pqs||!Array.isArray(pqs))continue;pqs.forEach(q=>q._part=pid);CQ[pid]=pqs;IMP[pid]++;tot+=pqs.length;}
+if(d.passage){PSG1=d.passage;PSG_HIST.push({text:d.passage,importedAt:impTime,label:'P1 Full '+impTime})}
+if(d.passage4){PSG4=d.passage4;PSG_HIST.push({text:d.passage4,importedAt:impTime,label:'P4 Full '+impTime})}
+IMP.full++;
+sMsg(msg,`✓ Full paper imported! ${tot} questions`,'g');area.value='';toast('Import successful!');render();return;
 }
-if(data.passage)currentPassage1=data.passage;
-if(data.passage4)currentPassage4=data.passage4;
-importedSets.full=(importedSets.full||0)+1;
-if(errors.length)showMsg(msg,`⚠️ Partial: ${totalImported} Qs imported. Issues: ${errors.join(', ')}`,'red');
-else showMsg(msg,`✓ Full paper imported! ${totalImported} questions (all 4 Parts updated)`,'green');
-area.value='';toast('Full paper imported!');render();return;
+if(!d.part||!d.questions){sMsg(msg,'Need "part"(1-4)+"questions", or "fullPaper":true+"parts".','r');return}
+const pid=d.part;if(pid<1||pid>4){sMsg(msg,'part must be 1-4.','r');return}
+d.questions.forEach(q=>q._part=pid);CQ[pid]=d.questions;
+if(d.passage&&pid===1){PSG1=d.passage;PSG_HIST.push({text:d.passage,importedAt:impTime,label:'P1 '+impTime})}
+if(d.passage&&pid===4){PSG4=d.passage;PSG_HIST.push({text:d.passage,importedAt:impTime,label:'P4 '+impTime})}
+IMP[pid]++;
+sMsg(msg,`✓ Part ${pid} imported: ${d.questions.length} questions!`,'g');area.value='';toast('Import successful!');
 }
-if(!data.part||!data.questions||!Array.isArray(data.questions)){showMsg(msg,'Need "part"(1-4)+"questions", or "fullPaper":true+"parts".','red');return;}
-const pid=data.part;if(pid<1||pid>4){showMsg(msg,'part must be 1-4.','red');return;}
-let valid=true;data.questions.forEach(q=>{if(!q.stem||!q.options||q.options.length<4||q.answer===undefined)valid=false;});
-if(!valid){showMsg(msg,'Question format error.','red');return;}
-data.questions.forEach(q=>q._part=pid);currentQuestions[pid]=data.questions;
-if(data.passage&&pid===1)currentPassage1=data.passage;
-if(data.passage&&pid===4)currentPassage4=data.passage;
-importedSets[pid]=(importedSets[pid]||0)+1;
-showMsg(msg,`✓ Part ${pid} imported: ${data.questions.length} questions!`,'green');
-area.value='';toast('Import successful!');
-}
-function showMsg(el,txt,color){if(!el)return;el.style.display='block';el.style.background=color==='red'?'var(--red-50)':'var(--green-50)';el.style.color=color==='red'?'var(--red-700)':'var(--green-700)';el.textContent=txt;}
+function sMsg(el,txt,c){if(!el)return;el.style.display='block';el.style.background=c==='r'?'var(--red-50)':'var(--green-50)';el.style.color=c==='r'?'var(--red-600)':'var(--green-600)';el.textContent=txt}
 
 // ===== SAVE/LOAD =====
-function buildSave(mode){
-if(mode==='compact'){return{version:'1.0-USE',exportDate:today(),wrongBank,history:quizHistory.map(r=>({id:r.id,date:r.date,part:r.part,mode:r.mode,total:r.total,correct:r.correct,time:r.time,isFullPaper:r.isFullPaper,paperNum:r.paperNum,breakdown:r.breakdown})),importedSets,paperCount};}
-return{version:'1.0-USE',exportDate:today(),wrongBank,history:quizHistory,importedSets,paperCount,currentQuestions,currentPassage1,currentPassage4};
+function buildSave(){
+return{v:'1.1-USE',savedAt:nowStr(),wb:WB,ub:UB,hist:HIST,imp:IMP,pc:PC,cq:CQ,psg1:PSG1,psg4:PSG4,psgHist:PSG_HIST};
 }
-function doExport(){
-const radios=document.querySelectorAll('input[name="saveMode"]');let mode='compact';radios.forEach(r=>{if(r.checked)mode=r.value;});
-const json=JSON.stringify(buildSave(mode));const area=document.getElementById('exportArea');if(area)area.value=json;
-copyTxt(json,`${mode==='full'?'Full':'Compact'} save copied!`);
-}
+function doExport(){copyTxt(JSON.stringify(buildSave()));toast('Save copied! Paste to Notes for backup.')}
 function doLoad(){
-const area=document.getElementById('loadArea');const msg=document.getElementById('loadMsg');if(!area)return;
-let raw=area.value.trim();if(!raw){showMsg(msg,'Please paste save data.','red');return;}
-let data;try{data=JSON.parse(raw);}catch(e){showMsg(msg,'JSON error: '+e.message,'red');return;}
-if(!data.wrongBank&&!data.history){showMsg(msg,'Not a valid save file.','red');return;}
-if(data.wrongBank)wrongBank=data.wrongBank;
-if(data.history)quizHistory=data.history;
-if(data.currentQuestions)currentQuestions=data.currentQuestions;
-if(data.currentPassage1)currentPassage1=data.currentPassage1;
-if(data.currentPassage4)currentPassage4=data.currentPassage4;
-if(data.importedSets)importedSets=data.importedSets;
-if(data.paperCount)paperCount=data.paperCount;
-const tw=Object.values(wrongBank).reduce((s,a)=>s+a.length,0);
-showMsg(msg,`✓ Restored! Wrong bank: ${tw} · History: ${quizHistory.length}`,'green');
-area.value='';toast('Load successful!');setTimeout(render,500);
+const area=document.getElementById('loadA');if(!area)return;
+let raw=area.value.trim();if(!raw){toast('Please paste save data');return}
+let d;try{d=JSON.parse(raw)}catch(e){toast('JSON error');return}
+if(d.wb)WB=d.wb;if(d.ub)UB=d.ub;if(d.hist)HIST=d.hist;if(d.cq)CQ=d.cq;
+if(d.psg1)PSG1=d.psg1;if(d.psg4)PSG4=d.psg4;
+if(d.imp)IMP=d.imp;if(d.pc!==undefined)PC=d.pc;if(d.psgHist)PSG_HIST=d.psgHist;
+for(let i=1;i<=4;i++){if(!WB[i])WB[i]=[];if(!UB[i])UB[i]=[]}
+const qCount=Object.values(CQ).reduce((a,b)=>a+b.length,0);
+toast(`Loaded! ${HIST.length} records · ${qCount} questions`);area.value='';render();
 }
+function copyTxt(t){if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).catch(()=>fbCopy(t));else fbCopy(t)}
+function fbCopy(t){const ta=document.createElement('textarea');ta.value=t;ta.style.cssText='position:fixed;opacity:0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta)}
 
-// ===== COPY =====
-function copyTxt(t,m){
-if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(()=>toast(m||'Copied')).catch(()=>fbCopy(t,m));
-else fbCopy(t,m);
-}
-function fbCopy(t,m){const ta=document.createElement('textarea');ta.value=t;ta.style.cssText='position:fixed;opacity:0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);toast(m||'Copied');}
+// ===== KEYBOARD =====
+document.addEventListener('keydown',e=>{
+if(S.page!=='quiz')return;
+if(e.target.tagName==='TEXTAREA'||e.target.tagName==='INPUT')return;
+const qs=S.qs;if(!qs)return;const q=qs[S.qi];if(!q)return;
+const optCount=q.options?q.options.length:4;
+if(e.key>='1'&&e.key<=String(optCount)){e.preventDefault();pickA(parseInt(e.key)-1)}
+else if(e.key==='ArrowRight'||e.key==='Enter'){e.preventDefault();if(S.qi<qs.length-1){S.qi++;render();scrollTo(0,0)}}
+else if(e.key==='ArrowLeft'){e.preventDefault();if(S.qi>0){S.qi--;render();scrollTo(0,0)}}
+else if(e.key.toLowerCase()==='f'){e.preventDefault();S.flags[S.qi]=!S.flags[S.qi];render()}
+});
 
-// ===== INIT =====
 render();
 </script>
-
-
-</body></html>
+</body>
+</html>
