@@ -203,9 +203,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Ro
 </div>
 </div>
 <script>
-// ===== CLOUD SAVE URL =====
+// ===== CLOUD SAVE CONFIG =====
 const CLOUD_URL = 'https://script.google.com/macros/s/AKfycbzRnKagiOJWQNMtWO7U-QmFhB7TXg-agE-GNeHHLYU3WzLlBPq7vL53asQYDC5qgU1aLw/exec';
-// 貼你嘅Google Apps Script URL喺上面引號入面
+const CLOUD_TOKEN = 'mySecret2026';
+const CLOUD_FILE = 'cre_english_save.txt';
 
 function showModal(title,msg,confirmText,onConfirm){
 document.getElementById('modalTitle').textContent=title;
@@ -446,20 +447,16 @@ const saveData=buildSave();
 const sz=new Blob([JSON.stringify(saveData)]).size;
 const hasCloud=!!CLOUD_URL;
 let h='';
-
-// Cloud Save Section
 h+=`<div class="card" style="border-color:${hasCloud?'var(--green-100)':'var(--amber-100)'}"><h3 style="font-size:14px;margin-bottom:10px;color:${hasCloud?'var(--green-700)':'var(--amber-600)'}">☁️ Cloud Save (Google Drive)</h3>`;
 if(!hasCloud){
-h+=`<div class="info-box info-amber">⚠️ 未設定Cloud URL。請按教程部署Google Apps Script後，將URL貼入HTML頂部 CLOUD_URL 變量。</div>`;
+h+=`<div class="info-box info-amber">⚠️ 未設定Cloud URL。</div>`;
 }else{
-h+=`<div class="info-box info-green">✅ Cloud已連接</div>`;
+h+=`<div class="info-box info-green">✅ Cloud已連接 · File: ${CLOUD_FILE}</div>`;
 h+=`<button class="btn btn-cloud" style="margin-bottom:8px" onclick="cloudSave()">☁️ 一鍵雲端儲存</button>`;
 h+=`<button class="btn btn-outline" onclick="cloudLoad()">📥 從雲端讀取</button>`;
 h+=`<div class="cloud-status" id="cloudStatus"></div>`;
 }
 h+=`</div>`;
-
-// Manual Save Section
 h+=`<div class="card"><h3 style="font-size:14px;margin-bottom:10px">📤 Manual Export</h3>`;
 h+=`<div class="save-info"><strong>Save includes:</strong><br>• ✅ All quiz history (questions + answers + passages)<br>• ✅ Wrong bank (full detail + source passages)<br>• ✅ Uncertain bank<br>• ✅ Current question bank<br>• ✅ Passage history<br><br>📦 Size: <strong>${fmtB(sz)}</strong></div>`;
 h+=`<button class="btn btn-green" onclick="doExport()">📋 Copy Save (One-Click Export)</button>`;
@@ -470,19 +467,32 @@ h+=`<button class="btn btn-primary" style="margin-top:10px" onclick="doLoad()">L
 return h;
 }
 
-// ===== CLOUD SAVE FUNCTIONS =====
+// ===== CLOUD SAVE FUNCTIONS (進階版 — 配合有Token嘅Apps Script) =====
 function cloudSave(){
 if(!CLOUD_URL){toast('未設定Cloud URL');return}
-const data=JSON.stringify(buildSave());
+const saveData=JSON.stringify(buildSave());
 const statusEl=document.getElementById('cloudStatus');
-if(statusEl){statusEl.className='cloud-status show loading';statusEl.textContent='⏳ 儲存中...';}
-fetch(CLOUD_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:data})
-.then(()=>{
-if(statusEl){statusEl.className='cloud-status show ok';statusEl.textContent='✅ 已儲存到Google Drive! '+nowStr();}
+if(statusEl){statusEl.className='cloud-status show loading';statusEl.textContent='⏳ Saving...';}
+
+const payload=JSON.stringify({
+token:CLOUD_TOKEN,
+file:CLOUD_FILE,
+data:saveData
+});
+
+fetch(CLOUD_URL,{method:'POST',body:payload})
+.then(r=>r.json())
+.then(res=>{
+if(res.ok){
+if(statusEl){statusEl.className='cloud-status show ok';statusEl.textContent='✅ Saved! '+nowStr()+' ('+res.bytes+' bytes)';}
 toast('☁️ Cloud saved!');
+}else{
+if(statusEl){statusEl.className='cloud-status show err';statusEl.textContent='❌ '+res.msg;}
+toast('Save failed: '+res.msg);
+}
 })
 .catch(err=>{
-if(statusEl){statusEl.className='cloud-status show err';statusEl.textContent='❌ 儲存失敗: '+err.message;}
+if(statusEl){statusEl.className='cloud-status show err';statusEl.textContent='❌ '+err.message;}
 toast('Save failed');
 });
 }
@@ -490,24 +500,26 @@ toast('Save failed');
 function cloudLoad(){
 if(!CLOUD_URL){toast('未設定Cloud URL');return}
 const statusEl=document.getElementById('cloudStatus');
-if(statusEl){statusEl.className='cloud-status show loading';statusEl.textContent='⏳ 讀取中...';}
-fetch(CLOUD_URL)
-.then(r=>r.text())
-.then(txt=>{
-if(!txt||txt==='NOT_FOUND'||txt.trim()===''){
-if(statusEl){statusEl.className='cloud-status show err';statusEl.textContent='⚠️ 雲端無存檔';}
-toast('No cloud save found');return;
-}
-let d;try{d=JSON.parse(txt)}catch(e){
-if(statusEl){statusEl.className='cloud-status show err';statusEl.textContent='❌ 資料格式錯誤';}
-toast('Parse error');return;
+if(statusEl){statusEl.className='cloud-status show loading';statusEl.textContent='⏳ Loading...';}
+
+fetch(CLOUD_URL+'?token='+encodeURIComponent(CLOUD_TOKEN)+'&file='+encodeURIComponent(CLOUD_FILE))
+.then(r=>r.json())
+.then(res=>{
+if(res.ok){
+let d;try{d=JSON.parse(res.data)}catch(e){
+if(statusEl){statusEl.className='cloud-status show err';statusEl.textContent='❌ Data parse error';}
+toast('Data corrupted');return;
 }
 applyLoad(d);
-if(statusEl){statusEl.className='cloud-status show ok';statusEl.textContent='✅ 已從雲端載入! '+nowStr();}
+if(statusEl){statusEl.className='cloud-status show ok';statusEl.textContent='✅ Loaded! '+nowStr();}
 toast('☁️ Cloud loaded!');render();
+}else{
+if(statusEl){statusEl.className='cloud-status show err';statusEl.textContent='⚠️ '+res.msg;}
+toast(res.msg);
+}
 })
 .catch(err=>{
-if(statusEl){statusEl.className='cloud-status show err';statusEl.textContent='❌ 讀取失敗: '+err.message;}
+if(statusEl){statusEl.className='cloud-status show err';statusEl.textContent='❌ '+err.message;}
 toast('Load failed');
 });
 }
