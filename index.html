@@ -6,7 +6,7 @@
 <title>CRE Use of English — Practice System v1.1</title>
 <style>
 :root{
---blue-50:#eff6ff;--blue-100:#dbeafe;--blue-200:#bfdbfe;--blue-500:#3b82f6;--blue-600:#2563eb;--blue-700:#1d4ed8;--blue-800:#1e40af;--blue-900:#1e3a8a;
+--blue-50:#fdf2f8;--blue-100:#fce7f3;--blue-200:#fbcfe8;--blue-500:#ec4899;--blue-600:#db2777;--blue-700:#be185d;--blue-800:#9d174d;--blue-900:#831843;
 --green-50:#f0fdf4;--green-100:#dcfce7;--green-500:#22c55e;--green-600:#16a34a;--green-700:#15803d;
 --red-50:#fef2f2;--red-100:#fee2e2;--red-500:#ef4444;--red-600:#dc2626;--red-700:#b91c1c;
 --amber-50:#fffbeb;--amber-100:#fef3c7;--amber-500:#f59e0b;--amber-600:#d97706;
@@ -88,7 +88,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Ro
 .prompt-card h3{font-size:13px;color:var(--blue-800);margin-bottom:8px}
 .prompt-card.master h3{color:var(--purple-700)}
 .prompt-text{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius-sm);padding:12px;font-size:11px;max-height:160px;overflow-y:auto;white-space:pre-wrap;line-height:1.6;font-family:'SF Mono',monospace}
-/* Quiz */
 .quiz-bar{display:flex;justify-content:space-between;align-items:center;padding:12px 0}
 .timer-area{display:flex;align-items:center;gap:6px}
 .timer-display{font-size:22px;font-weight:800;color:var(--blue-700);font-variant-numeric:tabular-nums}
@@ -118,7 +117,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Ro
 .opt-btn:hover{border-color:var(--blue-300);background:var(--blue-50)}
 .opt-btn.selected{border-color:var(--blue-600);background:var(--blue-50);color:var(--blue-800);font-weight:600}
 .nav-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
-/* Modal */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
 .modal-overlay.show{opacity:1;pointer-events:auto}
 .modal-box{background:#fff;border-radius:var(--radius);padding:24px;max-width:320px;width:100%;box-shadow:var(--shadow-lg);text-align:center}
@@ -126,7 +124,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Ro
 .modal-box p{font-size:13px;color:var(--gray-500);margin-bottom:18px;white-space:pre-wrap}
 .modal-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .modal-btns .btn{font-size:13px;padding:10px}
-/* Result */
 .result-hero{background:linear-gradient(135deg,var(--blue-700),var(--blue-900));border-radius:var(--radius);padding:28px 20px;text-align:center;color:#fff;margin-bottom:16px;box-shadow:var(--shadow-lg)}
 .result-hero.full-paper{background:linear-gradient(135deg,var(--purple-600),var(--blue-900))}
 .result-hero .score-big{font-size:48px;font-weight:900}
@@ -140,7 +137,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Ro
 .breakdown-item .bd-label{font-size:10px;opacity:.7}
 .breakdown-item .bd-score{font-size:16px;font-weight:800}
 .bank-update{background:var(--green-50);border:1px solid var(--green-100);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:14px;font-size:12px;color:var(--green-700)}
-/* Review Items */
 .ri{background:#fff;border-radius:var(--radius-sm);margin-bottom:8px;box-shadow:var(--shadow-sm);border:1px solid var(--gray-100);overflow:hidden}
 .ri-wrong{border-left:3px solid var(--red-500)}
 .ri-right{border-left:3px solid var(--green-500)}
@@ -162,13 +158,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Ro
 .ri-del:hover{color:var(--red-600)}
 .psg-in-bank{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius-xs);padding:10px;margin-top:6px;font-size:12px;line-height:1.8;max-height:150px;overflow-y:auto;white-space:pre-wrap}
 .psg-label{display:inline-block;background:var(--blue-50);color:var(--blue-700);font-size:10px;font-weight:600;padding:1px 6px;border-radius:4px;margin-bottom:4px}
-/* Sub-tabs for wrong bank */
 .sub-tabs{display:flex;gap:2px;background:var(--gray-100);padding:3px;border-radius:var(--radius-sm);margin-bottom:12px}
 .sub-tab{flex:1;padding:7px 4px;border:none;border-radius:var(--radius-xs);background:transparent;color:var(--gray-500);font-size:11px;font-weight:600;cursor:pointer;text-align:center}
 .sub-tab.on{background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.05)}
 .sub-tab.on.err-tab{color:var(--red-600)}
 .sub-tab.on.unc-tab{color:var(--amber-600)}
-/* History */
 .hi-group-title{font-size:12px;font-weight:700;color:var(--gray-400);letter-spacing:.5px;margin:16px 0 8px;padding-left:2px}
 .hi-card{background:#fff;border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:8px;box-shadow:var(--shadow-sm);border:1px solid var(--gray-100);cursor:pointer;transition:.15s}
 .hi-card:hover{box-shadow:var(--shadow);border-color:var(--blue-200)}
@@ -202,7 +196,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Ro
 </div>
 </div>
 <script>
-// ===== MODAL =====
 function showModal(title,msg,confirmText,onConfirm){
 document.getElementById('modalTitle').textContent=title;
 document.getElementById('modalMsg').textContent=msg;
@@ -222,7 +215,6 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).substr(
 function qKey(q){return(q.stem||'').substring(0,60)+'##'+(q.options?q.options[0]:'')}
 function optLabel(i){return'ABCDE'[i]||String(i);}
 
-// ===== META =====
 const PARTS_META=[
 {id:1,name:"Part 1 — Comprehension",desc:"Reading passage + inference",count:10,icon:"📖",optCount:4},
 {id:2,name:"Part 2 — Error Identification",desc:"Find lexical/grammatical/stylistic errors",count:10,icon:"🔍",optCount:5},
@@ -230,12 +222,10 @@ const PARTS_META=[
 {id:4,name:"Part 4 — Paragraph Improvement",desc:"Revise draft passages",count:10,icon:"📝",optCount:4}
 ];
 
-// ===== PASSAGES =====
 const PASSAGE_P1=`The notion that technology invariably leads to progress is one that has been largely unchallenged in public discourse for decades. From the industrial revolution onwards, each wave of innovation has been greeted with optimism, and those who expressed reservations were often dismissed as Luddites or reactionaries. Yet a more nuanced examination of the relationship between technological advancement and human wellbeing reveals a far more complex picture.\n\nConsider the impact of social media on democratic processes. While these platforms were initially celebrated as tools for democratisation — enabling citizens to organise, share information, and hold power to account — their capacity for spreading misinformation has proved equally formidable. The algorithms that determine what users see are designed not to inform but to engage, and outrage, it transpires, is considerably more engaging than nuance.\n\nThis is not to suggest that we should reject technological innovation wholesale. Rather, the argument is for a more deliberate and critical approach to adoption. The question should never be simply whether a new technology can be deployed, but whether it should be, and under what conditions. History offers numerous examples of innovations that were technically feasible but socially destructive — from leaded petrol to asbestos insulation.\n\nUltimately, the measure of any technology should be its contribution to human flourishing in its broadest sense. This requires that we move beyond simplistic metrics of economic growth or efficiency and consider the full spectrum of effects on social cohesion, mental health, equality of opportunity, and environmental sustainability. Technology, after all, is a means to an end, not an end in itself.`;
 
 const PASSAGE_P4=`Passage A:\n\n(1) The city council has announced plans to convert three downtown parking lots into public green spaces. (2) The decision follows years of advocacy by environmental groups. (3) Having conducted extensive research into the benefits of urban greenery the council believes the investment will yield significant returns. (4) Studies show that access to green spaces reduces stress and promotes physical activity. (5) Property values near parks tend to increase by up to 20 percent. (6) However, some business owners have expressed concerns. (7) They worry that reduced parking will drive customers to suburban shopping centres. (8) The council has promised to address these concerns. (9) A new multi-storey car park will be built on the edge of the downtown area. (10) Shuttle buses will connect it to the main shopping streets.\n\n---\n\nPassage B:\n\n(1) Remote working has become increasingly common since the pandemic. (2) Many employees report higher job satisfaction when working from home. (3) Employers benefit from reduced overhead costs. (4) Despite these advantages, remote working is not without its challenges. (5) Some workers struggle with isolation and find it difficult to maintain boundaries between work and personal life. (6) Communication between team members can also suffer. (7) Misunderstandings that would be quickly resolved in person may escalate when conducted through email or messaging. (8) For this reason many organisations have adopted hybrid models. (9) Employees typically spend two or three days in the office and the remainder at home. (10) This approach attempts to balance flexibility with the benefits of face-to-face collaboration.`;
 
-// ===== BUILT-IN QUESTIONS =====
 const BUILTIN_QUESTIONS={
 1:[
 {stem:"The author's primary purpose in writing this passage is to:",options:["argue that technology should be rejected entirely","suggest that technological progress requires more critical evaluation","prove that social media has destroyed democracy","compare modern technology with industrial revolution machinery"],answer:1,explanation:"The author repeatedly argues for 'a more deliberate and critical approach' — not rejection, but evaluation.",_part:1},
@@ -287,7 +277,6 @@ const BUILTIN_QUESTIONS={
 ]
 };
 
-// ===== PROMPTS =====
 const PROMPTS={
 1:`【CRE Use of English — Part 1: Comprehension 出題Prompt】\n\n你是CRE Use of English考試的出卷員。現在要出Part 1 Comprehension的題目。\n\n===== 結構 =====\n- 生成一篇300-500字英文散文（非專業背景，議論或說明體裁）\n- 配10道MC（4選1，A-D）\n- 難度：Flesch-Kincaid Grade 10-12\n\n===== 能力覆蓋（10題分配） =====\n- 主旨歸納(gist)：1-2題\n- 細節辨識(detail)：2-3題\n- 推論判斷(inference)：2-3題\n- 事實vs意見(fact/opinion)：1題\n- 詞語/比喻理解(vocabulary/figurative)：1-2題\n- 作者態度/語氣(tone/attitude)：1題\n\n===== 難度標準 =====\n- 文章用詞：中高級（如hitherto, unprecedented, ostensibly）\n- 選項差異：paraphrase式，非直接引用原文\n- 至少2題需跨段整合資訊\n- 干擾項須利用原文字眼製造似是而非\n\n⚠️ 輸出JSON格式：\n{\n  "part": 1,\n  "passage": "文章全文",\n  "questions": [\n    {"stem":"題目","options":["A","B","C","D"],"answer":0,"explanation":"解釋"}\n  ]\n}\nanswer: 0=A, 1=B, 2=C, 3=D。請直接輸出JSON。`,
 2:`【CRE Use of English — Part 2: Error Identification 出題Prompt】\n\n你是CRE Use of English考試的出卷員。現在要出Part 2 Error Identification的題目。\n\n===== 結構 =====\n- 10句獨立句子\n- 每句4處劃線(A-D) + E "No error"，5選1\n- 每10題中1-2題答案為E\n\n===== 題幹格式 =====\n用 [A: 詞組], [B: 詞組], [C: 詞組], [D: 詞組] 標記劃線位置\n\n⚠️ 輸出JSON格式：\n{\n  "part": 2,\n  "questions": [\n    {"stem":"句子","options":["A部分","B部分","C部分","D部分","No error"],"answer":0,"explanation":"解釋"}\n  ]\n}\nanswer: 0=A, 1=B, 2=C, 3=D, 4=E(No error)。請直接輸出JSON。`,
@@ -296,7 +285,6 @@ const PROMPTS={
 full:`【CRE Use of English — Full Paper 出題Prompt】\n\n你是CRE Use of English考試的出卷員。現在要出一份完整試卷（共40題）。\n\nPart 1 — Comprehension（10題）：一篇300-500字英文散文 + 10道4選1\nPart 2 — Error Identification（10題）：10句，4處劃線+E，5選1\nPart 3 — Sentence Completion（10題）：10句含空格，5選1\nPart 4 — Paragraph Improvement（10題）：2篇draft×5題，4選1\n\n⚠️ 輸出格式：\n{\n  "fullPaper": true,\n  "passage": "Part1閱讀文章",\n  "passage4": "Part4兩篇draft(用---分隔)",\n  "parts": {\n    "1": [{...}×10],\n    "2": [{...options有5個}×10],\n    "3": [{...options有5個}×10],\n    "4": [{...}×10]\n  }\n}\nanswer: 0=A,1=B,2=C,3=D,4=E。請直接輸出JSON。`
 };
 
-// ===== STATE =====
 let CQ=JSON.parse(JSON.stringify(BUILTIN_QUESTIONS));
 let PSG1=PASSAGE_P1;
 let PSG4=PASSAGE_P4;
@@ -316,13 +304,11 @@ isFP:false,mapOpen:false,_bu:null,viewRec:null,
 _curPsg1:PASSAGE_P1,_curPsg4:PASSAGE_P4
 };
 
-// ===== TIMER =====
 function tStart(){if(S._tID)clearInterval(S._tID);S.tOn=true;S._tID=setInterval(()=>{S.tSec++;const e=document.getElementById('tmr');if(e)e.textContent=fmt(S.tSec)},1000)}
 function tPause(){S.tOn=false;if(S._tID){clearInterval(S._tID);S._tID=null}}
 function tReset(){tPause();S.tSec=0;render()}
 function tStop(){tPause()}
 
-// ===== RENDER =====
 function render(){
 const app=document.getElementById('app');
 if(S.page==='quiz')renderQuiz(app);
@@ -331,7 +317,6 @@ else if(S.page==='detail')renderDetail(app);
 else renderHome(app);
 }
 
-// ===== HOME =====
 function renderHome(app){
 const tabs=['quiz','wrong','history','import','prompts','save'];
 const tNames=['Practice','Bank','History','Import','Prompt','Save'];
@@ -361,7 +346,6 @@ h+=`<div class="part-card" onclick="startP(${p.id})"><h3>${p.icon} ${p.name}</h3
 return h;
 }
 
-// ===== WRONG/UNCERTAIN BANK =====
 function tabWrong(){
 const tw=Object.values(WB).reduce((a,b)=>a+b.length,0);
 const tu=Object.values(UB).reduce((a,b)=>a+b.length,0);
@@ -417,7 +401,6 @@ else UB[pid].splice(idx,1);
 toast('Removed');render();
 }
 
-// ===== HISTORY =====
 function tabHist(){
 if(!HIST.length)return`<div class="empty-state"><div class="ei">📋</div><p>No records yet</p></div>`;
 let h=`<div class="info-box info-blue">📌 Each record saves all questions + answers + passage. Tap to review.</div>`;
@@ -460,7 +443,6 @@ h+=`<button class="btn btn-primary" style="margin-top:10px" onclick="doLoad()">L
 return h;
 }
 
-// ===== QUIZ =====
 function renderQuiz(app){
 const qs=S.qs,q=qs[S.qi];if(!q){goHome();return}
 const title=S.isFP?'Full Paper':(PARTS_META.find(p=>p.id===S.part)?.name||'Shuffle');
@@ -479,12 +461,10 @@ h+=`<div class="${cls}" onclick="S.qi=${i};render()">${i+1}</div>`;
 });h+=`</div>`;
 }
 if(S.isFP&&q._part){const prev=S.qi>0?qs[S.qi-1]:null;if(!prev||prev._part!==q._part){const pm=PARTS_META.find(p=>p.id===q._part);h+=`<div class="part-divider"><h4>${pm?pm.icon:''} ${pm?pm.name:''}</h4><p>${pm?pm.desc:''}</p></div>`;}}
-// ★ Show passage for ALL Part 1 questions (not just passage:true)
 if(q._part===1&&S._curPsg1){
 h+=`<button class="passage-toggle" onclick="S.psgOpen=!S.psgOpen;render()">📄 ${S.psgOpen?'Hide':'Show'} Reading Passage</button>`;
 if(S.psgOpen)h+=`<div class="passage-content">${S._curPsg1.replace(/\n/g,'<br>')}</div>`;
 }
-// ★ Show passage for ALL Part 4 questions
 if(q._part===4&&S._curPsg4){
 h+=`<button class="passage-toggle" onclick="S.psgOpen=!S.psgOpen;render()">📄 ${S.psgOpen?'Hide':'Show'} Draft Passages</button>`;
 if(S.psgOpen)h+=`<div class="passage-content">${S._curPsg4.replace(/\n/g,'<br>')}</div>`;
@@ -509,7 +489,6 @@ if(fl)msg+=`\n🚩 ${fl} flagged as uncertain`;
 showModal('Submit',msg,'Submit',submitQ);
 }
 
-// ===== RESULT =====
 function renderResult(app){
 const qs=S.qs;let cor=0;qs.forEach((q,i)=>{if(S.ans[i]===q.answer)cor++});
 const pct=qs.length?Math.round(cor/qs.length*100):0;
@@ -557,7 +536,6 @@ S._curPsg1=r.passage1||'';S._curPsg4=r.passage4||'';
 renderResult(app);
 }
 
-// ===== ACTIONS =====
 function goHome(){tStop();S.page='home';render()}
 function pickA(i){S.ans[S.qi]=i;render()}
 function viewR(id){S.viewRec=id;S.page='detail';render();scrollTo(0,0)}
@@ -597,7 +575,6 @@ if(S._tID){clearInterval(S._tID);S._tID=null}
 render();
 }
 
-// ===== SUBMIT =====
 function submitQ(){
 tStop();const qs=S.qs;const submitTime=nowStr();
 let cor=0,added=0,removed=0,uncAdded=0;
@@ -614,7 +591,6 @@ if(bi>=0){WB[pid].splice(bi,1);removed++}
 }else if(S.ans[i]!==undefined){
 if(bi<0){
 const entry={stem:q.stem,options:q.options,answer:q.answer,explanation:q.explanation||'',_part:pid,dateAdded:submitTime,yourAnswer:S.ans[i]};
-// ★ Store passage with wrong question for P1 and P4
 if(pid===1&&S._curPsg1){entry._passage=S._curPsg1;entry._psgLabel='P1 '+psgLabel}
 if(pid===4&&S._curPsg4){entry._passage=S._curPsg4;entry._psgLabel='P4 '+psgLabel}
 WB[pid].push(entry);added++;
@@ -635,7 +611,7 @@ HIST.push({
 id:uid(),date:submitTime,part:S.part||0,mode:S.mode,
 total:qs.length,correct:cor,time:S.tSec,
 isFP:S.isFP,breakdown:S.isFP?breakdown:undefined,
-passage1:S._curPsg1||'',passage4:S._curPsg4||'', // ★ store passages with history
+passage1:S._curPsg1||'',passage4:S._curPsg4||'',
 questions:qs.map(q=>({stem:q.stem,options:q.options,answer:q.answer,explanation:q.explanation||'',_part:q._part})),
 answers:{...S.ans}
 });
@@ -645,7 +621,6 @@ S.page='result';render();scrollTo(0,0);
 toast(`Saved! +${added} wrong`);
 }
 
-// ===== COPY WRONG =====
 function cpWrong(){
 const qs=S.qs;
 let txt=`📝 CRE English Wrong Qs · ${nowStr()}\n${'═'.repeat(30)}\n\n`;let n=0;
@@ -661,7 +636,6 @@ txt+=`\n${'─'.repeat(30)}\n\n`;
 copyTxt(txt);toast(`Copied ${n} questions!`);
 }
 
-// ===== IMPORT =====
 function doImport(){
 const area=document.getElementById('impA'),msg=document.getElementById('impMsg');if(!area)return;
 let raw=area.value.trim();if(!raw){sMsg(msg,'Please paste JSON.','r');return}
@@ -686,7 +660,6 @@ sMsg(msg,`✓ Part ${pid} imported: ${d.questions.length} questions!`,'g');area.
 }
 function sMsg(el,txt,c){if(!el)return;el.style.display='block';el.style.background=c==='r'?'var(--red-50)':'var(--green-50)';el.style.color=c==='r'?'var(--red-600)':'var(--green-600)';el.textContent=txt}
 
-// ===== SAVE/LOAD =====
 function buildSave(){
 return{v:'1.1-USE',savedAt:nowStr(),wb:WB,ub:UB,hist:HIST,imp:IMP,pc:PC,cq:CQ,psg1:PSG1,psg4:PSG4,psgHist:PSG_HIST};
 }
@@ -705,7 +678,6 @@ toast(`Loaded! ${HIST.length} records · ${qCount} questions`);area.value='';ren
 function copyTxt(t){if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).catch(()=>fbCopy(t));else fbCopy(t)}
 function fbCopy(t){const ta=document.createElement('textarea');ta.value=t;ta.style.cssText='position:fixed;opacity:0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta)}
 
-// ===== KEYBOARD =====
 document.addEventListener('keydown',e=>{
 if(S.page!=='quiz')return;
 if(e.target.tagName==='TEXTAREA'||e.target.tagName==='INPUT')return;
