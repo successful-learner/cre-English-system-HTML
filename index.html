@@ -483,6 +483,8 @@ function fbCopy(t){const a=document.createElement('textarea');a.value=t;a.style.
 function optLetter(i){return OPT_LETTERS[i]||String.fromCharCode(65+i)}
 
 // === Image Functions ===
+var _pendingImages = [];
+
 function openImgViewer(url){document.getElementById('imgViewerImg').src=url;document.getElementById('imgViewer').classList.add('show')}
 function closeImgViewer(){document.getElementById('imgViewer').classList.remove('show')}
 function uploadImageToCloud(base64Data,fileName,mimeType,callback){fetch(CLOUD_URL,{method:'POST',body:JSON.stringify({token:CLOUD_TOKEN,action:'uploadImage',imgFolder:IMG_FOLDER,imageData:base64Data,imageName:fileName,mimeType:mimeType})}).then(r=>r.json()).then(res=>{if(res.ok)callback(null,res);else callback(res.msg||'error')}).catch(err=>callback(err.message))}
