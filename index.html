@@ -95,7 +95,6 @@ body{font-family:var(--font);background:var(--g50);color:var(--g800);line-height
 .sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .sec-title{font-size:16px;font-weight:700;color:var(--g800)}
 
-/* Collapsible Section */
 .sec-toggle{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
 .sec-toggle .sec-arrow{transition:.2s;display:flex;align-items:center}
 .sec-toggle .sec-arrow svg{width:16px;height:16px;stroke:var(--g400);stroke-width:2.5}
@@ -128,7 +127,6 @@ body{font-family:var(--font);background:var(--g50);color:var(--g800);line-height
 .paper-item .pi-act-btn.pi-del-btn{background:var(--rose-l)}
 .paper-item .pi-act-btn.pi-del-btn svg{stroke:var(--rose)}
 
-/* Date Dropdown */
 .date-dropdown{display:flex;align-items:center;gap:8px;margin-bottom:12px}
 .date-dropdown select{flex:1;border:1.5px solid var(--g200);border-radius:var(--rx);padding:10px 14px;font-size:13px;font-family:var(--font);background:var(--g0);color:var(--g800);cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23737373' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
 .date-dropdown select:focus{border-color:var(--g900);outline:none}
@@ -155,7 +153,6 @@ body{font-family:var(--font);background:var(--g50);color:var(--g800);line-height
 .sub-tab{flex:1;padding:9px 8px;border:none;border-radius:var(--rx);background:transparent;color:var(--g500);font-size:12px;font-weight:600;cursor:pointer;text-align:center;white-space:nowrap;transition:.2s}
 .sub-tab.on{background:var(--g0);color:var(--g800);box-shadow:0 1px 3px rgba(0,0,0,.06)}
 
-/* Tags */
 .tag-chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
 .tag-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;background:var(--g100);color:var(--g600)}
 .tag-chip .tag-del{background:none;border:none;cursor:pointer;font-size:13px;color:var(--g400);padding:0 2px;line-height:1}
@@ -310,7 +307,6 @@ body{font-family:var(--font);background:var(--g50);color:var(--g800);line-height
 .prompt-card{background:var(--g0);border-radius:var(--r);padding:18px;margin-bottom:12px;box-shadow:var(--sh)}
 .prompt-card h4{font-size:13px;font-weight:700;margin-bottom:6px;color:var(--g700)}
 
-/* Prompt Link Box */
 .prompt-link-box{display:flex;align-items:center;justify-content:center;padding:14px;margin-bottom:14px;background:var(--g0);border:1.5px dashed var(--g200);border-radius:var(--rs)}
 .prompt-link-box .shortcut-link{margin:0}
 
@@ -389,14 +385,14 @@ body{font-family:var(--font);background:var(--g50);color:var(--g800);line-height
 </head>
 <body>
 <div id="app"></div>
-<nav class="btm-nav" id="btmNav"></nav>
-<div class="toast" id="toast"></div>
 <div class="toast" id="toast"></div>
 <div class="modal-ov" id="mo"><div class="modal-bx"><h3 id="mT"></h3><p id="mM"></p><div class="modal-btns"><button class="btn btn-outline" onclick="closeM()">取消</button><button class="btn btn-danger" id="mC">確定</button></div></div></div>
 <div class="qa-overlay" id="qaOv" onclick="closeQA()"><div class="qa-bg"></div><div class="qa-panel" onclick="event.stopPropagation()"><div class="qa-grid" id="qaGrid"></div></div></div>
 
 <script>
-var PART_NAMES={1:'Reading', 2:'Vocabulary', 3:'Grammar', 4:'Sentence Completion'}
+var PART_NAMES={1:'Comprehension',2:'Error Identification',3:'Sentence Completion',4:'Paragraph Improvement'};
+var PART_OPT_COUNT={1:4,2:5,3:5,4:4};
+var OPT_LETTERS='ABCDE';
 var THEME={cardColor:'#1a1a2e',accentColor:'#6c5ce7',pillStyle:'mono'};
 var TITLE_MAX=40;
 var CONTENT_PREVIEW_LEN=80;
@@ -443,9 +439,25 @@ settings:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4
 const CLOUD_URL='https://script.google.com/macros/s/AKfycbwSlrUxnW6MZw8SFdkwa1UF07QykfUM49xsFntlTO5Z2j1qViA3vSMhq1X3hgmjvW07/exec';
 const CLOUD_TOKEN='mySecret2026';
 const CLOUD_FILE='cre_english_v13.txt';
-const JSON_FORMAT_SUFFIX=`\n\n【輸出JSON格式（嚴格遵守）】\n{"fullPaper":true,"passage":"（Part1的完整文章）","parts":{"1":[10題],"2":[10題],"3":[10題],"4":[10題]}}\n\n每題格式：{"stem":"","options":["A","B","C","D"],"answer":0,"explanation":""}\n- Part 1 Section I的題加"passage":true\n- answer為0-3對應ABCD\n\n請直接輸出JSON，不要其他文字。`;
 
-const DRAFT_KEY='cre_drafts_v13';
+const JSON_FORMAT_SUFFIX=`\n\n【Output JSON format (strictly follow)】
+
+Full paper:
+{"fullPaper":true,"passage":"(Section I reading passage full text)","passages":{"4":["Draft passage 1 with numbered sentences","Draft passage 2 with numbered sentences"]},"parts":{"1":[10 questions],"2":[10 questions],"3":[10 questions],"4":[10 questions]}}
+
+Per-question format by section:
+- Section I (4 options A-D): {"stem":"...","options":["opt A","opt B","opt C","opt D"],"answer":0,"explanation":"...","passage":true}
+- Section II (5 options A-E): {"stem":"[A: phrase] ... [B: phrase] ... [C: phrase] ... [D: phrase] ...","options":["A","B","C","D","E: No error"],"answer":0,"explanation":"..."}
+- Section III (5 options A-E): {"stem":"Sentence with ________.","options":["opt A","opt B","opt C","opt D","opt E"],"answer":0,"explanation":"..."}
+- Section IV (4 options A-D): {"stem":"Which revision of sentence (X)...\\n\\n(X) Original sentence text.","options":["opt A","opt B","opt C","opt D"],"answer":0,"explanation":"...","passageIndex":0}
+
+Rules:
+- answer: 0-based. Sec I & IV → 0-3. Sec II & III → 0-4.
+- passage: true → Section I only
+- passageIndex: 0 or 1 → Section IV only (which draft passage)
+- Output JSON only, no other text.`;
+
+const DRAFT_KEY='cre_eng_drafts_v13';
 function saveDraft(k,v){try{let d=JSON.parse(localStorage.getItem(DRAFT_KEY)||'{}');d[k]=v;localStorage.setItem(DRAFT_KEY,JSON.stringify(d))}catch(e){}}
 function getDraft(k){try{let d=JSON.parse(localStorage.getItem(DRAFT_KEY)||'{}');return d[k]||''}catch(e){return''}}
 function clearDraft(k){try{let d=JSON.parse(localStorage.getItem(DRAFT_KEY)||'{}');delete d[k];localStorage.setItem(DRAFT_KEY,JSON.stringify(d))}catch(e){}}
@@ -458,7 +470,7 @@ function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 function truncate(s,len){if(!s)return'';return s.length>len?s.substring(0,len)+'…':s}
 function nowStr(){const d=new Date();return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate())+' '+p2(d.getHours())+':'+p2(d.getMinutes())}
 function dateStr(){const d=new Date();return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate())}
-function shortDate(){const d=new Date();return(d.getMonth()+1)+'月'+d.getDate()+'日'}
+function shortDate(){const d=new Date();return(d.getMonth()+1)+'/'+d.getDate()}
 function p2(n){return String(n).padStart(2,'0')}
 function fmtT(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
 function fmtB(b){return b<1024?b+'B':b<1048576?(b/1024).toFixed(1)+'KB':(b/1048576).toFixed(1)+'MB'}
@@ -467,51 +479,163 @@ function qKey(q){return(q.stem||'').substring(0,50)+'##'+((q.options&&q.options[
 function shuffleArr(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}return arr}
 function copyTxt(t){if(navigator.clipboard)navigator.clipboard.writeText(t).catch(()=>fbCopy(t));else fbCopy(t)}
 function fbCopy(t){const a=document.createElement('textarea');a.value=t;a.style.cssText='position:fixed;opacity:0';document.body.appendChild(a);a.select();document.execCommand('copy');document.body.removeChild(a)}
+function optLetter(i){return OPT_LETTERS[i]||String.fromCharCode(65+i)}
 
-const PM=[{id:1,name:"Part 1 — 閱讀理解",short:"閱讀理解",icon:IC.book,grad:'pt1'},{id:2,name:"Part 2 — 字詞辨識",short:"字詞辨識",icon:IC.search,grad:'pt2'},{id:3,name:"Part 3 — 句子辨析",short:"句子辨析",icon:IC.layers,grad:'pt3'},{id:4,name:"Part 4 — 詞句運用",short:"詞句運用",icon:IC.edit,grad:'pt4'}];
-function partShort(id){const p=PM.find(x=>x.id===id);return p?p.short:'Part '+id}
+const PM=[{id:1,name:"Sec I — Comprehension",short:"Comprehension",icon:IC.book,grad:'pt1'},{id:2,name:"Sec II — Error Identification",short:"Error ID",icon:IC.search,grad:'pt2'},{id:3,name:"Sec III — Sentence Completion",short:"Sentence",icon:IC.layers,grad:'pt3'},{id:4,name:"Sec IV — Paragraph Improvement",short:"Paragraph",icon:IC.edit,grad:'pt4'}];
+function partShort(id){const p=PM.find(x=>x.id===id);return p?p.short:'Sec '+id}
 
 const DEFAULT_PROMPTS = {
-  full: `You are a CRE Use of English exam committee member. Generate a full mock paper with 40 questions.
+  full: `You are a CRE Use of English exam committee member. Generate a full mock paper with 40 questions total.
 
-【Structure】
-- Part 1 Reading Comprehension (15 questions · 4 options · single passage ~600 words)
-- Part 2 Vocabulary & Usage (10 questions · 4 options · no passage)
-- Part 3 Error Identification (10 questions · 4 options · no passage)
-- Part 4 Sentence Completion (5 questions · 4 options · no passage)
+【Structure — strictly follow the official format】
+- Section I: Comprehension (10 questions · 4 options A-D · single prose passage ~800 words, non-technical)
+- Section II: Error Identification (10 questions · 5 options A-E · E = "No error")
+- Section III: Sentence Completion (10 questions · 5 options A-E · fill in blank, grammar focus)
+- Section IV: Paragraph Improvement (10 questions · 4 options A-D · 2 draft passages with numbered sentences, 5 questions each)
 
-【Difficulty】Match actual CRE Use of English level — formal/semi-formal English in public service context.
-【Content】Government communications, public notices, workplace correspondence, general knowledge.
-【Trap Design】Collocation errors, near-synonym confusion, tense/aspect shifts, preposition misuse, register mismatch.`,
+【Difficulty】Match actual CRE Use of English level — formal/semi-formal register, public service context.
+【Content】Non-technical prose, public affairs, workplace, general knowledge. No specialist jargon.
+【Trap Design】
+- Sec I: Over-inference, scope shift, fact vs opinion confusion, figurative language misread
+- Sec II: Common spoken errors that look correct, subtle preposition/collocation errors, "No error" traps
+- Sec III: Options semantically similar but grammatically different, embedded question word order
+- Sec IV: Revisions that fix one problem but create another, comma splices disguised as flow`,
 
-  1: `You are a CRE Use of English exam committee. Generate Part 1 Reading Comprehension (15 questions).
-- 4 options, based on one passage (~600 words) about public affairs/workplace
-- Test: main idea, detail location, inference, vocabulary in context, tone/attitude
-- Difficulty gradient: Q1-7 factual, Q8-15 inferential
-- Traps: over-inference, scope shift, paraphrase confusion`,
+  1: `You are a CRE Use of English exam committee. Generate Section I: Comprehension (10 questions).
 
-  2: `You are a CRE Use of English exam committee. Generate Part 2 Vocabulary & Usage (10 questions).
-- 4 options, no passage
-- Test: near-synonym differentiation, collocation, contextual word choice
-- All 4 options must be semantically close but differ in usage/register
-- Traps: false friends, register mismatch, collocation violation`,
+【Format】
+- Write ONE prose passage (~800 words, non-technical, formal register)
+- 4 options (A-D) per question
+- Topics: public affairs, social issues, workplace scenarios, general knowledge
+- The passage should be intellectually engaging but not require specialist knowledge
 
-  3: `You are a CRE Use of English exam committee. Generate Part 3 Error Identification (10 questions).
-- 4 options (A/B/C/D marking underlined portions), one contains error
-- Test: grammar accuracy — subject-verb agreement, tense, articles, prepositions
-- Each sentence contains exactly ONE error in one of the underlined portions
-- Traps: errors that sound natural in speech but are grammatically wrong`,
+【Skills tested】
+- Deciding on the gist / main idea
+- Identifying main points and supporting details
+- Drawing inferences from context
+- Distinguishing facts from opinion
+- Interpreting figurative language and tone
+- Vocabulary meaning in context
 
-  4: `You are a CRE Use of English exam committee. Generate Part 4 Sentence Completion (5 questions).
-- 4 options, no passage
-- Test: logical connectors, clause completion, parallel structure
-- Traps: semantic fit vs grammatical fit conflicts`
+【Difficulty gradient】
+- Q1-5: More factual/direct (locate information, identify main point, vocabulary in context)
+- Q6-10: More inferential (author's attitude, implied meaning, figurative language, logical structure)
+
+【Trap design】
+- Over-inference (reasonable but not stated in text)
+- Scope shift (answer too broad or too narrow)
+- Fact vs opinion confusion
+- Paraphrase that subtly changes meaning
+- Distractor uses words from passage but wrong context`,
+
+  2: `You are a CRE Use of English exam committee. Generate Section II: Error Identification (10 questions).
+
+【Format — CRITICAL】
+- Each question is ONE sentence with 4 underlined portions labelled A, B, C, D
+- 5th option is ALWAYS E = "No error"
+- Total: 5 options per question (A, B, C, D, E)
+- The error (if any) may be lexical, grammatical, or stylistic
+- Present underlined parts in stem like: "[A: Irrespective for] the outcome... the [B: sorry] affair... has [C: cast] a shadow... his [D: hitherto] unblemished record."
+
+【Distribution】
+- 7-8 questions should contain an error (answer = A, B, C, or D)
+- 2-3 questions should be correct (answer = E, No error)
+
+【Error types to cover】
+- Preposition usage (e.g. "irrespective of" not "for")
+- Subject-verb agreement
+- Tense/aspect errors
+- Article misuse (a/an/the/zero article)
+- Collocation errors
+- Word form confusion (noun/verb/adjective/adverb)
+- Pronoun reference errors
+- Parallel structure violations
+- Comparative/superlative errors
+
+【Register】Formal/semi-formal — government reports, business correspondence, academic writing.
+
+【Trap design】
+- Errors that sound natural in spoken English but are wrong in writing
+- Correct but unusual/formal usages that students might wrongly flag (e.g. "hitherto", "notwithstanding")
+- Near-miss prepositions where multiple seem plausible
+- "No error" sentences that contain unusual but correct structures`,
+
+  3: `You are a CRE Use of English exam committee. Generate Section III: Sentence Completion (10 questions).
+
+【Format — CRITICAL】
+- Each question has a sentence with ONE blank (________)
+- 5 options (A-E) to fill the blank
+- Focus is on GRAMMATICAL correctness, not just meaning
+- All 5 options should convey roughly similar meaning — the distinction is grammar
+
+【Skills tested】
+- Noun clause structure and word order (especially indirect questions)
+- Relative clause formation
+- Conditional structures (mixed conditionals, inverted conditionals)
+- Parallel structure in complex sentences
+- Subject-verb agreement with complex subjects
+- Tense/aspect selection in subordinate clauses
+- Comparative and correlative structures
+- Gerund vs infinitive after specific verbs/expressions
+
+【Reference example】
+"This company claims to predict in advance ________ by conducting exit polls."
+A: the results of an election will be
+B: the results will be of an election
+C: what results will be of an election
+D: what the results of an election will be ✓
+E: what will the results of an election be
+
+【Difficulty】
+- At least 2-3 options should be "almost correct" (one word wrong, or word order slightly off)
+- The correct answer should require understanding of a specific grammar rule
+- Avoid options that are obviously wrong at first glance
+
+【Trap design】
+- Inverted word order in embedded questions (looks like a direct question)
+- Missing/extra articles that change meaning
+- Wrong tense in time clauses (will vs present)
+- Dangling modifiers that sound natural in speech
+- Subjunctive mood requirements`,
+
+  4: `You are a CRE Use of English exam committee. Generate Section IV: Paragraph Improvement (10 questions).
+
+【Format — CRITICAL】
+- Write TWO short draft passages (each ~150-200 words)
+- Number every sentence in each passage: (1), (2), (3)... 
+- The drafts should contain deliberate weaknesses in writing style/structure
+- 5 questions per passage (total 10 questions)
+- 4 options (A-D) per question
+- Focus is on WRITING SKILLS, NOT comprehension
+
+【Draft passage requirements】
+- Each draft should be on a different topic (e.g. public notice + report, proposal + informational article)
+- Include problems like: weak transitions, run-on sentences, ambiguous pronouns, poor sentence linking, comma splices, redundancy, inconsistent tone
+- The passages should be understandable but clearly improvable
+
+【Question types (mix these)】
+- "Which is the best revision of sentence (X)?" — reproduce sentence (X) in the stem
+- "Which version of sentence (X) provides the best link between (Y) and (Z)?" — reproduce all relevant sentences
+- "What is the best way to combine sentences (X) and (Y)?"
+- "Which sentence should be removed to improve paragraph focus?"
+- "Where would the following sentence best be inserted?"
+
+【Important rules】
+- Always reproduce the relevant sentence(s) in the question stem
+- One option may be "No change needed" / "Sentence (X) as it is now"
+- Options should all be grammatically correct — the distinction is STYLE and COHERENCE
+
+【Trap design】
+- Revisions that fix grammar but break logical flow
+- Options that are individually well-written but don't fit the context
+- Comma splices disguised as smooth prose
+- Over-revision that changes the intended meaning`
 };
-  
+
 let POOL={1:[],2:[],3:[],4:[]};let PAPERS=[];let WB={1:[],2:[],3:[],4:[]};let UB={1:[],2:[],3:[],4:[]};
 let HIST=[];let MEMO=[];let NOTES=[];let PSG='';let CUSTOM_PROMPTS={};let PC=0;
-let GREETINGS={morning:'☀️ 早晨！今日操多份？',afternoon:'🌤️ 下午繼續練！',night:'🌙 夜晚衝刺中',latenight:'🌙 夜深繼續衝？'};
-let S={page:'home',tab:'home',wbSub:'wrong',poolPart:null,memoFilter:'all',noteFilter:'all',_noteCat:'all',part:null,qi:0,ans:{},flags:{},tSec:0,tOn:false,_tID:null,psgOpen:true,mode:'normal',qs:null,isFP:false,mapOpen:false,_bu:null,viewRec:null,_curPsg:'',_paperLabels:'',memoSel:{},noteSel:{},_paperView:null,impSub:'import',editingPaper:null,dateFilter:'all',mixDateFilter:'all',poolGroupOpen:{},qaOpen:false,expandedDot:null,paperSecOpen:true,mixSecOpen:true};
+let GREETINGS={morning:'☀️ Morning! Time to practice.',afternoon:'🌤️ Afternoon session.',night:'🌙 Night grind.',latenight:'🌙 Late night push?'};
+let S={page:'home',tab:'home',wbSub:'wrong',poolPart:null,memoFilter:'all',noteFilter:'all',_noteCat:'all',part:null,qi:0,ans:{},flags:{},tSec:0,tOn:false,_tID:null,psgOpen:true,psg4Open:true,mode:'normal',qs:null,isFP:false,mapOpen:false,_bu:null,viewRec:null,_curPsg:'',_psg4:[],_paperLabels:'',memoSel:{},noteSel:{},_paperView:null,impSub:'import',editingPaper:null,dateFilter:'all',mixDateFilter:'all',poolGroupOpen:{},qaOpen:false,expandedDot:null,paperSecOpen:true,mixSecOpen:true};
 
 function tStart(){if(S._tID)clearInterval(S._tID);S.tOn=true;S._tID=setInterval(()=>{S.tSec++;const e=document.getElementById('tmr');if(e)e.textContent=fmtT(S.tSec)},1000)}
 function tPause(){S.tOn=false;if(S._tID){clearInterval(S._tID);S._tID=null}}
@@ -520,41 +644,18 @@ function tStop(){tPause()}
 
 function getGreeting(){const h=new Date().getHours();if(h<6)return GREETINGS.latenight;if(h<12)return GREETINGS.morning;if(h<18)return GREETINGS.afternoon;return GREETINGS.night}
 function getPrompt(key){return CUSTOM_PROMPTS[key]||DEFAULT_PROMPTS[key]||''}
-function buildSave(){return{v:'13',savedAt:nowStr(),wb:WB,ub:UB,hist:HIST,memo:MEMO,notes:NOTES,pc:PC,psg:PSG,pool:POOL,papers:PAPERS,customPrompts:CUSTOM_PROMPTS,greetings:GREETINGS,theme:THEME}}
-function applyLoad(d){if(d.wb)WB=d.wb;if(d.ub)UB=d.ub;if(d.hist)HIST=d.hist;if(d.psg)PSG=d.psg;if(d.pc!==undefined)PC=d.pc;if(d.pool){for(let i=1;i<=4;i++)POOL[i]=d.pool[i]||[]}if(d.papers)PAPERS=d.papers;if(d.memo)MEMO=d.memo;if(d.notes)NOTES=d.notes;if(d.customPrompts)CUSTOM_PROMPTS=d.customPrompts;if(d.greetings)GREETINGS=d.greetings;if(d.theme)THEME=d.theme;for(let i=1;i<=4;i++){if(!WB[i])WB[i]=[];if(!UB[i])UB[i]=[];if(!POOL[i])POOL[i]=[]}if(!MEMO)MEMO=[];if(!NOTES)NOTES=[];if(!CUSTOM_PROMPTS)CUSTOM_PROMPTS={};if(!GREETINGS)GREETINGS={morning:'☀️ 早晨！',afternoon:'🌤️ 下午繼續練！',night:'🌙 夜晚衝刺中',latenight:'🌙 夜深繼續衝？'};if(!THEME)THEME={cardColor:'#1a1a2e',accentColor:'#6c5ce7'};applyTheme()}
-function cloudSaveAll(){const el=document.getElementById('cloudSt');if(el){el.className='cloud-status show loading';el.textContent='儲存中…';}fetch(CLOUD_URL,{method:'POST',body:JSON.stringify({token:CLOUD_TOKEN,file:CLOUD_FILE,data:JSON.stringify(buildSave())})}).then(r=>r.json()).then(res=>{if(res.ok){if(el){el.className='cloud-status show ok';el.textContent='已儲存 · '+nowStr();}toast('已儲存')}else{if(el){el.className='cloud-status show err';el.textContent='錯誤：'+(res.msg||'');}}}).catch(err=>{if(el){el.className='cloud-status show err';el.textContent='錯誤：'+err.message;}})}
-function cloudLoadAll(cb){const el=document.getElementById('cloudSt');if(el){el.className='cloud-status show loading';el.textContent='讀取中…';}fetch(CLOUD_URL+'?token='+encodeURIComponent(CLOUD_TOKEN)+'&file='+encodeURIComponent(CLOUD_FILE)).then(r=>r.json()).then(res=>{if(res.ok){let d;try{d=JSON.parse(res.data)}catch(e){}if(d)applyLoad(d);if(el){el.className='cloud-status show ok';el.textContent='已讀取';}toast('已讀取')}else{if(el){el.className='cloud-status show err';el.textContent='錯誤：'+(res.msg||'未找到');}}if(cb)cb();R()}).catch(err=>{if(el){el.className='cloud-status show err';el.textContent='錯誤：'+err.message;}if(cb)cb();R()})}
+function buildSave(){return{v:'13e',savedAt:nowStr(),wb:WB,ub:UB,hist:HIST,memo:MEMO,notes:NOTES,pc:PC,psg:PSG,pool:POOL,papers:PAPERS,customPrompts:CUSTOM_PROMPTS,greetings:GREETINGS,theme:THEME}}
+function applyLoad(d){if(d.wb)WB=d.wb;if(d.ub)UB=d.ub;if(d.hist)HIST=d.hist;if(d.psg)PSG=d.psg;if(d.pc!==undefined)PC=d.pc;if(d.pool){for(let i=1;i<=4;i++)POOL[i]=d.pool[i]||[]}if(d.papers)PAPERS=d.papers;if(d.memo)MEMO=d.memo;if(d.notes)NOTES=d.notes;if(d.customPrompts)CUSTOM_PROMPTS=d.customPrompts;if(d.greetings)GREETINGS=d.greetings;if(d.theme)THEME=d.theme;for(let i=1;i<=4;i++){if(!WB[i])WB[i]=[];if(!UB[i])UB[i]=[];if(!POOL[i])POOL[i]=[]}if(!MEMO)MEMO=[];if(!NOTES)NOTES=[];if(!CUSTOM_PROMPTS)CUSTOM_PROMPTS={};if(!GREETINGS)GREETINGS={morning:'☀️ Morning!',afternoon:'🌤️ Afternoon session.',night:'🌙 Night grind.',latenight:'🌙 Late night push?'};if(!THEME)THEME={cardColor:'#1a1a2e',accentColor:'#6c5ce7'};applyTheme()}
+function cloudSaveAll(){const el=document.getElementById('cloudSt');if(el){el.className='cloud-status show loading';el.textContent='Saving…';}fetch(CLOUD_URL,{method:'POST',body:JSON.stringify({token:CLOUD_TOKEN,file:CLOUD_FILE,data:JSON.stringify(buildSave())})}).then(r=>r.json()).then(res=>{if(res.ok){if(el){el.className='cloud-status show ok';el.textContent='Saved · '+nowStr();}toast('Saved')}else{if(el){el.className='cloud-status show err';el.textContent='Error: '+(res.msg||'');}}}).catch(err=>{if(el){el.className='cloud-status show err';el.textContent='Error: '+err.message;}})}
+function cloudLoadAll(cb){const el=document.getElementById('cloudSt');if(el){el.className='cloud-status show loading';el.textContent='Loading…';}fetch(CLOUD_URL+'?token='+encodeURIComponent(CLOUD_TOKEN)+'&file='+encodeURIComponent(CLOUD_FILE)).then(r=>r.json()).then(res=>{if(res.ok){let d;try{d=JSON.parse(res.data)}catch(e){}if(d)applyLoad(d);if(el){el.className='cloud-status show ok';el.textContent='Loaded';}toast('Loaded')}else{if(el){el.className='cloud-status show err';el.textContent='Error: '+(res.msg||'not found');}}if(cb)cb();R()}).catch(err=>{if(el){el.className='cloud-status show err';el.textContent='Error: '+err.message;}if(cb)cb();R()})}
 
 function toggleQA(){if(S.qaOpen)closeQA();else openQA()}
-function openQA(){S.qaOpen=true;document.getElementById('qaOv').classList.add('show');document.getElementById('qaGrid').innerHTML='<div class="qa-item" onclick="closeQA();S.tab=\'home\';R()"><div class="qa-icon qi-quiz">'+IC.grid+'</div><div class="qa-label">做題</div></div><div class="qa-item" onclick="closeQA();S.tab=\'pool\';R()"><div class="qa-icon qi-pool">'+IC.layers+'</div><div class="qa-label">題池</div></div><div class="qa-item" onclick="closeQA();S.tab=\'wrong\';R()"><div class="qa-icon qi-wrong">'+IC.xCirc+'</div><div class="qa-label">錯題</div></div><div class="qa-item" onclick="closeQA();S.tab=\'memo\';R()"><div class="qa-icon qi-memo">'+IC.memo+'</div><div class="qa-label">Memo</div></div><div class="qa-item" onclick="closeQA();S.tab=\'notes\';R()"><div class="qa-icon qi-notes">'+IC.notebook+'</div><div class="qa-label">筆記</div></div><div class="qa-item" onclick="closeQA();S.tab=\'prompt\';R()"><div class="qa-icon qi-import">'+IC.file+'</div><div class="qa-label">Prompt</div></div>';var cb=document.querySelector('.btm-center-btn');if(cb)cb.classList.add('open')}
+function openQA(){S.qaOpen=true;document.getElementById('qaOv').classList.add('show');document.getElementById('qaGrid').innerHTML='<div class="qa-item" onclick="closeQA();S.tab=\'home\';R()"><div class="qa-icon qi-quiz">'+IC.grid+'</div><div class="qa-label">Practice</div></div><div class="qa-item" onclick="closeQA();S.tab=\'pool\';R()"><div class="qa-icon qi-pool">'+IC.layers+'</div><div class="qa-label">Pool</div></div><div class="qa-item" onclick="closeQA();S.tab=\'wrong\';R()"><div class="qa-icon qi-wrong">'+IC.xCirc+'</div><div class="qa-label">Wrong</div></div><div class="qa-item" onclick="closeQA();S.tab=\'memo\';R()"><div class="qa-icon qi-memo">'+IC.memo+'</div><div class="qa-label">Memo</div></div><div class="qa-item" onclick="closeQA();S.tab=\'notes\';R()"><div class="qa-icon qi-notes">'+IC.notebook+'</div><div class="qa-label">Notes</div></div><div class="qa-item" onclick="closeQA();S.tab=\'prompt\';R()"><div class="qa-icon qi-import">'+IC.file+'</div><div class="qa-label">Prompt</div></div>';var cb=document.querySelector('.btm-center-btn');if(cb)cb.classList.add('open')}
 function closeQA(){S.qaOpen=false;document.getElementById('qaOv').classList.remove('show');var cb=document.querySelector('.btm-center-btn');if(cb)cb.classList.remove('open')}
 
-function renderNav(){
-  var nav=document.getElementById('btmNav');
-  if(!nav)return;
-  if(S.page==='quiz'){nav.style.display='none';return}
-  nav.style.display='';
-  nav.innerHTML='<div class="btm-nav-inner">'
-    +'<button class="btm-item '+(S.tab==="home"?"active":"")+'" onclick="S.tab=\'home\';R()"><span class="bi-icon">'+IC.home+'</span>主頁</button>'
-    +'<button class="btm-item '+(S.tab==="save"?"active":"")+'" onclick="S.tab=\'save\';R()"><span class="bi-icon">'+IC.save+'</span>存檔</button>'
-    +'<div class="btm-center"><button class="btm-center-btn '+(S.qaOpen?"open":"")+'" onclick="toggleQA()">'+IC.plus+'</button><span class="btm-center-label">起動</span></div>'
-    +'<button class="btm-item '+(S.tab==="import"?"active":"")+'" onclick="S.tab=\'import\';R()"><span class="bi-icon">'+IC.import2+'</span>匯入</button>'
-    +'<button class="btm-item '+(S.tab==="history"?"active":"")+'" onclick="S.tab=\'history\';R()"><span class="bi-icon">'+IC.clock+'</span>記錄</button>'
-    +'</div>';
-}
+function R(){applyTheme();const app=document.getElementById('app');if(S.page==='quiz')renderQuiz(app);else if(S.page==='result')renderResult(app);else if(S.page==='detail')renderDetail(app);else if(S.page==='paperView')renderPaperView(app);else renderHome(app)}
 
-function R(){
-  applyTheme();
-  const app=document.getElementById('app');
-  if(S.page==='quiz')renderQuiz(app);
-  else if(S.page==='result')renderResult(app);
-  else if(S.page==='detail')renderDetail(app);
-  else if(S.page==='paperView')renderPaperView(app);
-  else renderHome(app);
-  renderNav();
-}
-
-function renderBottomBar(){return '<nav class="btm-nav"><div class="btm-nav-inner"><button class="btm-item '+(S.tab==='home'?'active':'')+'" onclick="S.tab=\'home\';R()"><span class="bi-icon">'+IC.home+'</span>主頁</button><button class="btm-item '+(S.tab==='save'?'active':'')+'" onclick="S.tab=\'save\';R()"><span class="bi-icon">'+IC.save+'</span>存檔</button><div class="btm-center"><button class="btm-center-btn '+(S.qaOpen?'open':'')+'" onclick="toggleQA()">'+IC.plus+'</button><span class="btm-center-label">起動</span></div><button class="btm-item '+(S.tab==='import'?'active':'')+'" onclick="S.tab=\'import\';R()"><span class="bi-icon">'+IC.import2+'</span>匯入</button><button class="btm-item '+(S.tab==='history'?'active':'')+'" onclick="S.tab=\'history\';R()"><span class="bi-icon">'+IC.clock+'</span>記錄</button></div></nav>'}
+function renderBottomBar(){return '<nav class="btm-nav"><div class="btm-nav-inner"><button class="btm-item '+(S.tab==='home'?'active':'')+'" onclick="S.tab=\'home\';R()"><span class="bi-icon">'+IC.home+'</span>Home</button><button class="btm-item '+(S.tab==='save'?'active':'')+'" onclick="S.tab=\'save\';R()"><span class="bi-icon">'+IC.save+'</span>Sync</button><div class="btm-center"><button class="btm-center-btn '+(S.qaOpen?'open':'')+'" onclick="toggleQA()">'+IC.plus+'</button><span class="btm-center-label">Go</span></div><button class="btm-item '+(S.tab==='import'?'active':'')+'" onclick="S.tab=\'import\';R()"><span class="bi-icon">'+IC.import2+'</span>Import</button><button class="btm-item '+(S.tab==='history'?'active':'')+'" onclick="S.tab=\'history\';R()"><span class="bi-icon">'+IC.clock+'</span>History</button></div></nav>'}
 
 function renderHome(app){let h='<div class="container" style="padding-top:20px">';if(S.tab==='home')h+=tabHome();else if(S.tab==='pool')h+=tabPool();else if(S.tab==='wrong')h+=tabWrong();else if(S.tab==='memo')h+=tabMemo();else if(S.tab==='notes')h+=tabNotes();else if(S.tab==='history')h+=tabHist();else if(S.tab==='import')h+=tabImport();else if(S.tab==='prompt')h+=tabPrompt();else if(S.tab==='settings')h+=tabSettings();else h+=tabSave();h+='</div>'+renderBottomBar();app.innerHTML=h}
 
@@ -568,232 +669,238 @@ const tw=Object.values(WB).reduce((a,b)=>a+b.length,0);
 const tu=Object.values(UB).reduce((a,b)=>a+b.length,0);
 const tp=Object.values(POOL).reduce((a,b)=>a+b.length,0);
 let h='';
-h+='<div class="stat-hero"><div style="font-size:13px;opacity:.6;margin-bottom:4px">'+getGreeting()+'</div><div style="font-size:36px;font-weight:800;letter-spacing:-1px">'+HIST.length+' <span style="font-size:14px;opacity:.6">次練習</span></div><div style="font-size:12px;opacity:.5;margin-top:4px">題池 '+tp+' 題 · '+PAPERS.length+' 份Paper</div><div style="display:flex;gap:8px;margin-top:14px"><button class="btn btn-sm" style="background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2)" onclick="S.tab=\'memo\';R()">📝 Memo（'+MEMO.length+'）</button><button class="btn btn-sm" style="background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2)" onclick="S.tab=\'notes\';R()">📖 筆記（'+NOTES.length+'）</button></div></div>';
+h+='<div class="stat-hero"><div style="font-size:13px;opacity:.6;margin-bottom:4px">'+getGreeting()+'</div><div style="font-size:36px;font-weight:800;letter-spacing:-1px">'+HIST.length+' <span style="font-size:14px;opacity:.6">sessions</span></div><div style="font-size:12px;opacity:.5;margin-top:4px">Pool '+tp+' Q · '+PAPERS.length+' Papers</div><div style="display:flex;gap:8px;margin-top:14px"><button class="btn btn-sm" style="background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2)" onclick="S.tab=\'memo\';R()">📝 Memo（'+MEMO.length+'）</button><button class="btn btn-sm" style="background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2)" onclick="S.tab=\'notes\';R()">📖 Notes（'+NOTES.length+'）</button></div></div>';
 var pillCls=THEME.pillStyle==='mono'?'pill-mono':'';
-h+='<div class="stat-pills '+pillCls+'"><div class="stat-pill" onclick="S.tab=\'wrong\';S.wbSub=\'wrong\';R()"><div class="sp-icon ic-err">'+IC.xCirc+'</div><div><div class="sp-num">'+tw+'</div><div class="sp-lbl">錯題</div></div></div><div class="stat-pill" onclick="S.tab=\'wrong\';S.wbSub=\'uncertain\';R()"><div class="sp-icon ic-unc">'+IC.alert+'</div><div><div class="sp-num">'+tu+'</div><div class="sp-lbl">不確定</div></div></div><div class="stat-pill" onclick="S.tab=\'pool\';R()"><div class="sp-icon ic-pool">'+IC.layers+'</div><div><div class="sp-num">'+tp+'</div><div class="sp-lbl">題池</div></div></div><div class="stat-pill" onclick="S.tab=\'memo\';R()"><div class="sp-icon ic-memo">'+IC.memo+'</div><div><div class="sp-num">'+MEMO.length+'</div><div class="sp-lbl">Memo</div></div></div><div class="stat-pill" onclick="S.tab=\'notes\';R()"><div class="sp-icon ic-note">'+IC.notebook+'</div><div><div class="sp-num">'+NOTES.length+'</div><div class="sp-lbl">筆記</div></div></div></div>';
-h+='<div class="scroll-hint"><div class="scroll-hint-bar"></div><span class="scroll-hint-txt">左右滑動</span></div>';
+h+='<div class="stat-pills '+pillCls+'"><div class="stat-pill" onclick="S.tab=\'wrong\';S.wbSub=\'wrong\';R()"><div class="sp-icon ic-err">'+IC.xCirc+'</div><div><div class="sp-num">'+tw+'</div><div class="sp-lbl">Wrong</div></div></div><div class="stat-pill" onclick="S.tab=\'wrong\';S.wbSub=\'uncertain\';R()"><div class="sp-icon ic-unc">'+IC.alert+'</div><div><div class="sp-num">'+tu+'</div><div class="sp-lbl">Unsure</div></div></div><div class="stat-pill" onclick="S.tab=\'pool\';R()"><div class="sp-icon ic-pool">'+IC.layers+'</div><div><div class="sp-num">'+tp+'</div><div class="sp-lbl">Pool</div></div></div><div class="stat-pill" onclick="S.tab=\'memo\';R()"><div class="sp-icon ic-memo">'+IC.memo+'</div><div><div class="sp-num">'+MEMO.length+'</div><div class="sp-lbl">Memo</div></div></div><div class="stat-pill" onclick="S.tab=\'notes\';R()"><div class="sp-icon ic-note">'+IC.notebook+'</div><div><div class="sp-num">'+NOTES.length+'</div><div class="sp-lbl">Notes</div></div></div></div>';
+h+='<div class="scroll-hint"><div class="scroll-hint-bar"></div><span class="scroll-hint-txt">swipe</span></div>';
 
-// Paper Section - Collapsible with Dropdown
-h+='<div class="sec"><div class="sec-head"><div class="sec-toggle" onclick="S.paperSecOpen=!S.paperSecOpen;R()"><div class="sec-title">選Paper做題</div><span class="sec-arrow '+(S.paperSecOpen?'open':'')+'">'+IC.chevDown+'</span></div></div></div>';
+h+='<div class="sec"><div class="sec-head"><div class="sec-toggle" onclick="S.paperSecOpen=!S.paperSecOpen;R()"><div class="sec-title">Select Paper</div><span class="sec-arrow '+(S.paperSecOpen?'open':'')+'">'+IC.chevDown+'</span></div></div></div>';
 if(S.paperSecOpen){
 var dates=getUniqueDates();
 if(dates.length>0){
-h+='<div class="date-dropdown"><label>日期篩選：</label><select onchange="S.dateFilter=this.value;R()"><option value="all" '+(S.dateFilter==='all'?'selected':'')+'>全部（'+PAPERS.length+'份）</option>';
-dates.forEach(function(d){var cnt=PAPERS.filter(p=>p.date===d).length;h+='<option value="'+d+'" '+(S.dateFilter===d?'selected':'')+'>'+d+'（'+cnt+'份）</option>'});
+h+='<div class="date-dropdown"><label>Filter:</label><select onchange="S.dateFilter=this.value;R()"><option value="all" '+(S.dateFilter==='all'?'selected':'')+'>All ('+PAPERS.length+')</option>';
+dates.forEach(function(d){var cnt=PAPERS.filter(p=>p.date===d).length;h+='<option value="'+d+'" '+(S.dateFilter===d?'selected':'')+'>'+d+' ('+cnt+')</option>'});
 h+='</select></div>';}
 var filtered=getFilteredPapers();
-if(!filtered.length)h+='<div class="empty">'+IC.file+'<div>未有Paper，去「匯入」加卷</div></div>';
+if(!filtered.length)h+='<div class="empty">'+IC.file+'<div>No papers yet. Go to Import.</div></div>';
 else filtered.forEach(function(p){
-var cnt=getPaperQCount(p.id);var parts=getPaperParts(p.id);var iconCls=p.type==='全份卷'?'pi-grad-full':'pi-grad-part';
+var cnt=getPaperQCount(p.id);var parts=getPaperParts(p.id);var iconCls=p.type==='Full Paper'?'pi-grad-full':'pi-grad-part';
 if(S.editingPaper===p.id){h+='<div class="paper-item" style="cursor:default"><div class="inline-edit" style="width:100%"><input id="editN_'+p.id+'" value="'+esc(p.label)+'" maxlength="'+TITLE_MAX+'"><button style="background:var(--green);color:#fff" onclick="savePaperName(\''+p.id+'\')">✓</button><button style="background:var(--g200);color:var(--g600)" onclick="S.editingPaper=null;R()">✕</button></div></div>'}
-else{h+='<div class="paper-item" onclick="openPaperView(\''+p.id+'\')"><div class="pi-icon '+iconCls+'">'+IC.file+'</div><div class="pi-body"><div class="pi-name">'+esc(p.label)+'</div><div class="pi-meta"><span>'+p.date+'</span><span>'+cnt+'題</span></div>';if(parts.length>0){h+='<div class="pi-parts">';parts.forEach(function(pt){h+='<span class="pi-part-tag pt'+pt.id+'">'+PART_NAMES[pt.id]+' '+pt.count+'題</span>'});h+='</div>'}h+='</div><div class="pi-actions" onclick="event.stopPropagation()"><button class="pi-act-btn" onclick="S.editingPaper=\''+p.id+'\';R()">'+IC.edit+'</button><button class="pi-act-btn pi-del-btn" onclick="delPaper(\''+p.id+'\')">'+IC.trash+'</button></div><span class="pi-arrow">'+IC.chevRight+'</span></div>'}
+else{h+='<div class="paper-item" onclick="openPaperView(\''+p.id+'\')"><div class="pi-icon '+iconCls+'">'+IC.file+'</div><div class="pi-body"><div class="pi-name">'+esc(p.label)+'</div><div class="pi-meta"><span>'+p.date+'</span><span>'+cnt+'Q</span></div>';if(parts.length>0){h+='<div class="pi-parts">';parts.forEach(function(pt){h+='<span class="pi-part-tag pt'+pt.id+'">'+PART_NAMES[pt.id]+' '+pt.count+'</span>'});h+='</div>'}h+='</div><div class="pi-actions" onclick="event.stopPropagation()"><button class="pi-act-btn" onclick="S.editingPaper=\''+p.id+'\';R()">'+IC.edit+'</button><button class="pi-act-btn pi-del-btn" onclick="delPaper(\''+p.id+'\')">'+IC.trash+'</button></div><span class="pi-arrow">'+IC.chevRight+'</span></div>'}
 });}
 
-// Mix Section - Collapsible with Date Filter
 if(PAPERS.length){
-h+='<div class="sec"><div class="sec-head"><div class="sec-toggle" onclick="S.mixSecOpen=!S.mixSecOpen;R()"><div class="sec-title">混合練習</div><span class="sec-arrow '+(S.mixSecOpen?'open':'')+'">'+IC.chevDown+'</span></div></div></div>';
+h+='<div class="sec"><div class="sec-head"><div class="sec-toggle" onclick="S.mixSecOpen=!S.mixSecOpen;R()"><div class="sec-title">Mixed Practice</div><span class="sec-arrow '+(S.mixSecOpen?'open':'')+'">'+IC.chevDown+'</span></div></div></div>';
 if(S.mixSecOpen){
 var dates2=getUniqueDates();
 if(dates2.length>0){
-h+='<div class="date-dropdown"><label>日期篩選：</label><select onchange="S.mixDateFilter=this.value;R()"><option value="all" '+(S.mixDateFilter==='all'?'selected':'')+'>全部（'+PAPERS.length+'份）</option>';
-dates2.forEach(function(d){var cnt=PAPERS.filter(p=>p.date===d).length;h+='<option value="'+d+'" '+(S.mixDateFilter===d?'selected':'')+'>'+d+'（'+cnt+'份）</option>'});
+h+='<div class="date-dropdown"><label>Filter:</label><select onchange="S.mixDateFilter=this.value;R()"><option value="all" '+(S.mixDateFilter==='all'?'selected':'')+'>All ('+PAPERS.length+')</option>';
+dates2.forEach(function(d){var cnt=PAPERS.filter(p=>p.date===d).length;h+='<option value="'+d+'" '+(S.mixDateFilter===d?'selected':'')+'>'+d+' ('+cnt+')</option>'});
 h+='</select></div>';}
 var mixFiltered=S.mixDateFilter==='all'?PAPERS.slice().reverse():PAPERS.filter(p=>p.date===S.mixDateFilter).reverse();
 h+='<div class="mix-card">';
-mixFiltered.forEach(function(p){var cnt=getPaperQCount(p.id);h+='<div class="mix-item"><input type="checkbox" class="shp-cb" value="'+p.id+'" checked><div class="mi-body"><div class="mi-name">'+esc(p.label)+'</div><div class="mi-sub">'+p.date+'</div></div><div class="mi-count">'+cnt+'題</div></div>'});
-h+='<div class="mode-toggle"><button class="on" id="mt-shuffle" onclick="this.classList.add(\'on\');document.getElementById(\'mt-order\').classList.remove(\'on\')">撈亂</button><button id="mt-order" onclick="this.classList.add(\'on\');document.getElementById(\'mt-shuffle\').classList.remove(\'on\')">按次序</button></div>';
-h+='<div style="margin:10px 0;display:flex;align-items:center;gap:8px"><span style="font-size:12px;font-weight:500">抽取上限</span><input type="number" id="shNum" value="0" min="0" style="width:60px;border:1.5px solid var(--g200);border-radius:8px;padding:7px 10px;font-size:13px"><span style="font-size:11px;color:var(--g400)">0=全部</span></div>';
-h+='<button class="btn btn-dark" onclick="startMixPractice()">開始練習</button></div>';
+mixFiltered.forEach(function(p){var cnt=getPaperQCount(p.id);h+='<div class="mix-item"><input type="checkbox" class="shp-cb" value="'+p.id+'" checked><div class="mi-body"><div class="mi-name">'+esc(p.label)+'</div><div class="mi-sub">'+p.date+'</div></div><div class="mi-count">'+cnt+'Q</div></div>'});
+h+='<div class="mode-toggle"><button class="on" id="mt-shuffle" onclick="this.classList.add(\'on\');document.getElementById(\'mt-order\').classList.remove(\'on\')">Shuffle</button><button id="mt-order" onclick="this.classList.add(\'on\');document.getElementById(\'mt-shuffle\').classList.remove(\'on\')">In Order</button></div>';
+h+='<div style="margin:10px 0;display:flex;align-items:center;gap:8px"><span style="font-size:12px;font-weight:500">Limit</span><input type="number" id="shNum" value="0" min="0" style="width:60px;border:1.5px solid var(--g200);border-radius:8px;padding:7px 10px;font-size:13px"><span style="font-size:11px;color:var(--g400)">0=all</span></div>';
+h+='<button class="btn btn-dark" onclick="startMixPractice()">Start</button></div>';
 }}
 return h;
 }
 
-function savePaperName(pid){var input=document.getElementById('editN_'+pid);if(!input)return;var p=PAPERS.find(x=>x.id===pid);if(p)p.label=input.value.trim()||p.label;S.editingPaper=null;toast('已更新');cloudSaveAll();R()}
+function savePaperName(pid){var input=document.getElementById('editN_'+pid);if(!input)return;var p=PAPERS.find(x=>x.id===pid);if(p)p.label=input.value.trim()||p.label;S.editingPaper=null;toast('Updated');cloudSaveAll();R()}
 function openPaperView(paperId){S._paperView=paperId;S.page='paperView';R()}
 
 function renderPaperView(app){
 var paper=PAPERS.find(p=>p.id===S._paperView);if(!paper){goHome();return}
 let h='<div class="container" style="padding-top:20px"><div style="display:flex;align-items:center;gap:12px;margin-bottom:16px"><button class="pg-back" onclick="goHome()">'+IC.chevLeft+'</button><div style="flex:1;font-size:18px;font-weight:700">'+esc(paper.label)+'</div></div>';
-h+='<div class="info-box ib-accent">'+paper.date+' · '+paper.type+' · 共'+getPaperQCount(paper.id)+'題</div>';
+h+='<div class="info-box ib-accent">'+paper.date+' · '+paper.type+' · '+getPaperQCount(paper.id)+' questions</div>';
 var allQ=getAllPaperQs(paper.id);
-if(allQ.length>0)h+='<button class="btn btn-dark" style="margin-bottom:16px" onclick="startPaperFull(\''+paper.id+'\')">做全份（'+allQ.length+'題）</button>';
-h+='<div class="sec"><div class="sec-head"><div class="sec-title">分Part練習</div></div></div>';
-PM.forEach(function(pm){var pqs=POOL[pm.id].filter(q=>q.paperId===paper.id);if(!pqs.length)return;h+='<div class="part-item" onclick="startPaperPart(\''+paper.id+'\','+pm.id+')"><div class="pt-icon '+pm.grad+'">'+pm.icon+'</div><div class="pt-body"><div class="pt-name">'+pm.name+'</div><div class="pt-count">'+pqs.length+'題</div></div><span class="pt-arrow">'+IC.chevRight+'</span></div>'});
-h+='<div class="sec"><div class="sec-head"><div class="sec-title">自選</div></div></div><div class="m-card"><div class="part-select">';
-PM.forEach(function(pm){var n=POOL[pm.id].filter(q=>q.paperId===paper.id).length;if(!n)return;h+='<label><input type="checkbox" class="pv-cb" value="'+pm.id+'" checked><span>P'+pm.id+'（'+n+'）</span></label>'});
-h+='</div><div class="mode-toggle"><button class="on" id="pv-order" onclick="this.classList.add(\'on\');document.getElementById(\'pv-shuffle\').classList.remove(\'on\')">按次序</button><button id="pv-shuffle" onclick="this.classList.add(\'on\');document.getElementById(\'pv-order\').classList.remove(\'on\')">撈亂</button></div>';
-h+='<button class="btn btn-accent" style="margin-top:10px" onclick="startPaperCustom(\''+paper.id+'\')">開始</button></div></div>'+renderBottomBar();app.innerHTML=h;
+if(allQ.length>0)h+='<button class="btn btn-dark" style="margin-bottom:16px" onclick="startPaperFull(\''+paper.id+'\')">Full Paper ('+allQ.length+'Q)</button>';
+h+='<div class="sec"><div class="sec-head"><div class="sec-title">By Section</div></div></div>';
+PM.forEach(function(pm){var pqs=POOL[pm.id].filter(q=>q.paperId===paper.id);if(!pqs.length)return;h+='<div class="part-item" onclick="startPaperPart(\''+paper.id+'\','+pm.id+')"><div class="pt-icon '+pm.grad+'">'+pm.icon+'</div><div class="pt-body"><div class="pt-name">'+pm.name+'</div><div class="pt-count">'+pqs.length+'Q · '+(PART_OPT_COUNT[pm.id])+'options</div></div><span class="pt-arrow">'+IC.chevRight+'</span></div>'});
+h+='<div class="sec"><div class="sec-head"><div class="sec-title">Custom</div></div></div><div class="m-card"><div class="part-select">';
+PM.forEach(function(pm){var n=POOL[pm.id].filter(q=>q.paperId===paper.id).length;if(!n)return;h+='<label><input type="checkbox" class="pv-cb" value="'+pm.id+'" checked><span>S'+pm.id+' ('+n+')</span></label>'});
+h+='</div><div class="mode-toggle"><button class="on" id="pv-order" onclick="this.classList.add(\'on\');document.getElementById(\'pv-shuffle\').classList.remove(\'on\')">In Order</button><button id="pv-shuffle" onclick="this.classList.add(\'on\');document.getElementById(\'pv-order\').classList.remove(\'on\')">Shuffle</button></div>';
+h+='<button class="btn btn-accent" style="margin-top:10px" onclick="startPaperCustom(\''+paper.id+'\')">Start</button></div></div>'+renderBottomBar();app.innerHTML=h;
 }
 
 function getAllPaperQs(paperId){let all=[];for(let i=1;i<=4;i++)POOL[i].filter(q=>q.paperId===paperId).forEach(q=>{all.push(Object.assign({},JSON.parse(JSON.stringify(q)),{_part:i}))});return all}
-function startPaperFull(paperId){var paper=PAPERS.find(p=>p.id===paperId);if(!paper)return;var all=getAllPaperQs(paperId);if(!all.length){toast('冇題目');return}S._curPsg=paper.passage||'';S._paperLabels=paper.label;beginQ(all,'order',0,paper.type==='全份卷')}
-function startPaperPart(paperId,partId){var paper=PAPERS.find(p=>p.id===paperId);if(!paper)return;var qs=POOL[partId].filter(q=>q.paperId===paperId).map(q=>Object.assign({},JSON.parse(JSON.stringify(q)),{_part:partId}));if(!qs.length){toast('冇題目');return}S._curPsg=paper.passage||'';S._paperLabels=paper.label;beginQ(qs,'order',partId,false)}
-function startPaperCustom(paperId){var paper=PAPERS.find(p=>p.id===paperId);if(!paper)return;var cbs=document.querySelectorAll('.pv-cb:checked');if(!cbs.length){toast('請揀Part');return}var parts=[].slice.call(cbs).map(c=>parseInt(c.value));let all=[];parts.forEach(pid=>{POOL[pid].filter(q=>q.paperId===paperId).forEach(q=>{all.push(Object.assign({},JSON.parse(JSON.stringify(q)),{_part:pid}))})});if(!all.length){toast('冇題目');return}var isShuffle=document.getElementById('pv-shuffle')&&document.getElementById('pv-shuffle').classList.contains('on');if(isShuffle)all=shuffleArr(all);S._curPsg=paper.passage||'';S._paperLabels=paper.label;beginQ(all,isShuffle?'shuffle':'order',parts.length===1?parts[0]:0,false)}
+function getPaperPassages(paperId){var paper=PAPERS.find(p=>p.id===paperId);return (paper&&paper.passages)||{}}
+function startPaperFull(paperId){var paper=PAPERS.find(p=>p.id===paperId);if(!paper)return;var all=getAllPaperQs(paperId);if(!all.length){toast('No questions');return}S._curPsg=paper.passage||'';S._psg4=(paper.passages&&paper.passages['4'])||[];S._paperLabels=paper.label;beginQ(all,'order',0,paper.type==='Full Paper')}
+function startPaperPart(paperId,partId){var paper=PAPERS.find(p=>p.id===paperId);if(!paper)return;var qs=POOL[partId].filter(q=>q.paperId===paperId).map(q=>Object.assign({},JSON.parse(JSON.stringify(q)),{_part:partId}));if(!qs.length){toast('No questions');return}S._curPsg=paper.passage||'';S._psg4=(paper.passages&&paper.passages['4'])||[];S._paperLabels=paper.label;beginQ(qs,'order',partId,false)}
+function startPaperCustom(paperId){var paper=PAPERS.find(p=>p.id===paperId);if(!paper)return;var cbs=document.querySelectorAll('.pv-cb:checked');if(!cbs.length){toast('Select a section');return}var parts=[].slice.call(cbs).map(c=>parseInt(c.value));let all=[];parts.forEach(pid=>{POOL[pid].filter(q=>q.paperId===paperId).forEach(q=>{all.push(Object.assign({},JSON.parse(JSON.stringify(q)),{_part:pid}))})});if(!all.length){toast('No questions');return}var isShuffle=document.getElementById('pv-shuffle')&&document.getElementById('pv-shuffle').classList.contains('on');if(isShuffle)all=shuffleArr(all);S._curPsg=paper.passage||'';S._psg4=(paper.passages&&paper.passages['4'])||[];S._paperLabels=paper.label;beginQ(all,isShuffle?'shuffle':'order',parts.length===1?parts[0]:0,false)}
 
 function tabPool(){
 if(S.poolPart)return tabPoolDetail(S.poolPart);
 var tp=Object.values(POOL).reduce((a,b)=>a+b.length,0);
 let h='<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><button class="pg-back" onclick="S.tab=\'home\';R()">'+IC.chevLeft+'</button></div>';
-h+='<div class="info-box ib-accent">共 <strong>'+tp+'</strong> 題 · <strong>'+PAPERS.length+'</strong> 份Paper</div>';
-PM.forEach(function(p){h+='<div class="part-item" onclick="S.poolPart='+p.id+';R()"><div class="pt-icon '+p.grad+'">'+p.icon+'</div><div class="pt-body"><div class="pt-name">'+p.name+'</div><div class="pt-count">'+(POOL[p.id]||[]).length+'題</div></div><span class="pt-arrow">'+IC.chevRight+'</span></div>'});
+h+='<div class="info-box ib-accent">Total <strong>'+tp+'</strong> Q · <strong>'+PAPERS.length+'</strong> Papers</div>';
+PM.forEach(function(p){h+='<div class="part-item" onclick="S.poolPart='+p.id+';R()"><div class="pt-icon '+p.grad+'">'+p.icon+'</div><div class="pt-body"><div class="pt-name">'+p.name+'</div><div class="pt-count">'+(POOL[p.id]||[]).length+'Q · '+PART_OPT_COUNT[p.id]+' options</div></div><span class="pt-arrow">'+IC.chevRight+'</span></div>'});
 h+='<div class="sec"><div class="sec-head"><div class="sec-title">Papers</div></div></div>';
-if(!PAPERS.length)h+='<div class="empty">'+IC.file+'<div>未有Paper</div></div>';
-else PAPERS.slice().reverse().forEach(function(p){var cnt=getPaperQCount(p.id);var iconCls=p.type==='全份卷'?'pi-grad-full':'pi-grad-part';h+='<div class="paper-item" style="cursor:default"><div class="pi-icon '+iconCls+'">'+IC.file+'</div><div class="pi-body"><div class="pi-name">'+esc(p.label)+'</div><div class="pi-meta"><span>'+p.date+'</span><span>'+cnt+'題</span></div></div><div class="pi-actions" onclick="event.stopPropagation()"><button class="pi-act-btn pi-del-btn" onclick="delPaper(\''+p.id+'\')">'+IC.trash+'</button></div></div>'});
+if(!PAPERS.length)h+='<div class="empty">'+IC.file+'<div>No papers</div></div>';
+else PAPERS.slice().reverse().forEach(function(p){var cnt=getPaperQCount(p.id);var iconCls=p.type==='Full Paper'?'pi-grad-full':'pi-grad-part';h+='<div class="paper-item" style="cursor:default"><div class="pi-icon '+iconCls+'">'+IC.file+'</div><div class="pi-body"><div class="pi-name">'+esc(p.label)+'</div><div class="pi-meta"><span>'+p.date+'</span><span>'+cnt+'Q</span></div></div><div class="pi-actions" onclick="event.stopPropagation()"><button class="pi-act-btn pi-del-btn" onclick="delPaper(\''+p.id+'\')">'+IC.trash+'</button></div></div>'});
 return h;
 }
-function tabPoolDetail(pid){var pm=PM.find(p=>p.id===pid);var items=POOL[pid]||[];var groups={};items.forEach(q=>{var k=q.paperId||'unknown';if(!groups[k])groups[k]=[];groups[k].push(q)});let h='<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><button class="pg-back" onclick="S.poolPart=null;R()">'+IC.chevLeft+'</button><span style="font-size:16px;font-weight:700">'+pm.short+'（'+items.length+'）</span></div>';Object.keys(groups).forEach(function(paperId){var paper=PAPERS.find(p=>p.id===paperId);var pqs=groups[paperId];var isOpen=S.poolGroupOpen[paperId];h+='<div class="pool-group"><div class="pool-group-head" onclick="togglePoolGroup(\''+paperId+'\')"><div class="pg-label">'+esc(paper?paper.label:'未分類')+'</div><div class="pg-right"><span class="pg-count">'+pqs.length+'題</span><button class="btn btn-dark btn-sm" onclick="event.stopPropagation();startPoolPartPaper(\''+paperId+'\','+pid+')">練習</button><span class="pg-arrow '+(isOpen?'open':'')+'">'+IC.chevDown+'</span></div></div><div class="pool-group-body '+(isOpen?'show':'')+'">';pqs.forEach(function(q,i){h+='<div class="pq-item"><strong>Q'+(i+1)+'</strong> '+esc((q.stem||'').substring(0,60))+((q.stem||'').length>60?'…':'')+'</div>'});h+='</div></div>'});return h}
+function tabPoolDetail(pid){var pm=PM.find(p=>p.id===pid);var items=POOL[pid]||[];var groups={};items.forEach(q=>{var k=q.paperId||'unknown';if(!groups[k])groups[k]=[];groups[k].push(q)});let h='<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><button class="pg-back" onclick="S.poolPart=null;R()">'+IC.chevLeft+'</button><span style="font-size:16px;font-weight:700">'+pm.short+' ('+items.length+')</span></div>';Object.keys(groups).forEach(function(paperId){var paper=PAPERS.find(p=>p.id===paperId);var pqs=groups[paperId];var isOpen=S.poolGroupOpen[paperId];h+='<div class="pool-group"><div class="pool-group-head" onclick="togglePoolGroup(\''+paperId+'\')"><div class="pg-label">'+esc(paper?paper.label:'Unknown')+'</div><div class="pg-right"><span class="pg-count">'+pqs.length+'Q</span><button class="btn btn-dark btn-sm" onclick="event.stopPropagation();startPoolPartPaper(\''+paperId+'\','+pid+')">Practice</button><span class="pg-arrow '+(isOpen?'open':'')+'">'+IC.chevDown+'</span></div></div><div class="pool-group-body '+(isOpen?'show':'')+'">';pqs.forEach(function(q,i){h+='<div class="pq-item"><strong>Q'+(i+1)+'</strong> '+esc((q.stem||'').substring(0,60))+((q.stem||'').length>60?'…':'')+'</div>'});h+='</div></div>'});return h}
 function togglePoolGroup(id){S.poolGroupOpen[id]=!S.poolGroupOpen[id];R()}
-function startPoolPartPaper(paperId,partId){var paper=PAPERS.find(p=>p.id===paperId);var qs=POOL[partId].filter(q=>q.paperId===paperId).map(q=>Object.assign({},JSON.parse(JSON.stringify(q)),{_part:partId}));if(!qs.length){toast('冇題目');return}S._curPsg=(paper&&paper.passage)||'';S._paperLabels=paper?paper.label:'';beginQ(qs,'order',partId,false)}
-function delPaper(id){var p=PAPERS.find(x=>x.id===id);showM('刪除Paper','確定刪除「'+(p?p.label:'')+'」及全部題目？',function(){for(let i=1;i<=4;i++)POOL[i]=POOL[i].filter(q=>q.paperId!==id);PAPERS=PAPERS.filter(p=>p.id!==id);cloudSaveAll();toast('已刪除');R()},'刪除')}
+function startPoolPartPaper(paperId,partId){var paper=PAPERS.find(p=>p.id===paperId);var qs=POOL[partId].filter(q=>q.paperId===paperId).map(q=>Object.assign({},JSON.parse(JSON.stringify(q)),{_part:partId}));if(!qs.length){toast('No questions');return}S._curPsg=(paper&&paper.passage)||'';S._psg4=(paper&&paper.passages&&paper.passages['4'])||[];S._paperLabels=paper?paper.label:'';beginQ(qs,'order',partId,false)}
+function delPaper(id){var p=PAPERS.find(x=>x.id===id);showM('Delete Paper','Delete "'+esc(p?p.label:'')+'" and all questions?',function(){for(let i=1;i<=4;i++)POOL[i]=POOL[i].filter(q=>q.paperId!==id);PAPERS=PAPERS.filter(p=>p.id!==id);cloudSaveAll();toast('Deleted');R()},'Delete')}
 
 function tabWrong(){
 var tw=Object.values(WB).reduce((a,b)=>a+b.length,0);var tu=Object.values(UB).reduce((a,b)=>a+b.length,0);
 let h='<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><button class="pg-back" onclick="S.tab=\'home\';R()">'+IC.chevLeft+'</button></div>';
-h+='<div class="sub-tabs"><button class="sub-tab '+(S.wbSub==='wrong'?'on':'')+'" onclick="S.wbSub=\'wrong\';R()">錯題（'+tw+'）</button><button class="sub-tab '+(S.wbSub==='uncertain'?'on':'')+'" onclick="S.wbSub=\'uncertain\';R()">不確定（'+tu+'）</button></div>';
+h+='<div class="sub-tabs"><button class="sub-tab '+(S.wbSub==='wrong'?'on':'')+'" onclick="S.wbSub=\'wrong\';R()">Wrong ('+tw+')</button><button class="sub-tab '+(S.wbSub==='uncertain'?'on':'')+'" onclick="S.wbSub=\'uncertain\';R()">Unsure ('+tu+')</button></div>';
 if(S.wbSub==='wrong')h+=renderBank(WB,'wrong');else h+=renderBank(UB,'uncertain');return h;
 }
-function renderBank(bank,type){var total=Object.values(bank).reduce((a,b)=>a+b.length,0);if(!total)return '<div class="empty">'+(type==='wrong'?IC.xCirc:IC.alert)+'<div>'+(type==='wrong'?'冇錯題':'未標記')+'</div></div>';var bankVar=type==='wrong'?'WB':'UB';let h='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px"><button class="btn '+(type==='wrong'?'btn-danger':'btn-accent')+' btn-sm" onclick="startBankShuffle(\''+type+'\')">重做全部（'+total+'）</button><button class="btn btn-ghost btn-sm" onclick="showM(\'清空\',\'確定？\',function(){'+bankVar+'={1:[],2:[],3:[],4:[]};toast(\'已清空\');R()})">清空</button></div>';PM.forEach(function(p){var items=bank[p.id]||[];if(!items.length)return;h+='<div class="sec"><div class="sec-head"><div class="sec-title">'+p.short+'（'+items.length+'）</div><button class="btn btn-sm btn-outline" onclick="startReview('+p.id+',\''+type+'\')">重做</button></div></div>';items.forEach(function(q,i){h+=bankItem(q,i,p.id,type)})});return h}
-function bankItem(q,idx,pid,bank){var isW=bank==='wrong';var elId=bank+pid+'_'+idx;let h='<div class="ri '+(isW?'rw':'')+'"><div class="ri-h" onclick="togB(\''+elId+'\')"><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px">'+esc((q.stem||'').substring(0,40))+'</span><span style="display:flex;align-items:center;gap:4px"><span class="ri-tag '+(isW?'ri-tag-r':'ri-tag-w')+'">'+(isW?'錯誤':'不確定')+'</span><button class="ri-del" onclick="event.stopPropagation();delBank(\''+bank+'\','+pid+','+idx+')">'+IC.x+'</button></span></div><div class="ri-b" id="'+elId+'"><div class="lbl">題目</div><div style="white-space:pre-wrap;margin-bottom:5px">'+esc(q.stem)+'</div><div class="lbl">選項</div>';(q.options||[]).forEach(function(o,j){var c='';if(j===q.answer)c='opt-correct';else if(j===q.yourAnswer&&j!==q.answer)c='opt-wrong';h+='<div class="'+c+'">'+'ABCD'[j]+'. '+esc(o)+(j===q.answer?' ✓':'')+(j===q.yourAnswer&&j!==q.answer?' ←你揀':'')+'</div>'});if(q.explanation)h+='<div class="lbl">解釋</div><div>'+esc(q.explanation)+'</div>';h+='<div class="comment-box"><div class="lbl" style="margin-top:0">留言</div>';(q.comments||[]).forEach(function(c,ci){h+='<div class="comment-item"><div class="cm-txt">'+esc(c.text)+'<div class="cm-date">'+(c.date||'')+'</div></div><button class="cm-del" onclick="event.stopPropagation();delComment(\''+bank+'\','+pid+','+idx+','+ci+')">✕</button></div>'});h+='<div class="comment-input"><input id="cmt_'+bank+'_'+pid+'_'+idx+'" placeholder="輸入"><button onclick="addComment(\''+bank+'\','+pid+','+idx+')">送出</button></div></div><div style="margin-top:10px;display:flex;gap:6px"><button class="btn btn-accent btn-sm" onclick="saveToMemo(\''+bank+'\','+pid+','+idx+')">存Memo</button><button class="btn btn-outline btn-sm" onclick="copyForAI(\''+bank+'\','+pid+','+idx+')">問AI</button></div></div></div>';return h}
+function renderBank(bank,type){var total=Object.values(bank).reduce((a,b)=>a+b.length,0);if(!total)return '<div class="empty">'+(type==='wrong'?IC.xCirc:IC.alert)+'<div>'+(type==='wrong'?'No wrong items':'No unsure items')+'</div></div>';var bankVar=type==='wrong'?'WB':'UB';let h='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px"><button class="btn '+(type==='wrong'?'btn-danger':'btn-accent')+' btn-sm" onclick="startBankShuffle(\''+type+'\')">Redo All ('+total+')</button><button class="btn btn-ghost btn-sm" onclick="showM(\'Clear\',\'Confirm?\',function(){'+bankVar+'={1:[],2:[],3:[],4:[]};toast(\'Cleared\');R()})">Clear</button></div>';PM.forEach(function(p){var items=bank[p.id]||[];if(!items.length)return;h+='<div class="sec"><div class="sec-head"><div class="sec-title">'+p.short+' ('+items.length+')</div><button class="btn btn-sm btn-outline" onclick="startReview('+p.id+',\''+type+'\')">Redo</button></div></div>';items.forEach(function(q,i){h+=bankItem(q,i,p.id,type)})});return h}
+function bankItem(q,idx,pid,bank){var isW=bank==='wrong';var elId=bank+pid+'_'+idx;var numOpts=q.options?q.options.length:4;let h='<div class="ri '+(isW?'rw':'')+'"><div class="ri-h" onclick="togB(\''+elId+'\')"><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px">'+esc((q.stem||'').substring(0,40))+'</span><span style="display:flex;align-items:center;gap:4px"><span class="ri-tag '+(isW?'ri-tag-r':'ri-tag-w')+'">'+(isW?'Wrong':'Unsure')+'</span><button class="ri-del" onclick="event.stopPropagation();delBank(\''+bank+'\','+pid+','+idx+')">'+IC.x+'</button></span></div><div class="ri-b" id="'+elId+'"><div class="lbl">Question</div><div style="white-space:pre-wrap;margin-bottom:5px">'+esc(q.stem)+'</div><div class="lbl">Options</div>';(q.options||[]).forEach(function(o,j){var c='';if(j===q.answer)c='opt-correct';else if(j===q.yourAnswer&&j!==q.answer)c='opt-wrong';h+='<div class="'+c+'">'+optLetter(j)+'. '+esc(o)+(j===q.answer?' ✓':'')+(j===q.yourAnswer&&j!==q.answer?' ← yours':'')+'</div>'});if(q.explanation)h+='<div class="lbl">Explanation</div><div>'+esc(q.explanation)+'</div>';h+='<div class="comment-box"><div class="lbl" style="margin-top:0">Comments</div>';(q.comments||[]).forEach(function(c,ci){h+='<div class="comment-item"><div class="cm-txt">'+esc(c.text)+'<div class="cm-date">'+(c.date||'')+'</div></div><button class="cm-del" onclick="event.stopPropagation();delComment(\''+bank+'\','+pid+','+idx+','+ci+')">✕</button></div>'});h+='<div class="comment-input"><input id="cmt_'+bank+'_'+pid+'_'+idx+'" placeholder="Comment"><button onclick="addComment(\''+bank+'\','+pid+','+idx+')">Send</button></div></div><div style="margin-top:10px;display:flex;gap:6px"><button class="btn btn-accent btn-sm" onclick="saveToMemo(\''+bank+'\','+pid+','+idx+')">Save Memo</button><button class="btn btn-outline btn-sm" onclick="copyForAI(\''+bank+'\','+pid+','+idx+')">Copy for AI</button></div></div></div>';return h}
 function togB(id){var e=document.getElementById(id);if(e)e.classList.toggle('show')}
-function delBank(bank,pid,idx){if(bank==='wrong')WB[pid].splice(idx,1);else UB[pid].splice(idx,1);toast('已移除');R()}
-function addComment(bank,pid,idx){var input=document.getElementById('cmt_'+bank+'_'+pid+'_'+idx);if(!input||!input.value.trim())return;var src=bank==='wrong'?WB:UB;if(!src[pid][idx].comments)src[pid][idx].comments=[];src[pid][idx].comments.push({text:input.value.trim(),date:nowStr()});toast('已留言');R()}
+function delBank(bank,pid,idx){if(bank==='wrong')WB[pid].splice(idx,1);else UB[pid].splice(idx,1);toast('Removed');R()}
+function addComment(bank,pid,idx){var input=document.getElementById('cmt_'+bank+'_'+pid+'_'+idx);if(!input||!input.value.trim())return;var src=bank==='wrong'?WB:UB;if(!src[pid][idx].comments)src[pid][idx].comments=[];src[pid][idx].comments.push({text:input.value.trim(),date:nowStr()});toast('Added');R()}
 function delComment(bank,pid,idx,ci){var src=bank==='wrong'?WB:UB;if(src[pid][idx].comments)src[pid][idx].comments.splice(ci,1);R()}
-function saveToMemo(bank,pid,idx){var src=bank==='wrong'?WB:UB;var q=src[pid][idx];if(!q)return;let content=q.stem+'\n\n';q.options.forEach(function(o,j){content+='ABCD'[j]+'. '+o+'\n'});content+='\n正確：'+'ABCD'[q.answer]+'\n';if(q.explanation)content+=q.explanation;MEMO.push({id:uid(),part:pid,title:(q.stem||'').substring(0,TITLE_MAX),content:content,tags:[partShort(pid)],date:nowStr()});toast('已存入Memo');R()}
-function copyForAI(bank,pid,idx){var src=bank==='wrong'?WB:UB;var q=src[pid][idx];if(!q)return;let txt=q.stem+'\n\n';q.options.forEach(function(o,j){txt+='ABCD'[j]+'. '+o+'\n'});txt+='\n正確：'+'ABCD'[q.answer]+'\n';if(q.explanation)txt+='解釋：'+q.explanation+'\n';txt+='\n請詳細解釋。';copyTxt(txt);toast('已複製')}
+function saveToMemo(bank,pid,idx){var src=bank==='wrong'?WB:UB;var q=src[pid][idx];if(!q)return;let content=q.stem+'\n\n';q.options.forEach(function(o,j){content+=optLetter(j)+'. '+o+'\n'});content+='\nCorrect: '+optLetter(q.answer)+'\n';if(q.explanation)content+=q.explanation;MEMO.push({id:uid(),part:pid,title:(q.stem||'').substring(0,TITLE_MAX),content:content,tags:[partShort(pid)],date:nowStr()});toast('Saved to Memo');R()}
+function copyForAI(bank,pid,idx){var src=bank==='wrong'?WB:UB;var q=src[pid][idx];if(!q)return;let txt=q.stem+'\n\n';q.options.forEach(function(o,j){txt+=optLetter(j)+'. '+o+'\n'});txt+='\nCorrect: '+optLetter(q.answer)+'\n';if(q.explanation)txt+='Explanation: '+q.explanation+'\n';txt+='\nPlease explain in detail why the correct answer is correct and why the other options are wrong.';copyTxt(txt);toast('Copied')}
 
 function tabMemo(){
-var filters=['all',1,2,3,4];var fNames=['全部'].concat(PM.map(p=>p.short));
+var filters=['all',1,2,3,4];var fNames=['All'].concat(PM.map(p=>p.short));
 let h='<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><button class="pg-back" onclick="S.tab=\'home\';R()">'+IC.chevLeft+'</button></div>';
 h+='<div class="sub-tabs">';filters.forEach(function(f,i){h+='<button class="sub-tab '+(S.memoFilter==f?'on':'')+'" onclick="S.memoFilter=\''+f+'\';R()">'+fNames[i]+'</button>'});h+='</div>';
 var filtered=MEMO.filter(m=>S.memoFilter==='all'||m.part==S.memoFilter);
 var selCount=Object.values(S.memoSel).filter(Boolean).length;
-if(selCount)h+='<div style="display:flex;gap:6px;margin-bottom:12px"><button class="btn btn-accent btn-sm" onclick="copySelectedMemos()">複製（'+selCount+'）</button><button class="btn btn-ghost btn-sm" onclick="S.memoSel={};R()">取消</button><button class="btn btn-sm" style="background:var(--rose-l);color:var(--rose)" onclick="delSelectedMemos()">刪除</button></div>';
-h+='<button class="btn btn-outline btn-sm" style="margin-bottom:12px" onclick="showAddMemo()">＋ 新增</button>';
-if(!filtered.length)h+='<div class="empty">'+IC.memo+'<div>未有Memo</div></div>';
-else filtered.slice().reverse().forEach(function(m){var sel=S.memoSel[m.id];h+='<div class="memo-card '+(sel?'selected':'')+'" onclick="toggleMemoSel(\''+m.id+'\')"><input type="checkbox" class="memo-sel" '+(sel?'checked':'')+' onclick="event.stopPropagation();toggleMemoSel(\''+m.id+'\')"><div class="mc-head"><span class="mc-chip">'+partShort(m.part)+'</span></div><div class="mc-title">'+esc(truncate(m.title,TITLE_MAX))+'</div><div class="mc-body">'+esc(truncate(m.content,CONTENT_PREVIEW_LEN))+'</div>'+(m.content&&m.content.length>CONTENT_PREVIEW_LEN?'<div class="mc-ellipsis">⋯ 展開查看全部</div>':'')+'<div class="mc-footer"><span class="mc-date">'+m.date+'</span><span class="mc-actions"><button onclick="event.stopPropagation();editMemo(\''+m.id+'\')">'+IC.edit+'</button><button onclick="event.stopPropagation();copyOneMemo(\''+m.id+'\')">'+IC.copy+'</button><button onclick="event.stopPropagation();delMemo(\''+m.id+'\')">'+IC.trash+'</button></span></div></div>'});return h;
+if(selCount)h+='<div style="display:flex;gap:6px;margin-bottom:12px"><button class="btn btn-accent btn-sm" onclick="copySelectedMemos()">Copy ('+selCount+')</button><button class="btn btn-ghost btn-sm" onclick="S.memoSel={};R()">Cancel</button><button class="btn btn-sm" style="background:var(--rose-l);color:var(--rose)" onclick="delSelectedMemos()">Delete</button></div>';
+h+='<button class="btn btn-outline btn-sm" style="margin-bottom:12px" onclick="showAddMemo()">+ New</button>';
+if(!filtered.length)h+='<div class="empty">'+IC.memo+'<div>No memos</div></div>';
+else filtered.slice().reverse().forEach(function(m){var sel=S.memoSel[m.id];h+='<div class="memo-card '+(sel?'selected':'')+'" onclick="toggleMemoSel(\''+m.id+'\')"><input type="checkbox" class="memo-sel" '+(sel?'checked':'')+' onclick="event.stopPropagation();toggleMemoSel(\''+m.id+'\')"><div class="mc-head"><span class="mc-chip">'+partShort(m.part)+'</span></div><div class="mc-title">'+esc(truncate(m.title,TITLE_MAX))+'</div><div class="mc-body">'+esc(truncate(m.content,CONTENT_PREVIEW_LEN))+'</div>'+(m.content&&m.content.length>CONTENT_PREVIEW_LEN?'<div class="mc-ellipsis">⋯ expand</div>':'')+'<div class="mc-footer"><span class="mc-date">'+m.date+'</span><span class="mc-actions"><button onclick="event.stopPropagation();editMemo(\''+m.id+'\')">'+IC.edit+'</button><button onclick="event.stopPropagation();copyOneMemo(\''+m.id+'\')">'+IC.copy+'</button><button onclick="event.stopPropagation();delMemo(\''+m.id+'\')">'+IC.trash+'</button></span></div></div>'});return h;
 }
 function toggleMemoSel(id){S.memoSel[id]=!S.memoSel[id];R()}
-function copySelectedMemos(){var ids=Object.keys(S.memoSel).filter(k=>S.memoSel[k]);var ms=ids.map(id=>MEMO.find(m=>m.id===id)).filter(Boolean);let t='';ms.forEach(m=>{t+='--- '+m.title+' ---\n'+m.content+'\n\n'});copyTxt(t);toast('已複製'+ms.length+'張')}
-function delSelectedMemos(){var ids=Object.keys(S.memoSel).filter(k=>S.memoSel[k]);showM('刪除',ids.length+'張？',function(){MEMO=MEMO.filter(m=>!ids.includes(m.id));S.memoSel={};toast('已刪除');R()},'刪除')}
-function copyOneMemo(id){var m=MEMO.find(x=>x.id===id);if(m)copyTxt(m.content);toast('已複製')}
-function delMemo(id){MEMO=MEMO.filter(m=>m.id!==id);toast('已刪除');R()}
-function showAddMemo(){var app=document.getElementById('app');let h='<div class="container" style="padding-top:20px"><div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><button class="pg-back" onclick="R()">'+IC.chevLeft+'</button></div><div class="m-card"><input id="nm-title" class="m-input" style="margin-bottom:12px" placeholder="標題（上限'+TITLE_MAX+'字）" maxlength="'+TITLE_MAX+'"><textarea id="nm-body" class="m-textarea m-textarea-xl" style="margin-bottom:12px" placeholder="內容（不限長度）"></textarea><select id="nm-part" class="m-input" style="margin-bottom:12px">';PM.forEach(function(p){h+='<option value="'+p.id+'">'+p.name+'</option>'});h+='</select><button class="btn btn-dark" onclick="doAddMemo()">新增</button></div></div>'+renderBottomBar();app.innerHTML=h;setupDraft('nm-body','memo_new')}
-function doAddMemo(){var title=document.getElementById('nm-title').value.trim();var body=document.getElementById('nm-body').value;if(!body){toast('請輸入');return}MEMO.push({id:uid(),part:parseInt(document.getElementById('nm-part').value),title:title||body.substring(0,TITLE_MAX),content:body,tags:[],date:nowStr()});clearDraft('memo_new');toast('已新增');cloudSaveAll();R()}
-function editMemo(id){var m=MEMO.find(x=>x.id===id);if(!m)return;var app=document.getElementById('app');let h='<div class="container" style="padding-top:20px"><div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><button class="pg-back" onclick="R()">'+IC.chevLeft+'</button></div><div class="m-card"><input id="em-title" class="m-input" style="margin-bottom:12px" value="'+esc(m.title)+'" maxlength="'+TITLE_MAX+'"><textarea id="em-body" class="m-textarea m-textarea-xl" style="margin-bottom:12px">'+esc(m.content)+'</textarea><button class="btn btn-dark" onclick="saveMemoEdit(\''+m.id+'\')">儲存</button></div></div>'+renderBottomBar();app.innerHTML=h}
-function saveMemoEdit(id){var m=MEMO.find(x=>x.id===id);if(!m)return;m.title=document.getElementById('em-title').value.trim()||m.title;m.content=document.getElementById('em-body').value;toast('已儲存');cloudSaveAll();R()}
+function copySelectedMemos(){var ids=Object.keys(S.memoSel).filter(k=>S.memoSel[k]);var ms=ids.map(id=>MEMO.find(m=>m.id===id)).filter(Boolean);let t='';ms.forEach(m=>{t+='--- '+m.title+' ---\n'+m.content+'\n\n'});copyTxt(t);toast('Copied '+ms.length)}
+function delSelectedMemos(){var ids=Object.keys(S.memoSel).filter(k=>S.memoSel[k]);showM('Delete',ids.length+' memos?',function(){MEMO=MEMO.filter(m=>!ids.includes(m.id));S.memoSel={};toast('Deleted');R()},'Delete')}
+function copyOneMemo(id){var m=MEMO.find(x=>x.id===id);if(m)copyTxt(m.content);toast('Copied')}
+function delMemo(id){MEMO=MEMO.filter(m=>m.id!==id);toast('Deleted');R()}
+function showAddMemo(){var app=document.getElementById('app');let h='<div class="container" style="padding-top:20px"><div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><button class="pg-back" onclick="R()">'+IC.chevLeft+'</button></div><div class="m-card"><input id="nm-title" class="m-input" style="margin-bottom:12px" placeholder="Title" maxlength="'+TITLE_MAX+'"><textarea id="nm-body" class="m-textarea m-textarea-xl" style="margin-bottom:12px" placeholder="Content"></textarea><select id="nm-part" class="m-input" style="margin-bottom:12px">';PM.forEach(function(p){h+='<option value="'+p.id+'">'+p.name+'</option>'});h+='</select><button class="btn btn-dark" onclick="doAddMemo()">Add</button></div></div>'+renderBottomBar();app.innerHTML=h;setupDraft('nm-body','memo_new')}
+function doAddMemo(){var title=document.getElementById('nm-title').value.trim();var body=document.getElementById('nm-body').value;if(!body){toast('Enter content');return}MEMO.push({id:uid(),part:parseInt(document.getElementById('nm-part').value),title:title||body.substring(0,TITLE_MAX),content:body,tags:[],date:nowStr()});clearDraft('memo_new');toast('Added');cloudSaveAll();R()}
+function editMemo(id){var m=MEMO.find(x=>x.id===id);if(!m)return;var app=document.getElementById('app');let h='<div class="container" style="padding-top:20px"><div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><button class="pg-back" onclick="R()">'+IC.chevLeft+'</button></div><div class="m-card"><input id="em-title" class="m-input" style="margin-bottom:12px" value="'+esc(m.title)+'" maxlength="'+TITLE_MAX+'"><textarea id="em-body" class="m-textarea m-textarea-xl" style="margin-bottom:12px">'+esc(m.content)+'</textarea><button class="btn btn-dark" onclick="saveMemoEdit(\''+m.id+'\')">Save</button></div></div>'+renderBottomBar();app.innerHTML=h}
+function saveMemoEdit(id){var m=MEMO.find(x=>x.id===id);if(!m)return;m.title=document.getElementById('em-title').value.trim()||m.title;m.content=document.getElementById('em-body').value;toast('Saved');cloudSaveAll();R()}
 
 function tabNotes(){
-var filters=['all',1,2,3,4];var fNames=['全部'].concat(PM.map(p=>p.short));
-var cats=['all','thinking','logic','apply','custom'];var catNames=['全部','強化思考','應用邏輯','實戰技巧','自訂'];
+var filters=['all',1,2,3,4];var fNames=['All'].concat(PM.map(p=>p.short));
+var cats=['all','thinking','logic','apply','custom'];var catNames=['All','Deep Think','Logic','Strategy','Custom'];
 let h='<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><button class="pg-back" onclick="S.tab=\'home\';R()">'+IC.chevLeft+'</button></div>';
 h+='<div class="sub-tabs">';filters.forEach(function(f,i){h+='<button class="sub-tab '+(S.noteFilter==f?'on':'')+'" onclick="S.noteFilter=\''+f+'\';R()">'+fNames[i]+'</button>'});h+='</div>';
 h+='<div class="sub-tabs">';cats.forEach(function(c){h+='<button class="sub-tab '+((S._noteCat||'all')===c?'on':'')+'" onclick="S._noteCat=\''+c+'\';R()">'+catNames[cats.indexOf(c)]+'</button>'});h+='</div>';
 var selCount=Object.values(S.noteSel).filter(Boolean).length;
-if(selCount)h+='<div style="display:flex;gap:6px;margin-bottom:12px"><button class="btn btn-accent btn-sm" onclick="copySelectedNotes()">複製（'+selCount+'）</button><button class="btn btn-ghost btn-sm" onclick="S.noteSel={};R()">取消</button><button class="btn btn-sm" style="background:var(--rose-l);color:var(--rose)" onclick="delSelectedNotes()">刪除</button></div>';
-h+='<button class="btn btn-outline btn-sm" style="margin-bottom:12px" onclick="showAddNote()">＋ 新增</button>';
+if(selCount)h+='<div style="display:flex;gap:6px;margin-bottom:12px"><button class="btn btn-accent btn-sm" onclick="copySelectedNotes()">Copy ('+selCount+')</button><button class="btn btn-ghost btn-sm" onclick="S.noteSel={};R()">Cancel</button><button class="btn btn-sm" style="background:var(--rose-l);color:var(--rose)" onclick="delSelectedNotes()">Delete</button></div>';
+h+='<button class="btn btn-outline btn-sm" style="margin-bottom:12px" onclick="showAddNote()">+ New</button>';
 var filtered=NOTES.filter(n=>S.noteFilter==='all'||n.part==S.noteFilter);
 if((S._noteCat||'all')!=='all')filtered=filtered.filter(n=>n.category===S._noteCat);
-if(!filtered.length)h+='<div class="empty">'+IC.notebook+'<div>未有筆記</div></div>';
+if(!filtered.length)h+='<div class="empty">'+IC.notebook+'<div>No notes</div></div>';
 else filtered.slice().reverse().forEach(function(n){
-var sel=S.noteSel[n.id];var catL={'thinking':'強化思考','logic':'應用邏輯','apply':'實戰技巧','custom':'自訂'}[n.category||'custom']||'自訂';
+var sel=S.noteSel[n.id];var catL={'thinking':'Deep Think','logic':'Logic','apply':'Strategy','custom':'Custom'}[n.category||'custom']||'Custom';
 h+='<div class="note-card '+(sel?'selected':'')+'" onclick="toggleNoteSel(\''+n.id+'\')"><input type="checkbox" class="note-sel" '+(sel?'checked':'')+' onclick="event.stopPropagation();toggleNoteSel(\''+n.id+'\')"><div class="nc-chips"><span class="nc-chip cat-'+(n.category||'custom')+'">'+catL+'</span>'+(n.part?'<span class="nc-chip cat-part">'+partShort(n.part)+'</span>':'');
 if(n.tags&&n.tags.length)n.tags.forEach(function(tag){h+='<span class="nc-chip cat-tag">'+esc(tag)+'</span>'});
-h+='</div><div class="nc-title">'+esc(truncate(n.title,TITLE_MAX))+'</div><div class="nc-body">'+esc(truncate(n.content,CONTENT_PREVIEW_LEN))+'</div>'+(n.content&&n.content.length>CONTENT_PREVIEW_LEN?'<div class="nc-ellipsis">⋯ 展開查看全部</div>':'')+'<div class="nc-footer"><span class="nc-date">'+(n.date||'')+'</span><span class="nc-actions"><button onclick="event.stopPropagation();editNote(\''+n.id+'\')">'+IC.edit+'</button><button onclick="event.stopPropagation();copyOneNote(\''+n.id+'\')">'+IC.copy+'</button><button onclick="event.stopPropagation();delNote(\''+n.id+'\')">'+IC.trash+'</button></span></div></div>';
+h+='</div><div class="nc-title">'+esc(truncate(n.title,TITLE_MAX))+'</div><div class="nc-body">'+esc(truncate(n.content,CONTENT_PREVIEW_LEN))+'</div>'+(n.content&&n.content.length>CONTENT_PREVIEW_LEN?'<div class="nc-ellipsis">⋯ expand</div>':'')+'<div class="nc-footer"><span class="nc-date">'+(n.date||'')+'</span><span class="nc-actions"><button onclick="event.stopPropagation();editNote(\''+n.id+'\')">'+IC.edit+'</button><button onclick="event.stopPropagation();copyOneNote(\''+n.id+'\')">'+IC.copy+'</button><button onclick="event.stopPropagation();delNote(\''+n.id+'\')">'+IC.trash+'</button></span></div></div>';
 });return h;
 }
 function toggleNoteSel(id){S.noteSel[id]=!S.noteSel[id];R()}
-function copySelectedNotes(){var ids=Object.keys(S.noteSel).filter(k=>S.noteSel[k]);var ns=ids.map(id=>NOTES.find(n=>n.id===id)).filter(Boolean);let t='';ns.forEach(n=>{t+='--- '+n.title+' ---\n'+n.content+'\n\n'});copyTxt(t);toast('已複製'+ns.length+'則')}
-function delSelectedNotes(){var ids=Object.keys(S.noteSel).filter(k=>S.noteSel[k]);showM('刪除',ids.length+'則？',function(){NOTES=NOTES.filter(n=>!ids.includes(n.id));S.noteSel={};toast('已刪除');R()},'刪除')}
-function copyOneNote(id){var n=NOTES.find(x=>x.id===id);if(n)copyTxt(n.content);toast('已複製')}
-function delNote(id){NOTES=NOTES.filter(n=>n.id!==id);toast('已刪除');R()}
+function copySelectedNotes(){var ids=Object.keys(S.noteSel).filter(k=>S.noteSel[k]);var ns=ids.map(id=>NOTES.find(n=>n.id===id)).filter(Boolean);let t='';ns.forEach(n=>{t+='--- '+n.title+' ---\n'+n.content+'\n\n'});copyTxt(t);toast('Copied '+ns.length)}
+function delSelectedNotes(){var ids=Object.keys(S.noteSel).filter(k=>S.noteSel[k]);showM('Delete',ids.length+' notes?',function(){NOTES=NOTES.filter(n=>!ids.includes(n.id));S.noteSel={};toast('Deleted');R()},'Delete')}
+function copyOneNote(id){var n=NOTES.find(x=>x.id===id);if(n)copyTxt(n.content);toast('Copied')}
+function delNote(id){NOTES=NOTES.filter(n=>n.id!==id);toast('Deleted');R()}
 
-function showAddNote(){var app=document.getElementById('app');let h='<div class="container" style="padding-top:20px"><div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><button class="pg-back" onclick="R()">'+IC.chevLeft+'</button></div><div class="m-card"><input id="nn-title" class="m-input" style="margin-bottom:12px" placeholder="標題（上限'+TITLE_MAX+'字）" maxlength="'+TITLE_MAX+'"><textarea id="nn-body" class="m-textarea m-textarea-xl" style="margin-bottom:12px" placeholder="內容（不限長度）"></textarea><select id="nn-cat" class="m-input" style="margin-bottom:8px"><option value="thinking">強化思考</option><option value="logic">應用邏輯</option><option value="apply">實戰技巧</option><option value="custom">自訂</option></select><select id="nn-part" class="m-input" style="margin-bottom:8px"><option value="0">不限Part</option>';PM.forEach(function(p){h+='<option value="'+p.id+'">'+p.name+'</option>'});h+='</select>';
-h+='<div style="margin-bottom:12px"><div style="font-size:12px;font-weight:600;color:var(--g500);margin-bottom:6px">自訂標籤</div><div class="tag-chips" id="nn-tags-area"></div><div class="tag-input-wrap"><input id="nn-tag-input" placeholder="輸入標籤文字"><button onclick="addTagToNew()">新增</button></div></div>';
-h+='<button class="btn btn-dark" onclick="doAddNote()">新增</button></div></div>'+renderBottomBar();app.innerHTML=h;setupDraft('nn-body','note_new');window._newNoteTags=[]}
+function showAddNote(){var app=document.getElementById('app');let h='<div class="container" style="padding-top:20px"><div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><button class="pg-back" onclick="R()">'+IC.chevLeft+'</button></div><div class="m-card"><input id="nn-title" class="m-input" style="margin-bottom:12px" placeholder="Title" maxlength="'+TITLE_MAX+'"><textarea id="nn-body" class="m-textarea m-textarea-xl" style="margin-bottom:12px" placeholder="Content"></textarea><select id="nn-cat" class="m-input" style="margin-bottom:8px"><option value="thinking">Deep Think</option><option value="logic">Logic</option><option value="apply">Strategy</option><option value="custom">Custom</option></select><select id="nn-part" class="m-input" style="margin-bottom:8px"><option value="0">All Sections</option>';PM.forEach(function(p){h+='<option value="'+p.id+'">'+p.name+'</option>'});h+='</select>';
+h+='<div style="margin-bottom:12px"><div style="font-size:12px;font-weight:600;color:var(--g500);margin-bottom:6px">Tags</div><div class="tag-chips" id="nn-tags-area"></div><div class="tag-input-wrap"><input id="nn-tag-input" placeholder="Tag text"><button onclick="addTagToNew()">Add</button></div></div>';
+h+='<button class="btn btn-dark" onclick="doAddNote()">Add</button></div></div>'+renderBottomBar();app.innerHTML=h;setupDraft('nn-body','note_new');window._newNoteTags=[]}
 function addTagToNew(){var input=document.getElementById('nn-tag-input');if(!input||!input.value.trim())return;window._newNoteTags=window._newNoteTags||[];window._newNoteTags.push(input.value.trim());input.value='';renderNewNoteTags()}
 function removeNewNoteTag(idx){window._newNoteTags.splice(idx,1);renderNewNoteTags()}
 function renderNewNoteTags(){var area=document.getElementById('nn-tags-area');if(!area)return;var h='';(window._newNoteTags||[]).forEach(function(t,i){h+='<span class="tag-chip">'+esc(t)+'<button class="tag-del" onclick="removeNewNoteTag('+i+')">✕</button></span>'});area.innerHTML=h}
-function doAddNote(){var title=document.getElementById('nn-title').value.trim();var body=document.getElementById('nn-body').value;if(!body){toast('請輸入');return}NOTES.push({id:uid(),title:title||body.substring(0,TITLE_MAX),content:body,category:document.getElementById('nn-cat').value,part:parseInt(document.getElementById('nn-part').value)||0,tags:window._newNoteTags||[],date:nowStr()});clearDraft('note_new');toast('已新增');cloudSaveAll();R()}
+function doAddNote(){var title=document.getElementById('nn-title').value.trim();var body=document.getElementById('nn-body').value;if(!body){toast('Enter content');return}NOTES.push({id:uid(),title:title||body.substring(0,TITLE_MAX),content:body,category:document.getElementById('nn-cat').value,part:parseInt(document.getElementById('nn-part').value)||0,tags:window._newNoteTags||[],date:nowStr()});clearDraft('note_new');toast('Added');cloudSaveAll();R()}
 
-function editNote(id){var n=NOTES.find(x=>x.id===id);if(!n)return;window._editNoteTags=(n.tags||[]).slice();var app=document.getElementById('app');let h='<div class="container" style="padding-top:20px"><div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><button class="pg-back" onclick="R()">'+IC.chevLeft+'</button></div><div class="m-card"><input id="en-title" class="m-input" style="margin-bottom:12px" value="'+esc(n.title)+'" maxlength="'+TITLE_MAX+'"><textarea id="en-body" class="m-textarea m-textarea-xl" style="margin-bottom:12px">'+esc(n.content)+'</textarea><select id="en-cat" class="m-input" style="margin-bottom:8px">';['thinking','logic','apply','custom'].forEach(function(c){h+='<option value="'+c+'" '+(n.category===c?'selected':'')+'>'+{thinking:'強化思考',logic:'應用邏輯',apply:'實戰技巧',custom:'自訂'}[c]+'</option>'});h+='</select><select id="en-part" class="m-input" style="margin-bottom:8px"><option value="0" '+(!n.part?'selected':'')+'>不限Part</option>';PM.forEach(function(p){h+='<option value="'+p.id+'" '+(n.part===p.id?'selected':'')+'>'+p.name+'</option>'});h+='</select>';
-h+='<div style="margin-bottom:12px"><div style="font-size:12px;font-weight:600;color:var(--g500);margin-bottom:6px">自訂標籤</div><div class="tag-chips" id="en-tags-area"></div><div class="tag-input-wrap"><input id="en-tag-input" placeholder="輸入標籤文字"><button onclick="addTagToEdit()">新增</button></div></div>';
-h+='<button class="btn btn-dark" onclick="doSaveNote(\''+n.id+'\')">儲存</button></div></div>'+renderBottomBar();app.innerHTML=h;renderEditNoteTags()}
+function editNote(id){var n=NOTES.find(x=>x.id===id);if(!n)return;window._editNoteTags=(n.tags||[]).slice();var app=document.getElementById('app');let h='<div class="container" style="padding-top:20px"><div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><button class="pg-back" onclick="R()">'+IC.chevLeft+'</button></div><div class="m-card"><input id="en-title" class="m-input" style="margin-bottom:12px" value="'+esc(n.title)+'" maxlength="'+TITLE_MAX+'"><textarea id="en-body" class="m-textarea m-textarea-xl" style="margin-bottom:12px">'+esc(n.content)+'</textarea><select id="en-cat" class="m-input" style="margin-bottom:8px">';['thinking','logic','apply','custom'].forEach(function(c){h+='<option value="'+c+'" '+(n.category===c?'selected':'')+'>'+{thinking:'Deep Think',logic:'Logic',apply:'Strategy',custom:'Custom'}[c]+'</option>'});h+='</select><select id="en-part" class="m-input" style="margin-bottom:8px"><option value="0" '+(!n.part?'selected':'')+'>All Sections</option>';PM.forEach(function(p){h+='<option value="'+p.id+'" '+(n.part===p.id?'selected':'')+'>'+p.name+'</option>'});h+='</select>';
+h+='<div style="margin-bottom:12px"><div style="font-size:12px;font-weight:600;color:var(--g500);margin-bottom:6px">Tags</div><div class="tag-chips" id="en-tags-area"></div><div class="tag-input-wrap"><input id="en-tag-input" placeholder="Tag text"><button onclick="addTagToEdit()">Add</button></div></div>';
+h+='<button class="btn btn-dark" onclick="doSaveNote(\''+n.id+'\')">Save</button></div></div>'+renderBottomBar();app.innerHTML=h;renderEditNoteTags()}
 function addTagToEdit(){var input=document.getElementById('en-tag-input');if(!input||!input.value.trim())return;window._editNoteTags.push(input.value.trim());input.value='';renderEditNoteTags()}
 function removeEditNoteTag(idx){window._editNoteTags.splice(idx,1);renderEditNoteTags()}
 function renderEditNoteTags(){var area=document.getElementById('en-tags-area');if(!area)return;var h='';(window._editNoteTags||[]).forEach(function(t,i){h+='<span class="tag-chip">'+esc(t)+'<button class="tag-del" onclick="removeEditNoteTag('+i+')">✕</button></span>'});area.innerHTML=h}
-function doSaveNote(id){var n=NOTES.find(x=>x.id===id);if(!n)return;n.title=document.getElementById('en-title').value.trim()||n.title;n.content=document.getElementById('en-body').value;n.category=document.getElementById('en-cat').value;n.part=parseInt(document.getElementById('en-part').value)||0;n.tags=window._editNoteTags||[];toast('已儲存');cloudSaveAll();R()}
+function doSaveNote(id){var n=NOTES.find(x=>x.id===id);if(!n)return;n.title=document.getElementById('en-title').value.trim()||n.title;n.content=document.getElementById('en-body').value;n.category=document.getElementById('en-cat').value;n.part=parseInt(document.getElementById('en-part').value)||0;n.tags=window._editNoteTags||[];toast('Saved');cloudSaveAll();R()}
 
-function tabHist(){let h='';if(!HIST.length)return '<div class="empty">'+IC.clock+'<div>暫無記錄</div></div>';HIST.slice().reverse().forEach(function(r){var pn=r.isFP?'全份試卷':r.part===0?'混合練習':(PM.find(p=>p.id===r.part)||{}).name||'';var pct=r.total?Math.round(r.correct/r.total*100):0;h+='<div class="hi-card" onclick="viewR(\''+r.id+'\')"><div class="hi-top"><div class="hi-date">'+IC.clock+'<span>'+r.date+'</span></div><div class="hi-time">'+IC.refresh+'<span>'+fmtT(r.time)+'</span></div></div><div class="hi-title">'+pn+'</div><div class="hi-bottom"><span class="hi-score">'+r.correct+'/'+r.total+'（'+pct+'%）</span>'+(r.paperLabels?'<span class="hi-paper">'+esc(r.paperLabels)+'</span>':'')+'</div></div>'});h+='<button class="btn btn-ghost" style="margin-top:16px" onclick="showM(\'清空\',\'確定？\',function(){HIST=[];R();toast(\'已清空\')})">清空記錄</button>';return h}
+function tabHist(){let h='';if(!HIST.length)return '<div class="empty">'+IC.clock+'<div>No history</div></div>';HIST.slice().reverse().forEach(function(r){var pn=r.isFP?'Full Paper':r.part===0?'Mixed':(PM.find(p=>p.id===r.part)||{}).name||'';var pct=r.total?Math.round(r.correct/r.total*100):0;h+='<div class="hi-card" onclick="viewR(\''+r.id+'\')"><div class="hi-top"><div class="hi-date">'+IC.clock+'<span>'+r.date+'</span></div><div class="hi-time">'+IC.refresh+'<span>'+fmtT(r.time)+'</span></div></div><div class="hi-title">'+pn+'</div><div class="hi-bottom"><span class="hi-score">'+r.correct+'/'+r.total+' ('+pct+'%)</span>'+(r.paperLabels?'<span class="hi-paper">'+esc(r.paperLabels)+'</span>':'')+'</div></div>'});h+='<button class="btn btn-ghost" style="margin-top:16px" onclick="showM(\'Clear\',\'Confirm?\',function(){HIST=[];R();toast(\'Cleared\')})">Clear History</button>';return h}
 
 function tabImport(){
 let h='<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><button class="pg-back" onclick="S.tab=\'home\';R()">'+IC.chevLeft+'</button></div>';
-h+='<div class="save-card">'+IC.import2+'<div class="sc-title">匯入新題目</div><div class="sc-sub">Prompt → AI → 複製JSON → 貼入下方</div></div>';
-h+='<div class="prompt-link-box"><button class="shortcut-link" onclick="S.tab=\'prompt\';R()">'+IC.arrowRight+'<span>去 Prompt 頁面複製指令</span></button></div>';
-h+='<div class="m-card"><textarea class="m-textarea m-textarea-xl" id="impA" placeholder="貼上AI輸出嘅JSON"></textarea><div class="draft-ind" id="impDraft">有草稿</div><div style="margin-top:10px"><input id="impLabel" class="m-input" value="'+shortDate()+' 練習" placeholder="Paper名稱" maxlength="'+TITLE_MAX+'"></div><button class="btn btn-dark" style="margin-top:12px" onclick="doImport()">匯入到題池</button><div id="impMsg" style="margin-top:8px;display:none;padding:10px;border-radius:10px;font-size:12px"></div></div>';
+h+='<div class="save-card">'+IC.import2+'<div class="sc-title">Import Questions</div><div class="sc-sub">Prompt → AI → Copy JSON → Paste below</div></div>';
+h+='<div class="prompt-link-box"><button class="shortcut-link" onclick="S.tab=\'prompt\';R()">'+IC.arrowRight+'<span>Go to Prompt page</span></button></div>';
+h+='<div class="m-card"><textarea class="m-textarea m-textarea-xl" id="impA" placeholder="Paste AI-generated JSON here"></textarea><div class="draft-ind" id="impDraft">Draft saved</div><div style="margin-top:10px"><input id="impLabel" class="m-input" value="'+shortDate()+' Practice" placeholder="Paper name" maxlength="'+TITLE_MAX+'"></div><button class="btn btn-dark" style="margin-top:12px" onclick="doImport()">Import</button><div id="impMsg" style="margin-top:8px;display:none;padding:10px;border-radius:10px;font-size:12px"></div></div>';
 setTimeout(function(){setupDraft('impA','import_json');if(getDraft('import_json')){var ind=document.getElementById('impDraft');if(ind)ind.classList.add('show')}},60);return h;
 }
 
 function tabPrompt(){
-var keys=['full',1,2,3,4];var kNames=['全份卷','Part 1','Part 2','Part 3','Part 4'];
-let h='<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><button class="pg-back" onclick="S.tab=\'import\';R()">'+IC.chevLeft+'</button><span style="font-size:14px;color:var(--g500);font-weight:500">返回匯入</span></div>';
-h+='<div class="info-box ib-info">複製時自動附加JSON格式。完成後返回「匯入」頁面貼入。</div>';
-keys.forEach(function(k,i){h+='<div class="prompt-card"><h4>'+kNames[i]+'</h4><textarea class="m-textarea" style="min-height:100px;margin:6px 0;font-size:12px" id="prm_'+k+'">'+esc(getPrompt(k))+'</textarea><div style="display:flex;gap:6px"><button class="btn btn-dark btn-sm" onclick="copyPromptFull(\''+k+'\')">複製</button><button class="btn btn-accent btn-sm" onclick="savePrompt(\''+k+'\')">儲存</button><button class="btn btn-ghost btn-sm" onclick="resetPrompt(\''+k+'\')">還原</button></div></div>'});
-h+='<button class="btn btn-outline" style="margin-top:8px" onclick="S.tab=\'import\';R()">← 返回匯入頁面</button>';
+var keys=['full',1,2,3,4];var kNames=['Full Paper','Section I','Section II','Section III','Section IV'];
+let h='<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><button class="pg-back" onclick="S.tab=\'import\';R()">'+IC.chevLeft+'</button><span style="font-size:14px;color:var(--g500);font-weight:500">Back to Import</span></div>';
+h+='<div class="info-box ib-info">Copy auto-appends JSON format. Return to Import to paste result.</div>';
+keys.forEach(function(k,i){h+='<div class="prompt-card"><h4>'+kNames[i]+' <span style="color:var(--g400);font-weight:400;font-size:11px">'+(k==='full'?'40Q':k==1||k==4?'10Q·4opt':'10Q·5opt')+'</span></h4><textarea class="m-textarea" style="min-height:100px;margin:6px 0;font-size:12px" id="prm_'+k+'">'+esc(getPrompt(k))+'</textarea><div style="display:flex;gap:6px"><button class="btn btn-dark btn-sm" onclick="copyPromptFull(\''+k+'\')">Copy</button><button class="btn btn-accent btn-sm" onclick="savePrompt(\''+k+'\')">Save</button><button class="btn btn-ghost btn-sm" onclick="resetPrompt(\''+k+'\')">Reset</button></div></div>'});
+h+='<button class="btn btn-outline" style="margin-top:8px" onclick="S.tab=\'import\';R()">← Back to Import</button>';
 setTimeout(function(){keys.forEach(function(k){setupDraft('prm_'+k,'prompt_'+k)})},60);return h;
 }
-function copyPromptFull(key){var el=document.getElementById('prm_'+key);copyTxt((el?el.value:getPrompt(key))+JSON_FORMAT_SUFFIX);toast('已複製')}
-function savePrompt(key){var el=document.getElementById('prm_'+key);if(!el)return;CUSTOM_PROMPTS[key]=el.value;clearDraft('prompt_'+key);cloudSaveAll();toast('已儲存')}
-function resetPrompt(key){delete CUSTOM_PROMPTS[key];clearDraft('prompt_'+key);toast('已還原');R()}
+function copyPromptFull(key){var el=document.getElementById('prm_'+key);copyTxt((el?el.value:getPrompt(key))+JSON_FORMAT_SUFFIX);toast('Copied with JSON format')}
+function savePrompt(key){var el=document.getElementById('prm_'+key);if(!el)return;CUSTOM_PROMPTS[key]=el.value;clearDraft('prompt_'+key);cloudSaveAll();toast('Saved')}
+function resetPrompt(key){delete CUSTOM_PROMPTS[key];clearDraft('prompt_'+key);toast('Reset');R()}
 
 function tabSettings(){
-let h='<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><button class="pg-back" onclick="S.tab=\'save\';R()">'+IC.chevLeft+'</button><span style="font-size:16px;font-weight:700">設定</span></div>';
-h+='<div class="m-card"><div style="font-size:13px;font-weight:700;margin-bottom:12px">🎨 主題色</div><div class="set-item"><label>卡片背景色</label><div class="color-preview"><div class="color-swatch" style="background:'+(THEME.cardColor||'#1a1a2e')+'"></div><input type="color" value="'+(THEME.cardColor||'#1a1a2e')+'" onchange="THEME.cardColor=this.value;applyTheme();this.previousElementSibling.style.background=this.value"></div></div><div class="set-item"><label>強調色</label><div class="color-preview"><div class="color-swatch" style="background:'+(THEME.accentColor||'#6c5ce7')+'"></div><input type="color" value="'+(THEME.accentColor||'#6c5ce7')+'" onchange="THEME.accentColor=this.value;applyTheme();this.previousElementSibling.style.background=this.value"></div></div><div class="set-item"><label>圖標風格</label><select class="m-input" style="width:auto;min-width:100px" onchange="THEME.pillStyle=this.value;R()"><option value="mono" '+(THEME.pillStyle==='mono'?'selected':'')+'>統一色</option><option value="colorful" '+(THEME.pillStyle==='colorful'?'selected':'')+'>彩色</option></select></div><button class="btn btn-accent btn-sm" style="margin-top:12px" onclick="cloudSaveAll()">儲存主題</button><button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="THEME={cardColor:\'#1a1a2e\',accentColor:\'#6c5ce7\',pillStyle:\'mono\'};applyTheme();cloudSaveAll();R()">還原預設</button></div>';
-h+='<div class="m-card"><div style="font-size:13px;font-weight:700;margin-bottom:12px">💬 打招呼語句</div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--g400)">深夜</label><input id="gr-ln" class="m-input" style="margin-top:4px" value="'+esc(GREETINGS.latenight||'')+'"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--g400)">早上</label><input id="gr-m" class="m-input" style="margin-top:4px" value="'+esc(GREETINGS.morning||'')+'"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--g400)">下午</label><input id="gr-a" class="m-input" style="margin-top:4px" value="'+esc(GREETINGS.afternoon||'')+'"></div><div style="margin-bottom:12px"><label style="font-size:11px;color:var(--g400)">晚上</label><input id="gr-n" class="m-input" style="margin-top:4px" value="'+esc(GREETINGS.night||'')+'"></div><button class="btn btn-dark" onclick="saveGreetings()">儲存</button></div>';return h;
+let h='<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><button class="pg-back" onclick="S.tab=\'save\';R()">'+IC.chevLeft+'</button><span style="font-size:16px;font-weight:700">Settings</span></div>';
+h+='<div class="m-card"><div style="font-size:13px;font-weight:700;margin-bottom:12px">🎨 Theme</div><div class="set-item"><label>Card colour</label><div class="color-preview"><div class="color-swatch" style="background:'+(THEME.cardColor||'#1a1a2e')+'"></div><input type="color" value="'+(THEME.cardColor||'#1a1a2e')+'" onchange="THEME.cardColor=this.value;applyTheme();this.previousElementSibling.style.background=this.value"></div></div><div class="set-item"><label>Accent</label><div class="color-preview"><div class="color-swatch" style="background:'+(THEME.accentColor||'#6c5ce7')+'"></div><input type="color" value="'+(THEME.accentColor||'#6c5ce7')+'" onchange="THEME.accentColor=this.value;applyTheme();this.previousElementSibling.style.background=this.value"></div></div><div class="set-item"><label>Icon style</label><select class="m-input" style="width:auto;min-width:100px" onchange="THEME.pillStyle=this.value;R()"><option value="mono" '+(THEME.pillStyle==='mono'?'selected':'')+'>Mono</option><option value="colorful" '+(THEME.pillStyle==='colorful'?'selected':'')+'>Colour</option></select></div><button class="btn btn-accent btn-sm" style="margin-top:12px" onclick="cloudSaveAll()">Save Theme</button><button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="THEME={cardColor:\'#1a1a2e\',accentColor:\'#6c5ce7\',pillStyle:\'mono\'};applyTheme();cloudSaveAll();R()">Reset</button></div>';
+h+='<div class="m-card"><div style="font-size:13px;font-weight:700;margin-bottom:12px">💬 Greetings</div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--g400)">Late night</label><input id="gr-ln" class="m-input" style="margin-top:4px" value="'+esc(GREETINGS.latenight||'')+'"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--g400)">Morning</label><input id="gr-m" class="m-input" style="margin-top:4px" value="'+esc(GREETINGS.morning||'')+'"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--g400)">Afternoon</label><input id="gr-a" class="m-input" style="margin-top:4px" value="'+esc(GREETINGS.afternoon||'')+'"></div><div style="margin-bottom:12px"><label style="font-size:11px;color:var(--g400)">Night</label><input id="gr-n" class="m-input" style="margin-top:4px" value="'+esc(GREETINGS.night||'')+'"></div><button class="btn btn-dark" onclick="saveGreetings()">Save</button></div>';return h;
 }
-function saveGreetings(){var ln=document.getElementById('gr-ln'),m=document.getElementById('gr-m'),a=document.getElementById('gr-a'),n=document.getElementById('gr-n');if(ln)GREETINGS.latenight=ln.value.trim()||'🌙 夜深繼續衝？';if(m)GREETINGS.morning=m.value.trim()||'☀️ 早晨！';if(a)GREETINGS.afternoon=a.value.trim()||'🌤️ 下午繼續練！';if(n)GREETINGS.night=n.value.trim()||'🌙 夜晚衝刺中';toast('已儲存');cloudSaveAll();R()}
+function saveGreetings(){var ln=document.getElementById('gr-ln'),m=document.getElementById('gr-m'),a=document.getElementById('gr-a'),n=document.getElementById('gr-n');if(ln)GREETINGS.latenight=ln.value.trim()||'🌙 Late night push?';if(m)GREETINGS.morning=m.value.trim()||'☀️ Morning!';if(a)GREETINGS.afternoon=a.value.trim()||'🌤️ Afternoon session.';if(n)GREETINGS.night=n.value.trim()||'🌙 Night grind.';toast('Saved');cloudSaveAll();R()}
 
-function tabSave(){var sz=new Blob([JSON.stringify(buildSave())]).size;let h='<div class="save-card">'+IC.save+'<div class="sc-title">雲端同步</div><div class="sc-sub">'+fmtB(sz)+'</div><button class="btn btn-dark" style="margin-bottom:8px" onclick="cloudSaveAll()">儲存到雲端</button><button class="btn btn-outline" onclick="cloudLoadAll()">從雲端讀取</button><div class="cloud-status" id="cloudSt"></div></div><div class="m-card"><div style="font-size:13px;font-weight:700;margin-bottom:10px">手動備份</div><button class="btn btn-outline" style="margin-bottom:8px" onclick="doExport()">複製JSON</button><textarea class="m-textarea" style="height:60px;margin-bottom:8px" id="loadA" placeholder="貼入存檔JSON"></textarea><button class="btn btn-ghost" onclick="doLoad()">讀檔</button></div><button class="btn btn-outline" style="margin-top:12px" onclick="S.tab=\'settings\';R()">⚙️ 設定</button>';return h}
+function tabSave(){var sz=new Blob([JSON.stringify(buildSave())]).size;let h='<div class="save-card">'+IC.save+'<div class="sc-title">Cloud Sync</div><div class="sc-sub">'+fmtB(sz)+'</div><button class="btn btn-dark" style="margin-bottom:8px" onclick="cloudSaveAll()">Save to Cloud</button><button class="btn btn-outline" onclick="cloudLoadAll()">Load from Cloud</button><div class="cloud-status" id="cloudSt"></div></div><div class="m-card"><div style="font-size:13px;font-weight:700;margin-bottom:10px">Manual Backup</div><button class="btn btn-outline" style="margin-bottom:8px" onclick="doExport()">Copy JSON</button><textarea class="m-textarea" style="height:60px;margin-bottom:8px" id="loadA" placeholder="Paste backup JSON"></textarea><button class="btn btn-ghost" onclick="doLoad()">Restore</button></div><button class="btn btn-outline" style="margin-top:12px" onclick="S.tab=\'settings\';R()">⚙️ Settings</button>';return h}
 
 function renderQuiz(app){
 var qs=S.qs,q=qs[S.qi];if(!q){goHome();return}
-let h='<div class="container" style="padding-top:16px"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><button class="pg-back" onclick="showM(\'離開\',\'進度不保存\',goHome,\'離開\')">'+IC.chevLeft+'</button></div>';
+var numOpts=q.options?q.options.length:4;
+let h='<div class="container" style="padding-top:16px"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><button class="pg-back" onclick="showM(\'Leave\',\'Progress will not be saved.\',goHome,\'Leave\')">'+IC.chevLeft+'</button></div>';
 h+='<div class="quiz-header"><div class="q-progress">'+(S.qi+1)+'/'+qs.length+'</div><div style="display:flex;align-items:center;gap:8px"><span class="q-timer" id="tmr">'+fmtT(S.tSec)+'</span><div class="timer-btns">';
 h+=S.tOn?'<button class="timer-btn tb-pause" onclick="tPause();R()">'+IC.pause+'</button>':'<button class="timer-btn tb-play" onclick="tStart();R()">'+IC.play+'</button>';
 h+='<button class="timer-btn tb-reset" onclick="tReset();R()">'+IC.refresh+'</button></div></div></div>';
-h+='<div class="qmap-wrap"><button class="qmap-toggle" onclick="S.mapOpen=!S.mapOpen;R()">題目導覽 '+(S.mapOpen?'▲':'▼')+'</button>';
+h+='<div class="qmap-wrap"><button class="qmap-toggle" onclick="S.mapOpen=!S.mapOpen;R()">Question Map '+(S.mapOpen?'▲':'▼')+'</button>';
 if(S.mapOpen){h+='<div class="qmap">';qs.forEach(function(qq,i){var cls='qmap-dot';if(i===S.qi)cls+=' cur';if(S.flags[i])cls+=' flag';else if(S.ans[i]!==undefined)cls+=' done';h+='<div class="'+cls+'" onclick="S.qi='+i+';R()">'+( i+1)+'</div>'});h+='</div>'}h+='</div>';
-if(q._part){var prev=S.qi>0?qs[S.qi-1]:null;if(!prev||prev._part!==q._part){var pm=PM.find(p=>p.id===q._part);h+='<div class="part-div"><h4>'+(pm?pm.name:'')+'</h4></div>'}}
-if(q._part===1&&q.passage&&S._curPsg){h+='<button class="psg-toggle" onclick="S.psgOpen=!S.psgOpen;R()">'+(S.psgOpen?'收起':'展開')+'文章</button>';if(S.psgOpen)h+='<div class="psg-box">'+S._curPsg.replace(/\n/g,'<br>')+'</div>'}
+if(q._part){var prev=S.qi>0?qs[S.qi-1]:null;if(!prev||prev._part!==q._part){var pm=PM.find(p=>p.id===q._part);h+='<div class="part-div"><h4>'+(pm?pm.name:'')+(q._part===2||q._part===3?' (5 options)':' (4 options)')+'</h4></div>'}}
+
+// Section I passage
+if(q._part===1&&q.passage&&S._curPsg){h+='<button class="psg-toggle" onclick="S.psgOpen=!S.psgOpen;R()">'+(S.psgOpen?'Hide':'Show')+' Passage</button>';if(S.psgOpen)h+='<div class="psg-box">'+S._curPsg.replace(/\n/g,'<br>')+'</div>'}
+
+// Section IV draft passages
+if(q._part===4&&S._psg4&&S._psg4.length){var pIdx=q.passageIndex||0;h+='<button class="psg-toggle" onclick="S.psg4Open=!S.psg4Open;R()">'+(S.psg4Open?'Hide':'Show')+' Draft Passage '+(pIdx+1)+'</button>';if(S.psg4Open&&S._psg4[pIdx])h+='<div class="psg-box">'+S._psg4[pIdx].replace(/\n/g,'<br>')+'</div>'}
+
 h+='<div class="q-card"><div class="q-head"><span class="q-num">'+(q._part?partShort(q._part)+' · ':'')+' Q'+(S.qi+1)+'</span><button class="flag-btn '+(S.flags[S.qi]?'on':'')+'" onclick="S.flags[S.qi]=!S.flags[S.qi];R()">'+IC.flag+'</button></div><div class="q-stem">'+esc(q.stem).replace(/\n/g,'<br>')+'</div>';
-q.options.forEach(function(o,i){h+='<button class="opt-btn '+(S.ans[S.qi]===i?'sel':'')+'" onclick="pickA('+i+')"><span class="opt-letter">'+'ABCD'[i]+'</span><span>'+esc(o)+'</span></button>'});
-h+='</div><div class="nav-row">';h+=S.qi>0?'<button class="btn btn-outline" onclick="S.qi--;R();scrollTo(0,0)">上一題</button>':'<div></div>';h+=S.qi===qs.length-1?'<button class="btn btn-danger" onclick="preSubmit()">交卷</button>':'<button class="btn btn-dark" onclick="S.qi++;R();scrollTo(0,0)">下一題</button>';h+='</div></div>';app.innerHTML=h;
+q.options.forEach(function(o,i){h+='<button class="opt-btn '+(S.ans[S.qi]===i?'sel':'')+'" onclick="pickA('+i+')"><span class="opt-letter">'+optLetter(i)+'</span><span>'+esc(o)+'</span></button>'});
+h+='</div><div class="nav-row">';h+=S.qi>0?'<button class="btn btn-outline" onclick="S.qi--;R();scrollTo(0,0)">Previous</button>':'<div></div>';h+=S.qi===qs.length-1?'<button class="btn btn-danger" onclick="preSubmit()">Submit</button>':'<button class="btn btn-dark" onclick="S.qi++;R();scrollTo(0,0)">Next</button>';h+='</div></div>';app.innerHTML=h;
 }
-function preSubmit(){var qs=S.qs;var un=qs.filter((_,i)=>S.ans[i]===undefined).length;var fl=Object.values(S.flags).filter(Boolean).length;var msg='共'+qs.length+'題';if(un)msg+='\n'+un+'題未答';if(fl)msg+='\n'+fl+'題不確定';showM('交卷',msg,submitQ,'交卷')}
+function preSubmit(){var qs=S.qs;var un=qs.filter((_,i)=>S.ans[i]===undefined).length;var fl=Object.values(S.flags).filter(Boolean).length;var msg=qs.length+' questions total';if(un)msg+='\n'+un+' unanswered';if(fl)msg+='\n'+fl+' flagged';showM('Submit',''+msg,submitQ,'Submit')}
 
 function renderResult(app){
 var qs=S.qs;let cor=0;qs.forEach(function(q,i){if(S.ans[i]===q.answer)cor++});var pct=qs.length?Math.round(cor/qs.length*100):0;
-let h='<div class="container" style="padding-top:16px"><div class="result-hero"><div class="rh-score">'+cor+'/'+qs.length+'</div><div class="rh-pct">'+pct+'%</div><div class="rh-time">用時 '+fmtT(S.tSec)+'</div>';
+let h='<div class="container" style="padding-top:16px"><div class="result-hero"><div class="rh-score">'+cor+'/'+qs.length+'</div><div class="rh-pct">'+pct+'%</div><div class="rh-time">Time: '+fmtT(S.tSec)+'</div>';
 if(S._paperLabels)h+='<div class="rh-detail">'+esc(S._paperLabels)+'</div>';
 if(S.isFP||S.part===0){h+='<div class="bd">';PM.forEach(function(p){var pqs=qs.filter(q=>q._part===p.id);if(!pqs.length)return;var pc=pqs.filter(function(q){var gi=qs.indexOf(q);return S.ans[gi]===q.answer}).length;h+='<div class="bd-i"><div class="bl">'+p.short+'</div><div class="bs">'+pc+'/'+pqs.length+'</div></div>'});h+='</div>'}
 h+='<div class="result-dots">';qs.forEach(function(q,i){var a=S.ans[i];var cls=a===undefined?'sk':a===q.answer?'ok':'ng';h+='<div class="dot '+cls+' '+(S.expandedDot===i?'expanded':'')+'" onclick="toggleDot('+i+')">'+(i+1)+'</div>'});h+='</div></div>';
-if(S._bu)h+='<div class="bank-msg">+'+S._bu.a+'錯題 · '+S._bu.r+'掌握 · 現存'+S._bu.tw+'題</div>';
-if(S.expandedDot!==null&&S.expandedDot>=0&&S.expandedDot<qs.length){var ei=S.expandedDot,eq=qs[ei],eua=S.ans[ei],eok=eua===eq.answer;h+='<div class="m-card" style="border-left:3px solid '+(eok?'var(--green)':'var(--rose)')+'"><div style="font-size:11px;color:var(--g400);margin-bottom:6px">Q'+(ei+1)+' · '+(eok?'正確':'錯誤')+'</div><div style="font-size:13px;line-height:1.8;white-space:pre-wrap;margin-bottom:8px">'+esc(eq.stem)+'</div>';eq.options.forEach(function(o,j){var c='';if(j===eq.answer)c='color:var(--green);font-weight:600';else if(j===eua&&!eok)c='color:var(--rose);text-decoration:line-through';h+='<div style="'+c+';font-size:13px;padding:2px 0">'+'ABCD'[j]+'. '+esc(o)+(j===eq.answer?' ✓':'')+(j===eua&&!eok?' ←':'')+'</div>'});if(eq.explanation)h+='<div style="margin-top:6px;font-size:12px;color:var(--g500)">'+esc(eq.explanation)+'</div>';h+='</div>'}
-h+='<div class="sec"><div class="sec-head"><div class="sec-title">逐題溫習</div></div></div>';
+if(S._bu)h+='<div class="bank-msg">+'+S._bu.a+' wrong · '+S._bu.r+' mastered · Total: '+S._bu.tw+'</div>';
+if(S.expandedDot!==null&&S.expandedDot>=0&&S.expandedDot<qs.length){var ei=S.expandedDot,eq=qs[ei],eua=S.ans[ei],eok=eua===eq.answer;h+='<div class="m-card" style="border-left:3px solid '+(eok?'var(--green)':'var(--rose)')+'"><div style="font-size:11px;color:var(--g400);margin-bottom:6px">Q'+(ei+1)+' · '+(eok?'Correct':'Wrong')+'</div><div style="font-size:13px;line-height:1.8;white-space:pre-wrap;margin-bottom:8px">'+esc(eq.stem)+'</div>';eq.options.forEach(function(o,j){var c='';if(j===eq.answer)c='color:var(--green);font-weight:600';else if(j===eua&&!eok)c='color:var(--rose);text-decoration:line-through';h+='<div style="'+c+';font-size:13px;padding:2px 0">'+optLetter(j)+'. '+esc(o)+(j===eq.answer?' ✓':'')+(j===eua&&!eok?' ←':'')+'</div>'});if(eq.explanation)h+='<div style="margin-top:6px;font-size:12px;color:var(--g500)">'+esc(eq.explanation)+'</div>';h+='</div>'}
+h+='<div class="sec"><div class="sec-head"><div class="sec-title">Review</div></div></div>';
 var lp=0;qs.forEach(function(q,i){if(q._part&&q._part!==lp){lp=q._part;var pm=PM.find(p=>p.id===q._part);h+='<div class="part-div"><h4>'+(pm?pm.name:'')+'</h4></div>'}var ua=S.ans[i],ok=ua===q.answer;h+=riItem(q,i,ua,ok)});
-h+='<button class="btn btn-dark" style="margin-top:16px" onclick="goHome()">返回</button></div>'+renderBottomBar();app.innerHTML=h;
+h+='<button class="btn btn-dark" style="margin-top:16px" onclick="goHome()">Back</button></div>'+renderBottomBar();app.innerHTML=h;
 }
 function toggleDot(i){S.expandedDot=S.expandedDot===i?null:i;R()}
-function riItem(q,i,ua,ok){let h='<div class="ri '+(ok?'rr':'rw')+'"><div class="ri-h" onclick="togRI('+i+')"><span>'+(ok?'✓':'✗')+' Q'+(i+1)+'</span><span class="ri-tag '+(ok?'ri-tag-g':'ri-tag-r')+'">'+(ok?'正確':'錯誤')+'</span></div><div class="ri-b" id="rb'+i+'"><div class="lbl">題目</div><div style="white-space:pre-wrap;margin-bottom:5px">'+esc(q.stem)+'</div><div class="lbl">選項</div>';q.options.forEach(function(o,j){var cls='';if(j===q.answer)cls='opt-correct';else if(j===ua&&!ok)cls='opt-wrong';h+='<div class="'+cls+'">'+'ABCD'[j]+'. '+esc(o)+(j===q.answer?' ✓':'')+(j===ua&&!ok?' ←你揀':'')+'</div>'});if(!ok&&ua!==undefined)h+='<div class="lbl">你揀</div><div style="color:var(--rose)">'+'ABCD'[ua]+'</div>';h+='<div class="lbl">正確</div><div style="color:var(--green);font-weight:600">'+'ABCD'[q.answer]+'</div>';if(q.explanation)h+='<div class="lbl">解釋</div><div>'+esc(q.explanation)+'</div>';h+='</div></div>';return h}
+function riItem(q,i,ua,ok){let h='<div class="ri '+(ok?'rr':'rw')+'"><div class="ri-h" onclick="togRI('+i+')"><span>'+(ok?'✓':'✗')+' Q'+(i+1)+'</span><span class="ri-tag '+(ok?'ri-tag-g':'ri-tag-r')+'">'+(ok?'Correct':'Wrong')+'</span></div><div class="ri-b" id="rb'+i+'"><div class="lbl">Question</div><div style="white-space:pre-wrap;margin-bottom:5px">'+esc(q.stem)+'</div><div class="lbl">Options</div>';q.options.forEach(function(o,j){var cls='';if(j===q.answer)cls='opt-correct';else if(j===ua&&!ok)cls='opt-wrong';h+='<div class="'+cls+'">'+optLetter(j)+'. '+esc(o)+(j===q.answer?' ✓':'')+(j===ua&&!ok?' ← yours':'')+'</div>'});if(!ok&&ua!==undefined)h+='<div class="lbl">Your answer</div><div style="color:var(--rose)">'+optLetter(ua)+'</div>';h+='<div class="lbl">Correct</div><div style="color:var(--green);font-weight:600">'+optLetter(q.answer)+'</div>';if(q.explanation)h+='<div class="lbl">Explanation</div><div>'+esc(q.explanation)+'</div>';h+='</div></div>';return h}
 function togRI(i){var e=document.getElementById('rb'+i);if(e)e.classList.toggle('show')}
-function renderDetail(app){var r=HIST.find(x=>x.id===S.viewRec);if(!r||!r.questions){toast('無法載入');goHome();return}S.qs=r.questions;S.ans=r.answers||{};S.isFP=r.isFP;S.part=r.part;S.tSec=r.time;S._bu=null;S._curPsg=r.passage||'';S._paperLabels=r.paperLabels||'';S.expandedDot=null;renderResult(app)}
+function renderDetail(app){var r=HIST.find(x=>x.id===S.viewRec);if(!r||!r.questions){toast('Cannot load');goHome();return}S.qs=r.questions;S.ans=r.answers||{};S.isFP=r.isFP;S.part=r.part;S.tSec=r.time;S._bu=null;S._curPsg=r.passage||'';S._psg4=r.psg4||[];S._paperLabels=r.paperLabels||'';S.expandedDot=null;renderResult(app)}
 
 function goHome(){tStop();S.page='home';S.expandedDot=null;R()}
 function pickA(i){S.ans[S.qi]=i;R()}
 function viewR(id){S.viewRec=id;S.page='detail';R();scrollTo(0,0)}
-function startMixPractice(){var cbs=document.querySelectorAll('.shp-cb:checked');if(!cbs.length){toast('請揀Paper');return}var ids=[].slice.call(cbs).map(c=>c.value);let all=[];for(let i=1;i<=4;i++)POOL[i].filter(q=>ids.includes(q.paperId)).forEach(q=>{all.push(Object.assign({},JSON.parse(JSON.stringify(q)),{_part:i}))});if(!all.length){toast('冇題目');return}var isShuffle=document.getElementById('mt-shuffle')&&document.getElementById('mt-shuffle').classList.contains('on');if(isShuffle)all=shuffleArr(all);var numEl=document.getElementById('shNum');let num=numEl?parseInt(numEl.value):0;if(num>0&&num<all.length)all=all.slice(0,num);var fp=PAPERS.find(p=>ids.includes(p.id)&&p.passage);S._curPsg=fp?fp.passage:'';S._paperLabels=ids.map(id=>{var p=PAPERS.find(x=>x.id===id);return p?p.label:''}).filter(Boolean).join(', ');beginQ(all,isShuffle?'shuffle':'order',0,false)}
-function startReview(pid,bank){var src=bank==='wrong'?WB:UB;if(!src[pid]||!src[pid].length){toast('冇題目');return}let qs=JSON.parse(JSON.stringify(src[pid]));qs.forEach(q=>{q._part=pid});S._curPsg='';beginQ(qs,'review',pid,false)}
-function startBankShuffle(bank){var src=bank==='wrong'?WB:UB;let all=[];Object.keys(src).forEach(k=>{src[k].forEach(q=>{all.push(Object.assign({},JSON.parse(JSON.stringify(q)),{_part:+k}))})});if(!all.length){toast('冇題目');return}shuffleArr(all);S._curPsg='';beginQ(all,'shuffle',0,false)}
-function beginQ(qs,mode,part,fp){S.page='quiz';S.qs=qs;S.mode=mode;S.part=part;S.isFP=fp;S.qi=0;S.ans={};S.flags={};S.tSec=0;S.tOn=false;S.mapOpen=false;S.psgOpen=true;S._bu=null;S.expandedDot=null;if(S._tID){clearInterval(S._tID);S._tID=null}R()}
+function startMixPractice(){var cbs=document.querySelectorAll('.shp-cb:checked');if(!cbs.length){toast('Select papers');return}var ids=[].slice.call(cbs).map(c=>c.value);let all=[];for(let i=1;i<=4;i++)POOL[i].filter(q=>ids.includes(q.paperId)).forEach(q=>{all.push(Object.assign({},JSON.parse(JSON.stringify(q)),{_part:i}))});if(!all.length){toast('No questions');return}var isShuffle=document.getElementById('mt-shuffle')&&document.getElementById('mt-shuffle').classList.contains('on');if(isShuffle)all=shuffleArr(all);var numEl=document.getElementById('shNum');let num=numEl?parseInt(numEl.value):0;if(num>0&&num<all.length)all=all.slice(0,num);var fp=PAPERS.find(p=>ids.includes(p.id)&&p.passage);S._curPsg=fp?fp.passage:'';var fp4=PAPERS.find(p=>ids.includes(p.id)&&p.passages&&p.passages['4']);S._psg4=fp4?(fp4.passages['4']):[];S._paperLabels=ids.map(id=>{var p=PAPERS.find(x=>x.id===id);return p?p.label:''}).filter(Boolean).join(', ');beginQ(all,isShuffle?'shuffle':'order',0,false)}
+function startReview(pid,bank){var src=bank==='wrong'?WB:UB;if(!src[pid]||!src[pid].length){toast('No questions');return}let qs=JSON.parse(JSON.stringify(src[pid]));qs.forEach(q=>{q._part=pid});S._curPsg='';S._psg4=[];beginQ(qs,'review',pid,false)}
+function startBankShuffle(bank){var src=bank==='wrong'?WB:UB;let all=[];Object.keys(src).forEach(k=>{src[k].forEach(q=>{all.push(Object.assign({},JSON.parse(JSON.stringify(q)),{_part:+k}))})});if(!all.length){toast('No questions');return}shuffleArr(all);S._curPsg='';S._psg4=[];beginQ(all,'shuffle',0,false)}
+function beginQ(qs,mode,part,fp){S.page='quiz';S.qs=qs;S.mode=mode;S.part=part;S.isFP=fp;S.qi=0;S.ans={};S.flags={};S.tSec=0;S.tOn=false;S.mapOpen=false;S.psgOpen=true;S.psg4Open=true;S._bu=null;S.expandedDot=null;if(S._tID){clearInterval(S._tID);S._tID=null}R()}
 
 function submitQ(){
 tStop();var qs=S.qs;var t=nowStr();let cor=0,added=0,removed=0;
@@ -802,30 +909,31 @@ if(S.ans[i]===q.answer){cor++;if(bi>=0){WB[pid].splice(bi,1);removed++}}
 else if(S.ans[i]!==undefined){if(bi<0){WB[pid].push({stem:q.stem,options:q.options,answer:q.answer,explanation:q.explanation||'',_part:pid,dateAdded:t,yourAnswer:S.ans[i],comments:[],paperId:q.paperId||''});added++}else{WB[pid][bi].yourAnswer=S.ans[i];WB[pid][bi].dateAdded=t}}
 if(S.flags[i]){var ui=UB[pid].findIndex(e=>qKey(e)===key);if(ui<0)UB[pid].push({stem:q.stem,options:q.options,answer:q.answer,explanation:q.explanation||'',_part:pid,dateAdded:t,yourAnswer:S.ans[i],comments:[],paperId:q.paperId||''})}
 });
-PC++;HIST.push({id:uid(),date:t,part:S.part||0,mode:S.mode,total:qs.length,correct:cor,time:S.tSec,isFP:S.isFP,passage:S._curPsg||'',paperLabels:S._paperLabels||'',questions:qs.map(q=>({stem:q.stem,options:q.options,answer:q.answer,explanation:q.explanation||'',_part:q._part,passage:q.passage||false})),answers:Object.assign({},S.ans)});
+PC++;HIST.push({id:uid(),date:t,part:S.part||0,mode:S.mode,total:qs.length,correct:cor,time:S.tSec,isFP:S.isFP,passage:S._curPsg||'',psg4:S._psg4||[],paperLabels:S._paperLabels||'',questions:qs.map(q=>({stem:q.stem,options:q.options,answer:q.answer,explanation:q.explanation||'',_part:q._part,passage:q.passage||false,passageIndex:q.passageIndex})),answers:Object.assign({},S.ans)});
 var tw=Object.values(WB).reduce((a,b)=>a+b.length,0);S._bu={a:added,r:removed,tw:tw};
-S.page='result';S.expandedDot=null;R();scrollTo(0,0);toast('+'+added+'錯題');cloudSaveAll();
+S.page='result';S.expandedDot=null;R();scrollTo(0,0);toast('+'+added+' wrong');cloudSaveAll();
 }
 
 function doImport(){
 var area=document.getElementById('impA'),msg=document.getElementById('impMsg'),labelEl=document.getElementById('impLabel');if(!area)return;
-let raw=area.value.trim();if(!raw){sMsg(msg,'請paste JSON','r');return}
+let raw=area.value.trim();if(!raw){sMsg(msg,'Please paste JSON','r');return}
 var cm=raw.match(/```(?:json)?\s*([\s\S]*?)```/);if(cm)raw=cm[1].trim();
-let d;try{d=JSON.parse(raw)}catch(e){sMsg(msg,'JSON錯誤：'+e.message,'r');return}
-var label=(labelEl&&labelEl.value.trim())||shortDate()+' 練習';
+let d;try{d=JSON.parse(raw)}catch(e){sMsg(msg,'JSON error: '+e.message,'r');return}
+var label=(labelEl&&labelEl.value.trim())||shortDate()+' Practice';
 var paperId='paper_'+Date.now().toString(36)+Math.random().toString(36).substr(2,4);
-if(d.fullPaper&&d.parts){let tot=0;for(let pid=1;pid<=4;pid++){var pqs=d.parts[String(pid)];if(!pqs||!Array.isArray(pqs))continue;pqs.forEach(q=>{q._part=pid;q.id=uid();q.paperId=paperId;q.paperDate=dateStr()});POOL[pid]=POOL[pid].concat(pqs);tot+=pqs.length}PAPERS.push({id:paperId,date:dateStr(),label:label,addedAt:nowStr(),type:'全份卷',passage:d.passage||'',totalQ:tot});if(d.passage)PSG=d.passage;sMsg(msg,'「'+label+'」+'+tot+'題','g');area.value='';clearDraft('import_json');toast('匯入成功');cloudSaveAll();R();return}
-if(!d.part||!d.questions){sMsg(msg,'格式錯誤','r');return}
-var pid2=d.part;if(pid2<1||pid2>4){sMsg(msg,'part須1-4','r');return}
-d.questions.forEach(q=>{q._part=pid2;q.id=uid();q.paperId=paperId;q.paperDate=dateStr()});POOL[pid2]=POOL[pid2].concat(d.questions);PAPERS.push({id:paperId,date:dateStr(),label:label,addedAt:nowStr(),type:partShort(pid2),passage:d.passage||'',totalQ:d.questions.length});if(d.passage)PSG=d.passage;sMsg(msg,'「'+label+'」+'+d.questions.length+'題','g');area.value='';clearDraft('import_json');toast('匯入成功');cloudSaveAll();R();
+if(d.fullPaper&&d.parts){let tot=0;for(let pid=1;pid<=4;pid++){var pqs=d.parts[String(pid)];if(!pqs||!Array.isArray(pqs))continue;pqs.forEach(q=>{q._part=pid;q.id=uid();q.paperId=paperId;q.paperDate=dateStr()});POOL[pid]=POOL[pid].concat(pqs);tot+=pqs.length}var paperPassages=d.passages||{};PAPERS.push({id:paperId,date:dateStr(),label:label,addedAt:nowStr(),type:'Full Paper',passage:d.passage||'',passages:paperPassages,totalQ:tot});if(d.passage)PSG=d.passage;sMsg(msg,'"'+label+'" +'+tot+'Q','g');area.value='';clearDraft('import_json');toast('Imported');cloudSaveAll();R();return}
+if(!d.part||!d.questions){sMsg(msg,'Invalid format: need fullPaper+parts OR part+questions','r');return}
+var pid2=d.part;if(pid2<1||pid2>4){sMsg(msg,'part must be 1-4','r');return}
+d.questions.forEach(q=>{q._part=pid2;q.id=uid();q.paperId=paperId;q.paperDate=dateStr()});POOL[pid2]=POOL[pid2].concat(d.questions);var secPassages={};if(d.passages)secPassages=d.passages;PAPERS.push({id:paperId,date:dateStr(),label:label,addedAt:nowStr(),type:partShort(pid2),passage:d.passage||'',passages:secPassages,totalQ:d.questions.length});if(d.passage)PSG=d.passage;sMsg(msg,'"'+label+'" +'+d.questions.length+'Q','g');area.value='';clearDraft('import_json');toast('Imported');cloudSaveAll();R();
 }
 function sMsg(el,txt,c){if(!el)return;el.style.display='block';el.style.background=c==='r'?'var(--rose-l)':'var(--green-l)';el.style.color=c==='r'?'var(--rose)':'#065f46';el.textContent=txt}
-function doExport(){copyTxt(JSON.stringify(buildSave()));toast('已複製')}
-function doLoad(){var a=document.getElementById('loadA');if(!a)return;let r=a.value.trim();if(!r){toast('請paste');return}let d;try{d=JSON.parse(r)}catch(e){toast('JSON錯誤');return}applyLoad(d);toast('已還原');a.value='';R()}
+function doExport(){copyTxt(JSON.stringify(buildSave()));toast('Copied')}
+function doLoad(){var a=document.getElementById('loadA');if(!a)return;let r=a.value.trim();if(!r){toast('Please paste');return}let d;try{d=JSON.parse(r)}catch(e){toast('JSON error');return}applyLoad(d);toast('Restored');a.value='';R()}
 
 document.addEventListener('keydown',function(e){
 if(S.page!=='quiz')return;if(e.target.tagName==='TEXTAREA'||e.target.tagName==='INPUT')return;
-if(e.key>='1'&&e.key<='4'){e.preventDefault();pickA(parseInt(e.key)-1)}
+var q=S.qs[S.qi];var maxOpt=q&&q.options?q.options.length:4;
+if(e.key>='1'&&e.key<=String(maxOpt)){e.preventDefault();pickA(parseInt(e.key)-1)}
 else if(e.key==='ArrowRight'||e.key==='Enter'){e.preventDefault();if(S.qi<S.qs.length-1){S.qi++;R();scrollTo(0,0)}}
 else if(e.key==='ArrowLeft'){e.preventDefault();if(S.qi>0){S.qi--;R();scrollTo(0,0)}}
 else if(e.key.toLowerCase()==='f'){e.preventDefault();S.flags[S.qi]=!S.flags[S.qi];R()}
